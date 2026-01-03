@@ -1,0 +1,23 @@
+.git
+.DS_Store
+
+# local deps / logs
+node_modules
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# secrets
+.env
+.env.*
+ADMIN_CREDENTIALS.txt
+
+# tests / docs / misc
+tests
+coverage
+*.md
+hero_banner_variants
+hero_banner_variants.zip
+
+# runtime uploads (container creates its own)
+uploads
