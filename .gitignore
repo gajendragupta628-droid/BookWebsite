@@ -140,3 +140,8 @@ vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 =======
 node_modules
+
+.DS_Store
+.env
+ADMIN_CREDENTIALS.txt
+uploads/
