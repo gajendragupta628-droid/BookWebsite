@@ -67,8 +67,8 @@ const homeData = async () => {
       pexelsService.getBookImages('used-books', 6),
       pexelsService.getBookImages('nepali-books', 6)
     ]).then(([heroBanner, usedBooks, nepaliBooks]) => {
-      console.log('✅ Pexels images fetched:', {
-        heroBanner: heroBanner.length > 0 ? '✓' : '✗',
+      console.log('Pexels images fetched:', {
+        heroBanner: heroBanner.length > 0 ? 'yes' : 'no',
         usedBooks: usedBooks.length,
         nepaliBooks: nepaliBooks.length
       });
@@ -78,7 +78,7 @@ const homeData = async () => {
         nepaliBooks
       };
     }).catch(err => {
-      console.error('❌ Error fetching Pexels images:', err.message);
+      console.error('Error fetching Pexels images:', err.message);
       return { heroBanner: null, usedBooks: [], nepaliBooks: [] };
     })
   ]);
@@ -92,7 +92,7 @@ const homeData = async () => {
       featuredBooks = await Book.aggregate([
         { $sample: { size: Math.min(8, totalBooks) } }
       ]);
-      console.log(`✅ No featured books found. Showing ${featuredBooks.length} random books instead.`);
+      console.log(`No featured books found. Showing ${featuredBooks.length} random books instead.`);
     }
   }
   
@@ -128,4 +128,3 @@ const relatedBooks = async (book) => {
 };
 
 module.exports = { homeData, relatedBooks };
-

@@ -407,7 +407,7 @@ document.addEventListener('click', (e) => {
   // ======================
   // Console Welcome Message
   // ======================
-  console.log('%c📚 Bookstore Admin Panel', 'font-size: 20px; font-weight: bold; color: #f59e0b;');
+  console.log('%cBookstore Admin Panel', 'font-size: 20px; font-weight: bold; color: #f59e0b;');
   console.log('%cWelcome to the admin dashboard!', 'font-size: 14px; color: #888;');
 
 })();

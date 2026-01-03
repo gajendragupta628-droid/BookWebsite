@@ -150,7 +150,7 @@ function renderBooks() {
            data-book-id="${book._id}">
         <div class="book-picker-item-image">
           ${imageUrl ? `<img src="${imageUrl}" alt="${book.title}" />` : '<div class="book-item-placeholder">No Image</div>'}
-          ${isSelected ? '<div class="book-picker-item-checkbox">✓</div>' : ''}
+          ${isSelected ? '<div class="book-picker-item-checkbox" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg></div>' : ''}
         </div>
         <div class="book-picker-item-info">
           <div class="book-picker-item-title">${escapeHtml(book.title)}</div>

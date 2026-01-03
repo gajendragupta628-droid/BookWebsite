@@ -54,7 +54,7 @@ const connectDB = async (retries = 0) => {
       await new Promise(resolve => setTimeout(resolve, RETRY_DELAY));
       return connectDB(retries + 1);
     } else {
-      console.error('❌ Failed to connect to MongoDB after', MAX_RETRIES, 'attempts');
+      console.error('Failed to connect to MongoDB after', MAX_RETRIES, 'attempts');
       console.error('Error:', error.message);
       console.error('\nPlease check:');
       console.error('  1. MongoDB is running');
@@ -73,4 +73,3 @@ const getConnectionStatus = () => ({
 });
 
 module.exports = { connectDB, getConnectionStatus };
-

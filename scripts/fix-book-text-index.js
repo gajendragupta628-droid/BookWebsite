@@ -17,14 +17,14 @@ require('dotenv').config();
 
 const mongoUri = process.env.MONGODB_URI;
 if (!mongoUri) {
-  console.error('❌ MONGODB_URI is required (set it in your .env or environment).');
+  console.error('MONGODB_URI is required (set it in your .env or environment).');
   process.exit(1);
 }
 
 async function main() {
   console.log('Connecting to MongoDB...');
   await mongoose.connect(mongoUri);
-  console.log('✅ Connected\n');
+  console.log('Connected\n');
 
   const collection = mongoose.connection.db.collection('books');
   const indexes = await collection.indexes();
@@ -64,7 +64,7 @@ async function main() {
         language_override: 'textSearchLanguage',
       }
     );
-    console.log('✅ Created\n');
+    console.log('Created\n');
   } else {
     console.log('Safe text index already present.\n');
   }
@@ -73,10 +73,9 @@ async function main() {
 }
 
 main().catch(async (err) => {
-  console.error('❌ Failed to fix index:', err);
+  console.error('Failed to fix index:', err);
   try {
     await mongoose.connection.close();
   } catch {}
   process.exit(1);
 });
-

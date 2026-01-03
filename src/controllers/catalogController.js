@@ -1,7 +1,7 @@
 const Book = require('../models/Book');
 const Category = require('../models/Category');
 const Author = require('../models/Author');
-const { list, bySlug } = require('../services/bookService');
+const { list, bySlug, getAllCategories } = require('../services/bookService');
 const { getPagination } = require('../utils/pagination');
 const { breadcrumbJSONLD, buildMeta, productJSONLD } = require('../utils/seo');
 
@@ -24,10 +24,13 @@ exports.getSearch = async (req, res, next) => {
       rating: req.query.rating
     };
     const { page, perPage, skip, limit } = getPagination(req.query.page, 12);
-    const { items, total } = await list({ q, filters, sort, page, perPage });
+    const [{ items, total }, categories] = await Promise.all([
+      list({ q, filters, sort, page, perPage }),
+      getAllCategories()
+    ]);
     const meta = buildMeta({ title: `Search${q ? `: ${q}` : ''}` });
     if (req.query.suggest === '1') return res.json({ items: items.slice(0, 5).map(i => ({ title: i.title, slug: i.slug })) });
-    res.render('site/search', { meta, q, items, total, page, perPage, sort, filters });
+    res.render('site/search', { meta, q, items, total, page, perPage, sort, filters, categories });
   } catch (e) { next(e); }
 };
 

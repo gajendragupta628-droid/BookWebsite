@@ -76,14 +76,14 @@ function validateEnv() {
   }
 
   if (errors.length > 0) {
-    console.error('\n❌ Environment Variable Validation Failed:\n');
+    console.error('\nEnvironment Variable Validation Failed:\n');
     errors.forEach(err => console.error(`  - ${err}`));
     console.error('\nPlease fix these issues before starting the application.\n');
     process.exit(1);
   }
 
   if (warnings.length > 0 && !isProduction) {
-    console.warn('\n⚠️  Environment Variable Warnings:\n');
+    console.warn('\nEnvironment Variable Warnings:\n');
     warnings.forEach(warn => console.warn(`  - ${warn}`));
     console.warn('');
   }

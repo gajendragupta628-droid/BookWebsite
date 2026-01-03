@@ -16,7 +16,7 @@ require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
 // -------------------- Mongo --------------------
 const mongoUri = process.env.MONGODB_URI;
 if (!mongoUri) {
-  console.error('❌ MONGODB_URI is required (set it in your .env or environment).');
+  console.error('MONGODB_URI is required (set it in your .env or environment).');
   process.exit(1);
 }
 
@@ -405,11 +405,11 @@ const booksData = [
 // -------------------- Main Seed --------------------
 async function seedBooks() {
   try {
-    console.log('\n📚 Starting REAL Book Seed Script (NPR + Real Covers)...\n');
+    console.log('\nStarting REAL Book Seed Script (NPR + Real Covers)...\n');
 
     console.log('Connecting to MongoDB...');
     await mongoose.connect(mongoUri);
-    console.log('✅ Connected to MongoDB\n');
+    console.log('Connected to MongoDB\n');
 
     await ensureSafeBookTextIndex();
 
@@ -426,11 +426,11 @@ async function seedBooks() {
         readline.question('Do you want to delete existing books? (yes/no): ', (answer) => {
           if (answer.toLowerCase() === 'yes' || answer.toLowerCase() === 'y') {
             Book.deleteMany({}).then(() => {
-              console.log('✅ Cleared existing books\n');
+              console.log('Cleared existing books\n');
               resolve();
             });
           } else {
-            console.log('⏭️  Keeping existing books\n');
+            console.log('Keeping existing books\n');
             resolve();
           }
         });
@@ -444,7 +444,7 @@ async function seedBooks() {
       const bookData = booksData[i];
       console.log(`[${i + 1}/${booksData.length}] Creating: ${bookData.title}`);
 
-      console.log(`   → Fetching REAL cover (OpenLibrary → GoogleBooks fallback)...`);
+      console.log('   Fetching REAL cover (OpenLibrary -> GoogleBooks fallback)...');
       const image = await fetchRealBookCover({
         title: bookData.title,
         isbn13: bookData.isbn13,
@@ -454,7 +454,7 @@ async function seedBooks() {
       // Basic sanity check for NPR prices
       if (typeof bookData.priceMRP === 'number' && typeof bookData.priceSale === 'number') {
         if (bookData.priceSale > bookData.priceMRP) {
-          console.log(`   ⚠️  priceSale > priceMRP; adjusting sale to MRP for: ${bookData.title}`);
+          console.log(`   priceSale > priceMRP; adjusting sale to MRP for: ${bookData.title}`);
           bookData.priceSale = bookData.priceMRP;
         }
       }
@@ -500,14 +500,14 @@ async function seedBooks() {
       });
 
       await book.save();
-      console.log(`   ✅ Created successfully`);
-      console.log(`   🖼️  Cover: ${image.src}\n`);
+      console.log('   Created successfully');
+      console.log(`   Cover: ${image.src}\n`);
 
       // Small delay to be gentle with cover endpoints
       await new Promise((resolve) => setTimeout(resolve, 250));
     }
 
-    console.log('🎉 Successfully seeded all books!\n');
+    console.log('Successfully seeded all books!\n');
 
     const totalBooks = await Book.countDocuments();
     const featuredBooks = await Book.countDocuments({ featured: true });
@@ -520,9 +520,9 @@ async function seedBooks() {
     console.log(`Categories Used: ${[...new Set(booksData.flatMap((b) => b.categories))].length}`);
     console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
 
-    console.log('✅ Seed script completed successfully!\n');
+    console.log('Seed script completed successfully!\n');
   } catch (error) {
-    console.error('\n❌ Error seeding books:', error);
+    console.error('\nError seeding books:', error);
     process.exit(1);
   } finally {
     await mongoose.connection.close();

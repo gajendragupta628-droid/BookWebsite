@@ -10,10 +10,52 @@
       <input type="hidden" name="q" value="<%= filters.q %>" />
     <% } %>
 
+    <!-- Category Filter -->
+    <% if (categories && categories.length > 0) { %>
+    <div class="filter-group">
+      <div class="filter-group-header">
+        <svg class="filter-group-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/>
+        </svg>
+        <h4 class="filter-group-title">Category</h4>
+      </div>
+      <div class="filter-options">
+        <label class="filter-radio">
+          <input 
+            type="radio" 
+            name="category" 
+            value="" 
+            <%= (!filters || !filters.category)?'checked':'' %>
+            onchange="document.getElementById('filtersForm').submit()"
+          />
+          <span class="radio-custom"></span>
+          <span class="radio-label">All Categories</span>
+        </label>
+        <% categories.forEach(cat => { %>
+          <label class="filter-radio">
+            <input 
+              type="radio" 
+              name="category" 
+              value="<%= cat.name %>" 
+              <%= (filters && filters.category === cat.name)?'checked':'' %>
+              onchange="document.getElementById('filtersForm').submit()"
+            />
+            <span class="radio-custom"></span>
+            <span class="radio-label"><%= cat.name %> (<%= cat.count %>)</span>
+          </label>
+        <% }); %>
+      </div>
+    </div>
+    <% } %>
+
     <!-- Availability Filter -->
     <div class="filter-group">
       <div class="filter-group-header">
-        <span class="filter-group-icon">📦</span>
+        <svg class="filter-group-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/>
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.27 6.96L12 12l8.73-5.04"/>
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 22V12"/>
+        </svg>
         <h4 class="filter-group-title">Availability</h4>
       </div>
       <div class="filter-options">
@@ -25,7 +67,11 @@
             <%= (filters && filters.inStock)?'checked':'' %>
             onchange="document.getElementById('filtersForm').submit()"
           />
-          <span class="checkbox-custom"></span>
+          <span class="checkbox-custom">
+            <svg class="checkbox-check" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+              <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+            </svg>
+          </span>
           <span class="checkbox-label">In Stock Only</span>
         </label>
         <label class="filter-checkbox">
@@ -36,7 +82,11 @@
             <%= (filters && filters.preorder)?'checked':'' %>
             onchange="document.getElementById('filtersForm').submit()"
           />
-          <span class="checkbox-custom"></span>
+          <span class="checkbox-custom">
+            <svg class="checkbox-check" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+              <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+            </svg>
+          </span>
           <span class="checkbox-label">Pre-orders</span>
         </label>
       </div>
@@ -45,7 +95,11 @@
     <!-- Price Range Filter -->
     <div class="filter-group">
       <div class="filter-group-header">
-        <span class="filter-group-icon">💰</span>
+        <svg class="filter-group-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-2"/>
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12H9"/>
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9h4v6h-4a3 3 0 010-6z"/>
+        </svg>
         <h4 class="filter-group-title">Price Range</h4>
       </div>
       <div class="filter-options">
@@ -80,7 +134,11 @@
     <!-- Language Filter -->
     <div class="filter-group">
       <div class="filter-group-header">
-        <span class="filter-group-icon">🌐</span>
+        <svg class="filter-group-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+          <circle cx="12" cy="12" r="10" stroke-width="2"/>
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2 12h20"/>
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/>
+        </svg>
         <h4 class="filter-group-title">Language</h4>
       </div>
       <div class="filter-options">
@@ -123,7 +181,11 @@
     <!-- Condition Filter -->
     <div class="filter-group">
       <div class="filter-group-header">
-        <span class="filter-group-icon">✨</span>
+        <svg class="filter-group-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2l1.2 4.6L18 8l-4.8 1.4L12 14l-1.2-4.6L6 8l4.8-1.4L12 2z"/>
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12l.7 2.7L8.4 15l-2.7.8L5 18l-.7-2.2L1.6 15l2.7-.3L5 12z"/>
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 13l.7 2.7 2.7.3-2.7.8L19 19l-.7-2.2-2.7-.8 2.7-.3L19 13z"/>
+        </svg>
         <h4 class="filter-group-title">Condition</h4>
       </div>
       <div class="filter-options">
@@ -166,7 +228,9 @@
     <!-- Binding Type Filter -->
     <div class="filter-group">
       <div class="filter-group-header">
-        <span class="filter-group-icon">📖</span>
+        <svg class="filter-group-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+        </svg>
         <h4 class="filter-group-title">Binding</h4>
       </div>
       <div class="filter-options">
@@ -178,7 +242,11 @@
             <%= (filters && filters.hardcover)?'checked':'' %>
             onchange="document.getElementById('filtersForm').submit()"
           />
-          <span class="checkbox-custom"></span>
+          <span class="checkbox-custom">
+            <svg class="checkbox-check" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+              <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+            </svg>
+          </span>
           <span class="checkbox-label">Hardcover</span>
         </label>
         <label class="filter-checkbox">
@@ -189,7 +257,11 @@
             <%= (filters && filters.paperback)?'checked':'' %>
             onchange="document.getElementById('filtersForm').submit()"
           />
-          <span class="checkbox-custom"></span>
+          <span class="checkbox-custom">
+            <svg class="checkbox-check" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+              <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+            </svg>
+          </span>
           <span class="checkbox-label">Paperback</span>
         </label>
       </div>
@@ -198,7 +270,9 @@
     <!-- Rating Filter -->
     <div class="filter-group">
       <div class="filter-group-header">
-        <span class="filter-group-icon">⭐</span>
+        <svg class="filter-group-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.56 5.82 22 7 14.14l-5-4.87 6.91-1.01L12 2z"/>
+        </svg>
         <h4 class="filter-group-title">Rating</h4>
       </div>
       <div class="filter-options">
@@ -225,7 +299,11 @@
             <span class="radio-custom"></span>
             <span class="radio-label">
               <span class="rating-stars">
-                <% for(let j = 0; j < i; j++) { %><span class="star-filled">★</span><% } %>
+                <% for(let j = 0; j < i; j++) { %>
+                  <svg class="star-filled" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                  </svg>
+                <% } %>
               </span>
               & Up
             </span>
@@ -237,7 +315,9 @@
     <!-- Apply Button -->
     <button type="submit" class="filters-apply">
       <span>Apply Filters</span>
-      <span>→</span>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 18l6-6-6-6"/>
+      </svg>
     </button>
   </form>
 </aside>
@@ -310,7 +390,9 @@
 }
 
 .filter-group-icon {
-  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
 }
 
 .filter-group-title {
@@ -358,11 +440,18 @@
   border-color: #caa660;
 }
 
-.filter-checkbox input[type="checkbox"]:checked + .checkbox-custom::after {
-  content: '✓';
-  color: white;
-  font-size: 14px;
-  font-weight: 700;
+.checkbox-check {
+  width: 12px;
+  height: 12px;
+  color: #ffffff;
+  opacity: 0;
+  transform: scale(0.95);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.filter-checkbox input[type="checkbox"]:checked + .checkbox-custom .checkbox-check {
+  opacity: 1;
+  transform: scale(1);
 }
 
 .checkbox-label {
@@ -476,7 +565,8 @@
 
 .star-filled {
   color: #caa660;
-  font-size: 14px;
+  width: 14px;
+  height: 14px;
 }
 
 /* Apply Button */

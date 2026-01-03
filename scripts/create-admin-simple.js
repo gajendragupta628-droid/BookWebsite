@@ -17,26 +17,26 @@ async function createAdmin() {
     const password = process.argv[3];
 
     if (!email || !password) {
-      console.error('\n❌ Usage: node scripts/create-admin-simple.js <email> <password>');
+      console.error('\nUsage: node scripts/create-admin-simple.js <email> <password>');
       console.error('Example: node scripts/create-admin-simple.js admin@bookstore.com MyPassword123\n');
       process.exit(1);
     }
 
     if (password.length < 8) {
-      console.error('❌ Password must be at least 8 characters');
+      console.error('Password must be at least 8 characters');
       process.exit(1);
     }
 
-    console.log('\n📚 Creating admin user...\n');
+    console.log('\nCreating admin user...\n');
 
     // Connect to MongoDB
     const mongoUri = process.env.MONGODB_URI;
     if (!mongoUri) {
-      console.error('❌ MONGODB_URI is required (set it in your .env or environment).');
+      console.error('MONGODB_URI is required (set it in your .env or environment).');
       process.exit(1);
     }
     await mongoose.connect(mongoUri);
-    console.log('✅ Connected to MongoDB\n');
+    console.log('Connected to MongoDB\n');
 
     // Define AdminUser model
     const AdminUserSchema = new mongoose.Schema({
@@ -50,7 +50,7 @@ async function createAdmin() {
     // Check if admin already exists
     const existingAdmin = await AdminUser.findOne({ email: email.toLowerCase() });
     if (existingAdmin) {
-      console.log('⚠️  Admin with this email already exists. Deleting old user...');
+      console.log('Admin with this email already exists. Deleting old user...');
       await AdminUser.deleteOne({ email: email.toLowerCase() });
     }
 
@@ -65,16 +65,16 @@ async function createAdmin() {
 
     await admin.save();
 
-    console.log('✅ Admin user created successfully!\n');
+    console.log('Admin user created successfully!\n');
     console.log('Login Details:');
     console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
     console.log(`Email:    ${email}`);
     console.log(`Password: ${password}`);
     console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
-    console.log('🔐 Access admin panel at: http://localhost:3000/admin/login\n');
+    console.log('Access admin panel at: http://localhost:3000/admin/login\n');
 
   } catch (error) {
-    console.error('\n❌ Error:', error.message);
+    console.error('\nError:', error.message);
     process.exit(1);
   } finally {
     await mongoose.connection.close();

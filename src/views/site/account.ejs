@@ -15,7 +15,12 @@
           <p class="user-email"><%= currentUser.email %></p>
           <div class="user-badges">
             <% if (currentUser.isVerified) { %>
-              <span class="badge-verified">✓ Verified</span>
+              <span class="badge-verified">
+                <svg width="14" height="14" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" style="margin-right:6px;">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                </svg>
+                Verified
+              </span>
             <% } %>
             <% if (currentUser.provider === 'google') { %>
               <span class="badge-google">Google Account</span>

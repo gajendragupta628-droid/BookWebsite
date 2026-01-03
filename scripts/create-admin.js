@@ -23,13 +23,13 @@ function question(query) {
 
 async function createAdmin() {
   try {
-    console.log('\n📚 Motivational Books - Admin User Creation\n');
+    console.log('\nMotivational Books - Admin User Creation\n');
     console.log('This script will create an admin user for the dashboard.\n');
 
     // Connect to MongoDB
     const mongoUri = process.env.MONGODB_URI;
     if (!mongoUri) {
-      console.error('❌ MONGODB_URI is required (set it in your .env or environment).');
+      console.error('MONGODB_URI is required (set it in your .env or environment).');
       process.exit(1);
     }
     console.log(`Connecting to MongoDB at ${mongoUri}...`);
@@ -39,7 +39,7 @@ async function createAdmin() {
       useUnifiedTopology: true
     });
     
-    console.log('✅ Connected to MongoDB\n');
+    console.log('Connected to MongoDB\n');
 
     // Define AdminUser model inline
     const AdminUserSchema = new mongoose.Schema({
@@ -58,14 +58,14 @@ async function createAdmin() {
     const email = await question('Enter admin email: ');
     
     if (!email || !email.includes('@')) {
-      console.error('❌ Invalid email address');
+      console.error('Invalid email address');
       process.exit(1);
     }
 
     // Check if admin already exists
     const existingAdmin = await AdminUser.findOne({ email });
     if (existingAdmin) {
-      const overwrite = await question('⚠️  Admin with this email already exists. Overwrite? (yes/no): ');
+      const overwrite = await question('Admin with this email already exists. Overwrite? (yes/no): ');
       if (overwrite.toLowerCase() !== 'yes' && overwrite.toLowerCase() !== 'y') {
         console.log('Cancelled.');
         process.exit(0);
@@ -76,14 +76,14 @@ async function createAdmin() {
     const password = await question('Enter admin password (min 8 characters): ');
     
     if (!password || password.length < 8) {
-      console.error('❌ Password must be at least 8 characters');
+      console.error('Password must be at least 8 characters');
       process.exit(1);
     }
 
     const confirmPassword = await question('Confirm password: ');
     
     if (password !== confirmPassword) {
-      console.error('❌ Passwords do not match');
+      console.error('Passwords do not match');
       process.exit(1);
     }
 
@@ -99,17 +99,17 @@ async function createAdmin() {
 
     await admin.save();
 
-    console.log('\n✅ Admin user created successfully!\n');
+    console.log('\nAdmin user created successfully!\n');
     console.log('Login Details:');
     console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
     console.log(`Email:    ${email}`);
     console.log(`Password: ${password}`);
     console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
-    console.log('🔐 Please keep these credentials secure!\n');
+    console.log('Please keep these credentials secure!\n');
     console.log('Access the admin panel at: http://localhost:3000/admin/login\n');
 
   } catch (error) {
-    console.error('\n❌ Error:', error.message);
+    console.error('\nError:', error.message);
     process.exit(1);
   } finally {
     rl.close();

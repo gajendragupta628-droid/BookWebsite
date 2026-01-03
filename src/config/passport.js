@@ -117,9 +117,9 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
       return done(error, null);
     }
   }));
-  console.log('✓ Google OAuth configured');
+  console.log('Google OAuth configured');
 } else {
-  console.log('⚠ Google OAuth not configured (missing GOOGLE_CLIENT_ID or GOOGLE_CLIENT_SECRET)');
+  console.log('Google OAuth not configured (missing GOOGLE_CLIENT_ID or GOOGLE_CLIENT_SECRET)');
 }
 
 module.exports = passport;

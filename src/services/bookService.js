@@ -110,6 +110,17 @@ const remove = async (id) => {
 const bySlug = async (slug) => Book.findOne({ slug });
 const byId = async (id) => Book.findById(id);
 
+const getAllCategories = async () => {
+  const result = await Book.aggregate([
+    { $unwind: '$categories' },
+    { $match: { categories: { $exists: true, $ne: null, $ne: '' } } },
+    { $group: { _id: '$categories', count: { $sum: 1 } } },
+    { $sort: { _id: 1 } },
+    { $project: { name: '$_id', count: 1, _id: 0 } }
+  ]);
+  return result;
+};
+
 const bulkImport = async (rows, { defaultCurrency = 'USD' } = {}) => {
   const upserts = [];
   for (const r of rows) {
@@ -159,4 +170,4 @@ const bulkImport = async (rows, { defaultCurrency = 'USD' } = {}) => {
   return upserts.length;
 };
 
-module.exports = { list, createOrUpdate, remove, bySlug, byId, bulkImport };
+module.exports = { list, createOrUpdate, remove, bySlug, byId, bulkImport, getAllCategories };

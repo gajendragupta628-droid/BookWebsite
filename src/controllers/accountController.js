@@ -173,7 +173,7 @@ exports.cancelOrder = async (req, res, next) => {
     order.status = 'cancelled';
     await order.save();
 
-    console.log(`✅ Order ${order.orderNumber} cancelled by user`);
+    console.log(`Order ${order.orderNumber} cancelled by user`);
 
     res.json({ ok: true, message: 'Order cancelled successfully' });
   } catch (error) {
@@ -315,4 +315,3 @@ exports.setDefaultAddress = async (req, res, next) => {
     res.status(500).json({ ok: false, message: 'Failed to update default address' });
   }
 };
-
