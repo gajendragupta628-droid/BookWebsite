@@ -1,0 +1,526 @@
+<aside class="search-filters">
+  <div class="filters-header">
+    <h3 class="filters-title">Filters</h3>
+    <button type="button" class="filters-reset" onclick="resetFilters()">Clear All</button>
+  </div>
+
+  <form method="get" class="filters-form" id="filtersForm">
+    <!-- Preserve search query -->
+    <% if (filters && filters.q) { %>
+      <input type="hidden" name="q" value="<%= filters.q %>" />
+    <% } %>
+
+    <!-- Availability Filter -->
+    <div class="filter-group">
+      <div class="filter-group-header">
+        <span class="filter-group-icon">📦</span>
+        <h4 class="filter-group-title">Availability</h4>
+      </div>
+      <div class="filter-options">
+        <label class="filter-checkbox">
+          <input 
+            type="checkbox" 
+            name="inStock" 
+            value="1" 
+            <%= (filters && filters.inStock)?'checked':'' %>
+            onchange="document.getElementById('filtersForm').submit()"
+          />
+          <span class="checkbox-custom"></span>
+          <span class="checkbox-label">In Stock Only</span>
+        </label>
+        <label class="filter-checkbox">
+          <input 
+            type="checkbox" 
+            name="preorder" 
+            value="1" 
+            <%= (filters && filters.preorder)?'checked':'' %>
+            onchange="document.getElementById('filtersForm').submit()"
+          />
+          <span class="checkbox-custom"></span>
+          <span class="checkbox-label">Pre-orders</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Price Range Filter -->
+    <div class="filter-group">
+      <div class="filter-group-header">
+        <span class="filter-group-icon">💰</span>
+        <h4 class="filter-group-title">Price Range</h4>
+      </div>
+      <div class="filter-options">
+        <div class="price-inputs">
+          <input 
+            name="min" 
+            type="number" 
+            placeholder="Min रू" 
+            value="<%= filters && filters.priceMin || '' %>" 
+            class="price-input"
+          />
+          <span class="price-separator">—</span>
+          <input 
+            name="max" 
+            type="number" 
+            placeholder="Max रू" 
+            value="<%= filters && filters.priceMax || '' %>" 
+            class="price-input"
+          />
+        </div>
+        
+        <!-- Quick Price Ranges -->
+        <div class="price-quick-links">
+          <button type="button" class="price-tag" onclick="setPrice(0, 500)">Under रू500</button>
+          <button type="button" class="price-tag" onclick="setPrice(500, 1000)">रू500-रू1000</button>
+          <button type="button" class="price-tag" onclick="setPrice(1000, 2000)">रू1000-रू2000</button>
+          <button type="button" class="price-tag" onclick="setPrice(2000, 99999)">Above रू2000</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Language Filter -->
+    <div class="filter-group">
+      <div class="filter-group-header">
+        <span class="filter-group-icon">🌐</span>
+        <h4 class="filter-group-title">Language</h4>
+      </div>
+      <div class="filter-options">
+        <label class="filter-radio">
+          <input 
+            type="radio" 
+            name="language" 
+            value="" 
+            <%= (!filters || !filters.language)?'checked':'' %>
+            onchange="document.getElementById('filtersForm').submit()"
+          />
+          <span class="radio-custom"></span>
+          <span class="radio-label">All Languages</span>
+        </label>
+        <label class="filter-radio">
+          <input 
+            type="radio" 
+            name="language" 
+            value="English" 
+            <%= (filters && filters.language === 'English')?'checked':'' %>
+            onchange="document.getElementById('filtersForm').submit()"
+          />
+          <span class="radio-custom"></span>
+          <span class="radio-label">English</span>
+        </label>
+        <label class="filter-radio">
+          <input 
+            type="radio" 
+            name="language" 
+            value="Nepali" 
+            <%= (filters && filters.language === 'Nepali')?'checked':'' %>
+            onchange="document.getElementById('filtersForm').submit()"
+          />
+          <span class="radio-custom"></span>
+          <span class="radio-label">Nepali</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Condition Filter -->
+    <div class="filter-group">
+      <div class="filter-group-header">
+        <span class="filter-group-icon">✨</span>
+        <h4 class="filter-group-title">Condition</h4>
+      </div>
+      <div class="filter-options">
+        <label class="filter-radio">
+          <input 
+            type="radio" 
+            name="condition" 
+            value="" 
+            <%= (!filters || !filters.condition)?'checked':'' %>
+            onchange="document.getElementById('filtersForm').submit()"
+          />
+          <span class="radio-custom"></span>
+          <span class="radio-label">All</span>
+        </label>
+        <label class="filter-radio">
+          <input 
+            type="radio" 
+            name="condition" 
+            value="new" 
+            <%= (filters && filters.condition === 'new')?'checked':'' %>
+            onchange="document.getElementById('filtersForm').submit()"
+          />
+          <span class="radio-custom"></span>
+          <span class="radio-label">New</span>
+        </label>
+        <label class="filter-radio">
+          <input 
+            type="radio" 
+            name="condition" 
+            value="used" 
+            <%= (filters && filters.condition === 'used')?'checked':'' %>
+            onchange="document.getElementById('filtersForm').submit()"
+          />
+          <span class="radio-custom"></span>
+          <span class="radio-label">Used</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Binding Type Filter -->
+    <div class="filter-group">
+      <div class="filter-group-header">
+        <span class="filter-group-icon">📖</span>
+        <h4 class="filter-group-title">Binding</h4>
+      </div>
+      <div class="filter-options">
+        <label class="filter-checkbox">
+          <input 
+            type="checkbox" 
+            name="hardcover" 
+            value="1" 
+            <%= (filters && filters.hardcover)?'checked':'' %>
+            onchange="document.getElementById('filtersForm').submit()"
+          />
+          <span class="checkbox-custom"></span>
+          <span class="checkbox-label">Hardcover</span>
+        </label>
+        <label class="filter-checkbox">
+          <input 
+            type="checkbox" 
+            name="paperback" 
+            value="1" 
+            <%= (filters && filters.paperback)?'checked':'' %>
+            onchange="document.getElementById('filtersForm').submit()"
+          />
+          <span class="checkbox-custom"></span>
+          <span class="checkbox-label">Paperback</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Rating Filter -->
+    <div class="filter-group">
+      <div class="filter-group-header">
+        <span class="filter-group-icon">⭐</span>
+        <h4 class="filter-group-title">Rating</h4>
+      </div>
+      <div class="filter-options">
+        <label class="filter-radio">
+          <input 
+            type="radio" 
+            name="rating" 
+            value="" 
+            <%= (!filters || !filters.rating)?'checked':'' %>
+            onchange="document.getElementById('filtersForm').submit()"
+          />
+          <span class="radio-custom"></span>
+          <span class="radio-label">All Ratings</span>
+        </label>
+        <% for(let i = 4; i >= 3; i--) { %>
+          <label class="filter-radio">
+            <input 
+              type="radio" 
+              name="rating" 
+              value="<%= i %>" 
+              <%= (filters && filters.rating == i)?'checked':'' %>
+              onchange="document.getElementById('filtersForm').submit()"
+            />
+            <span class="radio-custom"></span>
+            <span class="radio-label">
+              <span class="rating-stars">
+                <% for(let j = 0; j < i; j++) { %><span class="star-filled">★</span><% } %>
+              </span>
+              & Up
+            </span>
+          </label>
+        <% } %>
+      </div>
+    </div>
+
+    <!-- Apply Button -->
+    <button type="submit" class="filters-apply">
+      <span>Apply Filters</span>
+      <span>→</span>
+    </button>
+  </form>
+</aside>
+
+<style>
+/* Filters Sidebar Styles */
+.search-filters {
+  position: sticky;
+  top: 100px;
+  background: white;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 4px 20px rgba(13, 13, 15, 0.08);
+  max-height: calc(100vh - 120px);
+  overflow-y: auto;
+}
+
+.filters-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid rgba(13, 13, 15, 0.1);
+}
+
+.filters-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 24px;
+  font-weight: 700;
+  color: #0d0d0f;
+}
+
+.filters-reset {
+  background: none;
+  border: none;
+  color: #caa660;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: underline;
+  transition: color 0.3s ease;
+}
+
+.filters-reset:hover {
+  color: #b8954d;
+}
+
+.filters-form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.filter-group {
+  border-bottom: 1px solid rgba(13, 13, 15, 0.08);
+  padding-bottom: 20px;
+}
+
+.filter-group:last-of-type {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.filter-group-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.filter-group-icon {
+  font-size: 18px;
+}
+
+.filter-group-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #0d0d0f;
+}
+
+.filter-options {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Custom Checkbox */
+.filter-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  position: relative;
+}
+
+.filter-checkbox input[type="checkbox"] {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.checkbox-custom {
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(13, 13, 15, 0.2);
+  border-radius: 4px;
+  background: white;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.filter-checkbox input[type="checkbox"]:checked + .checkbox-custom {
+  background: #caa660;
+  border-color: #caa660;
+}
+
+.filter-checkbox input[type="checkbox"]:checked + .checkbox-custom::after {
+  content: '✓';
+  color: white;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.checkbox-label {
+  font-size: 14px;
+  color: #0d0d0f;
+  user-select: none;
+}
+
+/* Custom Radio */
+.filter-radio {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  position: relative;
+}
+
+.filter-radio input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.radio-custom {
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(13, 13, 15, 0.2);
+  border-radius: 50%;
+  background: white;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.filter-radio input[type="radio"]:checked + .radio-custom {
+  border-color: #caa660;
+}
+
+.filter-radio input[type="radio"]:checked + .radio-custom::after {
+  content: '';
+  width: 10px;
+  height: 10px;
+  background: #caa660;
+  border-radius: 50%;
+}
+
+.radio-label {
+  font-size: 14px;
+  color: #0d0d0f;
+  user-select: none;
+}
+
+/* Price Inputs */
+.price-inputs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.price-input {
+  flex: 1;
+  padding: 10px 12px;
+  border: 2px solid rgba(13, 13, 15, 0.15);
+  border-radius: 8px;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.price-input:focus {
+  outline: none;
+  border-color: #caa660;
+}
+
+.price-separator {
+  color: rgba(13, 13, 15, 0.4);
+  font-weight: 600;
+}
+
+.price-quick-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.price-tag {
+  padding: 6px 12px;
+  background: #f8f6f2;
+  border: 1px solid rgba(13, 13, 15, 0.1);
+  border-radius: 50px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #0d0d0f;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.price-tag:hover {
+  background: rgba(202, 166, 96, 0.1);
+  border-color: #caa660;
+  color: #caa660;
+}
+
+/* Rating Stars */
+.rating-stars {
+  display: inline-flex;
+  gap: 2px;
+}
+
+.star-filled {
+  color: #caa660;
+  font-size: 14px;
+}
+
+/* Apply Button */
+.filters-apply {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 14px 24px;
+  background: #caa660;
+  color: #0d0d0f;
+  border: none;
+  border-radius: 50px;
+  font-weight: 700;
+  font-size: 15px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(202, 166, 96, 0.3);
+  margin-top: 8px;
+}
+
+.filters-apply:hover {
+  background: #d4b76f;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 25px rgba(202, 166, 96, 0.4);
+}
+
+/* Mobile */
+@media (max-width: 767px) {
+  .search-filters {
+    position: static;
+    max-height: none;
+  }
+}
+</style>
+
+<script>
+function resetFilters() {
+  window.location.href = window.location.pathname;
+}
+
+function setPrice(min, max) {
+  document.querySelector('input[name="min"]').value = min;
+  document.querySelector('input[name="max"]').value = max;
+  document.getElementById('filtersForm').submit();
+}
+</script>

@@ -1,0 +1,664 @@
+<div class="auth-page">
+  <div class="auth-container">
+    <!-- Auth Card -->
+    <div class="auth-card">
+      <!-- Left Side - Branding -->
+      <div class="auth-branding">
+        <div class="branding-content">
+          <a href="/" class="brand-logo">
+            <svg class="logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M4 19.5C4 18.6716 4.67157 18 5.5 18H18.5C19.3284 18 20 18.6716 20 19.5V20.5C20 21.3284 19.3284 22 18.5 22H5.5C4.67157 22 4 21.3284 4 20.5V19.5Z"/>
+              <path d="M4 19.5C4 18.6716 4.67157 18 5.5 18H18.5C19.3284 18 20 18.6716 20 19.5V20.5C20 21.3284 19.3284 22 18.5 22H5.5C4.67157 22 4 21.3284 4 20.5V19.5Z"/>
+              <path d="M6 6L12 2L18 6V16H6V6Z"/>
+            </svg>
+            <span class="logo-text">Motivational Books</span>
+          </a>
+          <h2 class="branding-title">Welcome Back!</h2>
+          <p class="branding-description">
+            Sign in to access your wishlist, track orders, and discover motivational books that inspire success across Nepal.
+          </p>
+          <div class="branding-features">
+            <div class="feature-item">
+              <svg class="feature-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 11L12 14L22 4M21 12V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H16"/>
+              </svg>
+              <span class="feature-text">Track your orders</span>
+            </div>
+            <div class="feature-item">
+              <svg class="feature-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20.84 4.61C20.3292 4.099 19.7228 3.69364 19.0554 3.41708C18.3879 3.14052 17.6725 2.99817 16.95 2.99817C16.2275 2.99817 15.5121 3.14052 14.8446 3.41708C14.1772 3.69364 13.5708 4.099 13.06 4.61L12 5.67L10.94 4.61C9.9083 3.57831 8.50903 2.99871 7.05 2.99871C5.59096 2.99871 4.19169 3.57831 3.16 4.61C2.1283 5.64169 1.54871 7.04097 1.54871 8.5C1.54871 9.95903 2.1283 11.3583 3.16 12.39L4.22 13.45L12 21.23L19.78 13.45L20.84 12.39C21.351 11.8792 21.7564 11.2728 22.0329 10.6054C22.3095 9.93789 22.4518 9.22248 22.4518 8.5C22.4518 7.77752 22.3095 7.0621 22.0329 6.39464C21.7564 5.72718 21.351 5.12075 20.84 4.61Z"/>
+              </svg>
+              <span class="feature-text">Save to wishlist</span>
+            </div>
+            <div class="feature-item">
+              <svg class="feature-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M13 2L3 14H12L11 22L21 10H12L13 2Z"/>
+              </svg>
+              <span class="feature-text">Faster checkout</span>
+            </div>
+            <div class="feature-item">
+              <svg class="feature-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+              </svg>
+              <span class="feature-text">Exclusive offers</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Side - Login Form -->
+      <div class="auth-form-section">
+        <div class="form-header">
+          <h1 class="form-title">Sign In</h1>
+          <p class="form-subtitle">Enter your credentials to access your account</p>
+        </div>
+
+        <!-- Error Messages -->
+        <% if (typeof error !== 'undefined' && error) { %>
+          <div class="alert-error">
+            <svg class="alert-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 9V13M12 17H12.01M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z"/>
+            </svg>
+            <span class="alert-text"><%= error %></span>
+          </div>
+        <% } %>
+
+        <!-- Social Login -->
+        <div class="social-login">
+          <a href="/auth/google" class="social-btn google-btn">
+            <svg class="social-icon" viewBox="0 0 24 24" width="20" height="20">
+              <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+              <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+              <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+              <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+            </svg>
+            <span>Continue with Google</span>
+          </a>
+        </div>
+
+        <div class="divider">
+          <span class="divider-text">or sign in with email</span>
+        </div>
+
+        <!-- Login Form -->
+        <form action="/auth/login" method="POST" class="auth-form">
+          <!-- Email -->
+          <div class="form-group">
+            <label class="form-label" for="email">Email Address</label>
+            <div class="input-wrapper">
+              <svg class="input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M4 4H20C21.1 4 22 4.9 22 6V18C22 19.1 21.1 20 20 20H4C2.9 20 2 19.1 2 18V6C2 4.9 2.9 4 4 4Z"/>
+                <path d="L22 6L12 13L2 6"/>
+              </svg>
+              <input 
+                type="email" 
+                id="email" 
+                name="email" 
+                class="form-input" 
+                placeholder="your.email@example.com"
+                required
+                autocomplete="email"
+              />
+            </div>
+          </div>
+
+          <!-- Password -->
+          <div class="form-group">
+            <div class="label-with-link">
+              <label class="form-label" for="password">Password</label>
+              <a href="/auth/forgot-password" class="forgot-link">Forgot?</a>
+            </div>
+            <div class="input-wrapper">
+              <svg class="input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                <path d="M7 11V7C7 4.23858 9.23858 2 12 2C14.7614 2 17 4.23858 17 7V11"/>
+              </svg>
+              <input 
+                type="password" 
+                id="password" 
+                name="password" 
+                class="form-input" 
+                placeholder="Enter your password"
+                required
+                autocomplete="current-password"
+              />
+              <button type="button" class="toggle-password" onclick="togglePassword('password')">
+                <span class="eye-icon">👁️</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Remember Me -->
+          <div class="form-options">
+            <label class="checkbox-label">
+              <input type="checkbox" name="remember" class="checkbox-input" />
+              <span class="checkbox-custom"></span>
+              <span class="checkbox-text">Remember me for 30 days</span>
+            </label>
+          </div>
+
+          <!-- Submit Button -->
+          <button type="submit" class="submit-btn">
+            <span>Sign In</span>
+            <span class="btn-arrow">→</span>
+          </button>
+        </form>
+
+        <!-- Sign Up Link -->
+        <div class="auth-footer">
+          <p class="footer-text">
+            Don't have an account?
+            <a href="/auth/signup" class="footer-link">Create one now</a>
+          </p>
+        </div>
+
+        <!-- Back to Home -->
+        <div class="back-to-home">
+          <a href="/" class="back-link">
+            <span>←</span>
+            <span>Back to Home</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+/* Auth Page Styles - Mobile First */
+.auth-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f8f6f2 0%, #ffffff 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px 16px;
+}
+
+@media (min-width: 640px) {
+  .auth-page {
+    padding: 32px 20px;
+  }
+}
+
+@media (min-width: 768px) {
+  .auth-page {
+    padding: 40px 20px;
+  }
+}
+
+.auth-container {
+  width: 100%;
+  max-width: 1100px;
+}
+
+.auth-card {
+  display: grid;
+  grid-template-columns: 1fr;
+  background: white;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(13, 13, 15, 0.15);
+}
+
+@media (min-width: 640px) {
+  .auth-card {
+    border-radius: 20px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .auth-card {
+    grid-template-columns: 1fr 1.2fr;
+    min-height: 700px;
+    border-radius: 24px;
+  }
+}
+
+/* Left Side - Branding */
+.auth-branding {
+  background: linear-gradient(135deg, #0d0d0f 0%, #1a1a1d 100%);
+  padding: 60px 48px;
+  position: relative;
+  overflow: hidden;
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .auth-branding {
+    display: block;
+  }
+}
+
+.auth-branding::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23caa660' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v6h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+.branding-content {
+  position: relative;
+  z-index: 1;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.brand-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  margin-bottom: 48px;
+}
+
+.logo-icon {
+  width: 32px;
+  height: 32px;
+  color: #f8f6f2;
+  flex-shrink: 0;
+}
+
+.logo-text {
+  font-family: 'Playfair Display', serif;
+  font-size: 28px;
+  font-weight: 700;
+  color: #f8f6f2;
+}
+
+.branding-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 40px;
+  font-weight: 700;
+  color: #f8f6f2;
+  margin-bottom: 16px;
+  line-height: 1.2;
+}
+
+.branding-description {
+  font-size: 17px;
+  line-height: 1.7;
+  color: rgba(248, 246, 242, 0.8);
+  margin-bottom: 40px;
+}
+
+.branding-features {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.feature-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.feature-icon {
+  width: 18px;
+  height: 18px;
+  color: rgba(248, 246, 242, 0.7);
+  flex-shrink: 0;
+}
+
+.feature-text {
+  font-size: 15px;
+  color: rgba(248, 246, 242, 0.9);
+}
+
+/* Right Side - Form - Mobile First */
+.auth-form-section {
+  padding: 32px 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+@media (min-width: 640px) {
+  .auth-form-section {
+    padding: 40px 32px;
+  }
+}
+
+@media (min-width: 768px) {
+  .auth-form-section {
+    padding: 60px 48px;
+  }
+}
+
+.form-header {
+  margin-bottom: 32px;
+}
+
+.form-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(28px, 6vw, 36px);
+  font-weight: 600;
+  color: #0d0d0f;
+  margin-bottom: 8px;
+  letter-spacing: -0.01em;
+}
+
+.form-subtitle {
+  font-size: 16px;
+  color: rgba(13, 13, 15, 0.6);
+}
+
+/* Alert */
+.alert-error {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 18px;
+  background: rgba(231, 76, 60, 0.08);
+  border: 1px solid rgba(231, 76, 60, 0.2);
+  border-radius: 8px;
+  margin-bottom: 24px;
+}
+
+.alert-icon {
+  width: 20px;
+  height: 20px;
+  color: #e74c3c;
+  flex-shrink: 0;
+}
+
+.alert-text {
+  font-size: 14px;
+  color: #e74c3c;
+  font-weight: 600;
+}
+
+/* Social Login */
+.social-login {
+  margin-bottom: 24px;
+}
+
+.social-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+  padding: 14px 24px;
+  background: white;
+  border: 1px solid rgba(13, 13, 15, 0.12);
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 500;
+  color: #0d0d0f;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  min-height: 48px;
+}
+
+.social-btn:hover {
+  border-color: rgba(13, 13, 15, 0.25);
+  background: rgba(13, 13, 15, 0.02);
+}
+
+.social-icon {
+  flex-shrink: 0;
+}
+
+/* Divider */
+.divider {
+  position: relative;
+  text-align: center;
+  margin: 24px 0;
+}
+
+.divider::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: rgba(13, 13, 15, 0.1);
+}
+
+.divider-text {
+  position: relative;
+  display: inline-block;
+  padding: 0 16px;
+  background: white;
+  font-size: 13px;
+  color: rgba(13, 13, 15, 0.5);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Form */
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-group {}
+
+.form-label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: #0d0d0f;
+  margin-bottom: 8px;
+}
+
+.label-with-link {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.forgot-link {
+  font-size: 14px;
+  color: #0f766e;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.forgot-link:hover {
+  text-decoration: underline;
+}
+
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-icon {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 18px;
+  height: 18px;
+  color: rgba(13, 13, 15, 0.4);
+  pointer-events: none;
+}
+
+.form-input {
+  width: 100%;
+  padding: 14px 18px 14px 48px;
+  border: 1px solid rgba(13, 13, 15, 0.12);
+  border-radius: 8px;
+  font-size: 16px; /* Prevents iOS zoom */
+  color: #0d0d0f;
+  transition: all 0.2s ease;
+  background: white;
+  min-height: 48px;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: rgba(13, 13, 15, 0.25);
+  box-shadow: 0 0 0 3px rgba(13, 13, 15, 0.05);
+}
+
+.toggle-password {
+  position: absolute;
+  right: 16px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  font-size: 18px;
+  opacity: 0.5;
+  transition: opacity 0.3s ease;
+}
+
+.toggle-password:hover {
+  opacity: 1;
+}
+
+/* Checkbox */
+.form-options {
+  margin-top: 4px;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.checkbox-input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.checkbox-custom {
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(13, 13, 15, 0.2);
+  border-radius: 4px;
+  background: white;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.checkbox-input:checked + .checkbox-custom {
+  background: #0d0d0f;
+  border-color: #0d0d0f;
+}
+
+.checkbox-input:checked + .checkbox-custom::after {
+  content: '';
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+  margin-top: -2px;
+}
+
+.checkbox-text {
+  font-size: 14px;
+  color: rgba(13, 13, 15, 0.7);
+  user-select: none;
+}
+
+/* Submit Button */
+.submit-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 14px 28px;
+  background: #0d0d0f;
+  color: #f8f6f2;
+  border: none;
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(13, 13, 15, 0.15);
+  margin-top: 8px;
+  min-height: 48px;
+}
+
+.submit-btn:hover {
+  background: #1a1a1d;
+  box-shadow: 0 4px 12px rgba(13, 13, 15, 0.25);
+  transform: translateY(-1px);
+}
+
+.btn-arrow {
+  font-size: 20px;
+}
+
+/* Footer */
+.auth-footer {
+  margin-top: 24px;
+  text-align: center;
+}
+
+.footer-text {
+  font-size: 15px;
+  color: rgba(13, 13, 15, 0.7);
+}
+
+.footer-link {
+  color: #0f766e;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.footer-link:hover {
+  text-decoration: underline;
+}
+
+.back-to-home {
+  margin-top: 24px;
+  text-align: center;
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: rgba(13, 13, 15, 0.6);
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.back-link:hover {
+  color: #0f766e;
+  gap: 12px;
+}
+</style>
+
+<script>
+function togglePassword(inputId) {
+  const input = document.getElementById(inputId);
+  const button = event.currentTarget;
+  
+  if (input.type === 'password') {
+    input.type = 'text';
+    button.querySelector('.eye-icon').textContent = '👁️‍🗨️';
+  } else {
+    input.type = 'password';
+    button.querySelector('.eye-icon').textContent = '👁️';
+  }
+}
+</script>

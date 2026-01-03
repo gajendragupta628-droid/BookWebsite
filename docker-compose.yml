@@ -1,0 +1,26 @@
+version: '3.8'
+services:
+  mongo:
+    image: mongo:6
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+  app:
+    build: .
+    environment:
+      - NODE_ENV=development
+      - PORT=3000
+      - MONGODB_URI=mongodb://mongo:27017/premium_books
+      - SESSION_SECRET=change_me
+      - STORE_NAME=Motivational Books
+      - STORE_CURRENCY=USD
+      - ENABLE_COD=true
+      - BASE_URL=http://localhost:3000
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mongo
+volumes:
+  mongo_data:

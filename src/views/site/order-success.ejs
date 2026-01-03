@@ -1,0 +1,209 @@
+<div class="order-success-page">
+  <div class="order-success-container">
+    <div class="success-icon-wrapper">
+      <svg class="success-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+      </svg>
+    </div>
+    <h1 class="success-title">Thank you for your order!</h1>
+    <p class="success-subtitle">Your order number is <span class="order-number"><%= order.number %></span></p>
+    
+    <div class="order-summary-card">
+      <h2 class="summary-title">Order Summary</h2>
+      <div class="summary-items">
+        <% order.items.forEach(function(it){ %>
+          <div class="summary-item">
+            <span class="item-name"><%= it.titleSnapshot %> × <%= it.qty %></span>
+            <span class="item-price"><%= store.currency %>&nbsp;<%= (it.qty * it.priceAtPurchase).toFixed(2) %></span>
+          </div>
+        <% }) %>
+      </div>
+      <div class="summary-total">
+        <span>Total</span>
+        <span><%= store.currency %>&nbsp;<%= order.totals.grandTotal.toFixed(2) %></span>
+      </div>
+    </div>
+    
+    <div class="success-actions">
+      <a href="/" class="btn-continue">Continue Shopping</a>
+      <a href="/account?tab=orders" class="btn-orders">View My Orders</a>
+    </div>
+  </div>
+</div>
+
+<style>
+.order-success-page {
+  background: #fafafa;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+}
+
+.order-success-container {
+  max-width: 600px;
+  width: 100%;
+  text-align: center;
+}
+
+.success-icon-wrapper {
+  width: 100px;
+  height: 100px;
+  margin: 0 auto 32px;
+  background: #d1fae5;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.success-icon {
+  width: 50px;
+  height: 50px;
+  color: #059669;
+}
+
+.success-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(28px, 5vw, 36px);
+  font-weight: 600;
+  color: #0d0d0f;
+  margin-bottom: 12px;
+  letter-spacing: -0.01em;
+}
+
+.success-subtitle {
+  font-size: 16px;
+  color: rgba(13, 13, 15, 0.6);
+  margin-bottom: 32px;
+}
+
+.order-number {
+  font-family: 'Courier New', monospace;
+  background: rgba(13, 13, 15, 0.04);
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-weight: 600;
+  color: #0d0d0f;
+}
+
+.order-summary-card {
+  background: white;
+  border-radius: 12px;
+  padding: 32px;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  margin-bottom: 32px;
+  text-align: left;
+}
+
+.summary-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #0d0d0f;
+  margin-bottom: 20px;
+}
+
+.summary-items {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid rgba(13, 13, 15, 0.1);
+}
+
+.summary-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 15px;
+}
+
+.item-name {
+  color: rgba(13, 13, 15, 0.7);
+}
+
+.item-price {
+  color: #0d0d0f;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.summary-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 18px;
+  font-weight: 700;
+  color: #0d0d0f;
+}
+
+.summary-total span:last-child {
+  white-space: nowrap;
+}
+
+.success-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.btn-continue,
+.btn-orders {
+  padding: 14px 32px;
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 16px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  min-height: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-continue {
+  background: #0d0d0f;
+  color: white;
+  box-shadow: 0 2px 8px rgba(13, 13, 15, 0.15);
+}
+
+.btn-continue:hover {
+  background: #1a1a1d;
+  box-shadow: 0 4px 12px rgba(13, 13, 15, 0.25);
+  transform: translateY(-1px);
+}
+
+.btn-orders {
+  background: white;
+  color: #0d0d0f;
+  border: 1px solid rgba(13, 13, 15, 0.12);
+}
+
+.btn-orders:hover {
+  border-color: rgba(13, 13, 15, 0.25);
+  background: rgba(13, 13, 15, 0.02);
+}
+
+@media (max-width: 640px) {
+  .order-success-container {
+    padding: 0;
+  }
+  
+  .order-summary-card {
+    padding: 24px;
+  }
+  
+  .success-actions {
+    flex-direction: column;
+  }
+  
+  .btn-continue,
+  .btn-orders {
+    width: 100%;
+  }
+}
+</style>

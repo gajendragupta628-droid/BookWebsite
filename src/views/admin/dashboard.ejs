@@ -1,0 +1,176 @@
+<div class="admin-card-header" style="margin-top: 0;">
+  <h1 class="admin-card-title" style="font-size: 1.75rem; margin: 0;">Dashboard</h1>
+  <div class="admin-card-actions">
+    <a href="/admin/orders" class="admin-btn admin-btn-sm admin-btn-secondary">View All Orders</a>
+    <a href="/admin/books/new" class="admin-btn admin-btn-sm admin-btn-primary">Add Book</a>
+  </div>
+</div>
+
+<!-- Stats Grid -->
+<div class="admin-stats-grid">
+  <!-- Orders Today -->
+  <div class="admin-stat-card">
+    <div class="admin-stat-header">
+      <div class="admin-stat-label">Orders Today</div>
+      <div class="admin-stat-icon primary">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+        </svg>
+      </div>
+    </div>
+    <div class="admin-stat-value"><%= stats.ordersToday || 0 %></div>
+    <div class="admin-stat-change positive">
+      <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+      </svg>
+      <span>New orders</span>
+    </div>
+  </div>
+
+  <!-- Revenue Today -->
+  <div class="admin-stat-card">
+    <div class="admin-stat-header">
+      <div class="admin-stat-label">Revenue Today</div>
+      <div class="admin-stat-icon success">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+      </div>
+    </div>
+    <div class="admin-stat-value"><%= store.currency %> <%= (stats.revenueToday || 0).toFixed(2) %></div>
+    <div class="admin-stat-change positive">
+      <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+      </svg>
+      <span>Sales growth</span>
+    </div>
+  </div>
+
+  <!-- Low Stock Items -->
+  <div class="admin-stat-card">
+    <div class="admin-stat-header">
+      <div class="admin-stat-label">Low Stock Alert</div>
+      <div class="admin-stat-icon danger">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+        </svg>
+      </div>
+    </div>
+    <div class="admin-stat-value"><%= stats.lowStock || 0 %></div>
+    <div class="admin-stat-change negative">
+      <span>Items need restock</span>
+    </div>
+  </div>
+
+  <!-- Total Books -->
+  <div class="admin-stat-card">
+    <div class="admin-stat-header">
+      <div class="admin-stat-label">Total Books</div>
+      <div class="admin-stat-icon info">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+        </svg>
+      </div>
+    </div>
+    <div class="admin-stat-value"><%= stats.totalBooks || 0 %></div>
+    <div class="admin-stat-change">
+      <span>In catalog</span>
+    </div>
+  </div>
+</div>
+
+<!-- Recent Orders -->
+<div class="admin-card">
+  <div class="admin-card-header">
+    <div class="admin-card-title">Latest Orders</div>
+    <a href="/admin/orders" class="admin-btn admin-btn-sm admin-btn-secondary">View All</a>
+  </div>
+  
+  <% if (latest && latest.length > 0) { %>
+    <div class="admin-table-container">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Order #</th>
+            <th>Customer</th>
+            <th>Phone</th>
+            <th>Total</th>
+            <th>Status</th>
+            <th>Date</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+        <% latest.forEach(function(o){ %>
+          <tr>
+            <td><strong><%= o.number %></strong></td>
+            <td><%= o.customer?.name || 'N/A' %></td>
+            <td><%= o.customer?.phone || 'N/A' %></td>
+            <td><strong><%= store.currency %> <%= o.totals?.grandTotal?.toFixed(2) || '0.00' %></strong></td>
+            <td>
+              <% 
+                let statusClass = 'admin-badge-primary';
+                if (o.status === 'Delivered') statusClass = 'admin-badge-success';
+                else if (o.status === 'Cancelled' || o.status === 'Returned') statusClass = 'admin-badge-danger';
+                else if (o.status === 'Shipped') statusClass = 'admin-badge-info';
+              %>
+              <span class="admin-badge <%= statusClass %>"><%= o.status || 'New' %></span>
+            </td>
+            <td><%= new Date(o.createdAt).toLocaleDateString() %></td>
+            <td>
+              <div class="admin-table-actions">
+                <a href="/admin/orders/<%= o._id %>" class="admin-btn admin-btn-sm admin-btn-secondary">View</a>
+              </div>
+            </td>
+          </tr>
+        <% }) %>
+        </tbody>
+      </table>
+    </div>
+  <% } else { %>
+    <div class="admin-empty">
+      <svg class="admin-empty-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+      </svg>
+      <div class="admin-empty-title">No orders yet</div>
+      <p>Orders will appear here once customers start purchasing.</p>
+    </div>
+  <% } %>
+</div>
+
+<!-- Quick Actions -->
+<div class="admin-card">
+  <div class="admin-card-header">
+    <div class="admin-card-title">Quick Actions</div>
+  </div>
+  
+  <div class="admin-form-grid">
+    <a href="/admin/books/new" class="admin-btn admin-btn-secondary" style="text-align: center;">
+      <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+      </svg>
+      Add New Book
+    </a>
+    
+    <a href="/admin/books" class="admin-btn admin-btn-secondary" style="text-align: center;">
+      <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+      </svg>
+      Manage Books
+    </a>
+    
+    <a href="/admin/orders" class="admin-btn admin-btn-secondary" style="text-align: center;">
+      <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+      </svg>
+      View Orders
+    </a>
+    
+    <a href="/admin/orders/export.csv" class="admin-btn admin-btn-secondary" style="text-align: center;">
+      <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+      </svg>
+      Export Orders
+    </a>
+  </div>
+</div>

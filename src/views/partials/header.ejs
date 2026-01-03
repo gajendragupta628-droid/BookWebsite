@@ -1,0 +1,452 @@
+<header class="sticky top-0 z-30 backdrop-blur-md bg-white/95 border-b border-charcoal/10 shadow-sm">
+  <div class="mx-auto max-w-7xl">
+    <!-- Top Bar with Currency/Language (Desktop Only) -->
+    <div class="hidden md:flex items-center justify-between py-2 px-4 text-xs text-charcoal/60 border-b border-charcoal/5">
+      <!-- Welcome Message (if logged in) -->
+      <div>
+        <% if (currentUser) { %>
+          <span class="text-charcoal/80">Welcome back, <strong class="text-onyx"><%= currentUser.name.split(' ')[0] %></strong>!</span>
+        <% } %>
+      </div>
+      
+      <!-- Right Side Links -->
+      <div class="flex items-center gap-4">
+        <a href="/contact" class="hover:text-charcoal transition">Help & Support</a>
+        <span class="text-charcoal/30">|</span>
+        <a href="/about" class="hover:text-charcoal transition">About Us</a>
+        <span class="text-charcoal/30">|</span>
+        <div class="flex items-center gap-1">
+          <span>रू NPR</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Header -->
+    <div class="flex items-center justify-between py-3 px-4 md:py-4 md:px-6">
+      <!-- Logo - Mobile Optimized -->
+      <a href="/" class="flex items-center gap-2 md:gap-3 group flex-shrink-0">
+        <div class="w-7 h-7 sm:w-8 sm:h-8 md:w-10 md:h-10 flex items-center justify-center overflow-hidden rounded-lg md:rounded-xl shadow-sm group-hover:shadow-md transition">
+          <img 
+            src="/assets/logo.png" 
+            alt="Motivational Books Logo" 
+            class="w-full h-full object-contain p-0.5 sm:p-0.5 md:p-0"
+            onerror="this.onerror=null; this.style.display='none'; this.nextElementSibling.style.display='flex';"
+          />
+          <div class="w-full h-full bg-gradient-to-br from-onyx to-charcoal rounded-lg md:rounded-xl flex items-center justify-center text-white shadow-sm group-hover:shadow-md transition" style="display: none;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="md:w-6 md:h-6">
+              <path d="M4 19.5C4 18.6716 4.67157 18 5.5 18H18.5C19.3284 18 20 18.6716 20 19.5V20.5C20 21.3284 19.3284 22 18.5 22H5.5C4.67157 22 4 21.3284 4 20.5V19.5Z"/>
+              <path d="M6 6L12 2L18 6V16H6V6Z"/>
+            </svg>
+          </div>
+        </div>
+        <div class="hidden sm:block">
+          <div class="font-display text-xl md:text-2xl tracking-tight text-charcoal group-hover:text-onyx transition leading-tight">
+            Motivational Books
+          </div>
+          <div class="text-xs text-charcoal/50 hidden md:block mt-0.5">Inspire Nepal Through Books</div>
+        </div>
+      </a>
+
+      <!-- Search Bar (Desktop) -->
+      <form action="/search" method="GET" class="hidden md:block flex-1 max-w-2xl mx-8">
+        <div class="relative">
+          <input 
+            type="text" 
+            name="q" 
+            placeholder="Search books, authors, ISBN..." 
+            class="w-full pl-12 pr-4 py-2.5 rounded-full border border-charcoal/20 focus:border-gold focus:ring-2 focus:ring-gold/20 transition bg-charcoal/5 text-sm"
+          />
+          <svg class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-charcoal/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+          </svg>
+        </div>
+      </form>
+
+      <!-- Right Actions -->
+      <nav class="flex items-center gap-1 md:gap-3 flex-shrink-0">
+        <!-- Search Icon (Mobile) -->
+        <button 
+          id="mobile-search-toggle"
+          class="md:hidden p-2.5 -mr-1 hover:bg-charcoal/5 rounded-lg transition active:scale-95 touch-manipulation"
+          aria-label="Search"
+          type="button"
+        >
+          <svg class="w-5 h-5 text-charcoal" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+          </svg>
+        </button>
+
+        <!-- Wishlist -->
+        <a 
+          href="/wishlist" 
+          aria-label="Wishlist" 
+          class="relative p-2.5 hover:bg-charcoal/5 rounded-lg transition active:scale-95 touch-manipulation"
+        >
+          <svg class="w-5 h-5 md:w-6 md:h-6 text-charcoal" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+          </svg>
+          <% if (session && session.wishlist && session.wishlist.items && session.wishlist.items.length > 0) { %>
+            <span class="absolute top-1 right-1 w-4 h-4 md:w-5 md:h-5 bg-onyx text-ivory text-[10px] md:text-xs rounded-full flex items-center justify-center font-semibold">
+              <%= session.wishlist.items.length %>
+            </span>
+          <% } %>
+        </a>
+
+        <!-- Cart -->
+        <a 
+          href="/cart" 
+          aria-label="Cart" 
+          class="relative p-2.5 hover:bg-charcoal/5 rounded-lg transition active:scale-95 touch-manipulation"
+        >
+          <svg class="w-5 h-5 md:w-6 md:h-6 text-charcoal" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
+          </svg>
+          <% if (session && session.cart && session.cart.items && session.cart.items.length > 0) { %>
+            <span class="absolute top-1 right-1 w-4 h-4 md:w-5 md:h-5 bg-onyx text-ivory text-[10px] md:text-xs rounded-full flex items-center justify-center font-semibold">
+              <%= session.cart.items.length %>
+            </span>
+          <% } %>
+        </a>
+
+        <!-- Account/Profile - Dynamic based on auth status -->
+        <% if (currentUser) { %>
+          <!-- Logged In - Show Profile Dropdown (Desktop) -->
+          <div class="hidden md:block relative" x-data="{ open: false }">
+            <button 
+              @click="open = !open" 
+              class="flex items-center gap-2 px-3 py-2 rounded-full border border-charcoal/20 hover:border-charcoal hover:bg-charcoal/5 transition"
+            >
+              <% if (currentUser.avatar) { %>
+                <img src="<%= currentUser.avatar %>" alt="<%= currentUser.name %>" class="w-7 h-7 rounded-full object-cover" />
+              <% } else { %>
+                <div class="w-7 h-7 rounded-full bg-gradient-to-br from-onyx to-charcoal flex items-center justify-center text-white text-xs font-bold">
+                  <%= currentUser.name.charAt(0).toUpperCase() %>
+                </div>
+              <% } %>
+              <span class="text-sm font-medium"><%= currentUser.name.split(' ')[0] %></span>
+              <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+              </svg>
+            </button>
+            
+            <!-- Dropdown Menu -->
+            <div 
+              x-show="open" 
+              @click.away="open = false" 
+              x-transition
+              class="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-lg border border-charcoal/10 py-2 z-50"
+              style="display: none;"
+            >
+              <div class="px-4 py-3 border-b border-charcoal/10">
+                <div class="text-sm font-semibold text-charcoal"><%= currentUser.name %></div>
+                <div class="text-xs text-charcoal/60"><%= currentUser.email %></div>
+              </div>
+              <a href="/account" class="flex items-center gap-3 px-4 py-2.5 hover:bg-charcoal/5 transition">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                </svg>
+                <span class="text-sm">My Account</span>
+              </a>
+              <a href="/account?tab=orders" class="flex items-center gap-3 px-4 py-2.5 hover:bg-charcoal/5 transition">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+                </svg>
+                <span class="text-sm">My Orders</span>
+              </a>
+              <a href="/wishlist" class="flex items-center gap-3 px-4 py-2.5 hover:bg-charcoal/5 transition">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+                </svg>
+                <span class="text-sm">Wishlist</span>
+              </a>
+              <a href="/account?tab=settings" class="flex items-center gap-3 px-4 py-2.5 hover:bg-charcoal/5 transition">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                </svg>
+                <span class="text-sm">Settings</span>
+              </a>
+              <div class="border-t border-charcoal/10 my-2"></div>
+              <a href="/auth/logout" class="flex items-center gap-3 px-4 py-2.5 hover:bg-red-50 text-red-600 transition">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+                </svg>
+                <span class="text-sm">Logout</span>
+              </a>
+            </div>
+          </div>
+        <% } else { %>
+          <!-- Not Logged In - Show Login/Signup (Desktop) -->
+          <div class="hidden md:flex items-center gap-2">
+            <a href="/auth/login" class="px-4 py-2 rounded-full text-sm font-medium hover:bg-charcoal/5 transition">
+              Login
+            </a>
+            <a href="/auth/signup" class="px-4 py-2 rounded-full bg-onyx text-ivory text-sm font-semibold hover:bg-charcoal transition shadow-md">
+              Sign Up
+            </a>
+          </div>
+        <% } %>
+      </nav>
+    </div>
+
+    <!-- Mobile Search Overlay -->
+    <div id="mobile-search-overlay" class="md:hidden hidden fixed inset-0 z-40 bg-white" style="display: none;">
+      <div class="p-4 border-b border-charcoal/10">
+        <form action="/search" method="GET" class="relative">
+          <input 
+            type="text" 
+            name="q" 
+            placeholder="Search books, authors, ISBN..." 
+            id="mobile-search-input"
+            class="w-full pl-11 pr-12 py-3 rounded-xl border-2 border-charcoal/20 focus:border-gold focus:ring-2 focus:ring-gold/20 transition bg-charcoal/5 text-base"
+            autofocus
+          />
+          <svg class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-charcoal/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+          </svg>
+          <button 
+            type="button"
+            id="mobile-search-close"
+            class="absolute right-3 top-1/2 -translate-y-1/2 p-2 hover:bg-charcoal/5 rounded-lg transition"
+            aria-label="Close search"
+          >
+            <svg class="w-5 h-5 text-charcoal" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Navigation Menu (Desktop) -->
+    <div class="hidden md:flex items-center justify-center gap-2 pb-3 px-6 border-t border-charcoal/5 pt-3">
+      <a href="/search" class="px-4 py-2 rounded-lg hover:bg-charcoal/5 transition font-medium text-sm">
+        All Books
+      </a>
+      <a href="/search?sort=newest" class="px-4 py-2 rounded-lg hover:bg-charcoal/5 transition font-medium text-sm">
+        New Arrivals
+      </a>
+      <a href="/search?sort=popular" class="px-4 py-2 rounded-lg hover:bg-charcoal/5 transition font-medium text-sm">
+        Best Sellers
+      </a>
+      <a href="/search?language=nepali" class="px-4 py-2 rounded-lg hover:bg-charcoal/5 transition font-medium text-sm">
+        Nepali Books
+      </a>
+      <a href="/search?condition=used" class="px-4 py-2 rounded-lg hover:bg-charcoal/5 transition font-medium text-sm">
+        Used Books
+      </a>
+    </div>
+  </div>
+
+  <!-- Mobile Bottom Navigation -->
+  <div class="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-charcoal/10 z-30 safe-area-inset-bottom shadow-[0_-2px_10px_rgba(0,0,0,0.05)]">
+    <div class="mobile-bottom-nav-grid">
+      <a 
+        href="/" 
+        class="mobile-nav-item flex flex-col items-center justify-center gap-1 py-3 px-2 text-xs transition-colors relative"
+        data-path="/"
+      >
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+        </svg>
+        <span class="font-medium">Home</span>
+      </a>
+      <a 
+        href="/search" 
+        class="mobile-nav-item flex flex-col items-center justify-center gap-1 py-3 px-2 text-xs transition-colors relative"
+        data-path="/search"
+      >
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+        </svg>
+        <span class="font-medium">Search</span>
+      </a>
+      <a 
+        href="/cart" 
+        class="mobile-nav-item flex flex-col items-center justify-center gap-1 py-3 px-2 text-xs transition-colors relative"
+        data-path="/cart"
+      >
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
+        </svg>
+        <span class="font-medium">Cart</span>
+        <% if (session && session.cart && session.cart.items && session.cart.items.length > 0) { %>
+          <span class="absolute top-2 right-2 md:right-3 w-4 h-4 bg-onyx text-ivory text-[10px] rounded-full flex items-center justify-center font-bold">
+            <%= session.cart.items.length %>
+          </span>
+        <% } %>
+      </a>
+      <% if (currentUser) { %>
+        <a 
+          href="/account" 
+          class="mobile-nav-item flex flex-col items-center justify-center gap-1 py-3 px-2 text-xs transition-colors relative"
+          data-path="/account"
+        >
+          <% if (currentUser.avatar) { %>
+            <img src="<%= currentUser.avatar %>" alt="<%= currentUser.name %>" class="w-5 h-5 rounded-full object-cover" />
+          <% } else { %>
+            <div class="w-5 h-5 rounded-full bg-gradient-to-br from-onyx to-charcoal flex items-center justify-center text-white text-[10px] font-bold">
+              <%= currentUser.name.charAt(0).toUpperCase() %>
+            </div>
+          <% } %>
+          <span class="font-medium">Account</span>
+        </a>
+      <% } else { %>
+        <a 
+          href="/auth/login" 
+          class="mobile-nav-item flex flex-col items-center justify-center gap-1 py-3 px-2 text-xs transition-colors relative"
+          data-path="/auth/login"
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+          </svg>
+          <span class="font-medium">Login</span>
+        </a>
+      <% } %>
+    </div>
+  </div>
+</header>
+
+<style>
+/* Safe area for mobile devices with notches */
+.safe-area-inset-bottom {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* Touch manipulation for better mobile performance */
+.touch-manipulation {
+  touch-action: manipulation;
+}
+
+/* Mobile Bottom Navigation Grid */
+.mobile-bottom-nav-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  width: 100%;
+}
+
+/* Mobile Navigation Active State */
+.mobile-nav-item {
+  color: rgba(30, 41, 59, 0.6);
+  position: relative;
+}
+
+.mobile-nav-item.active,
+.mobile-nav-item:hover {
+  color: #020617;
+  background-color: rgba(30, 41, 59, 0.03);
+}
+
+.mobile-nav-item.active::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: #020617;
+  border-radius: 0 0 2px 2px;
+}
+
+/* Mobile Search Overlay Animation */
+#mobile-search-overlay {
+  animation: slideDown 0.2s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Better badge positioning */
+.mobile-nav-item .absolute {
+  min-width: 16px;
+  padding: 0 4px;
+  font-size: 10px;
+  line-height: 16px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .mobile-nav-item span {
+    font-size: 11px;
+  }
+}
+</style>
+
+<script>
+(function() {
+  'use strict';
+  
+  // Mobile Search Overlay Functionality
+  const searchToggle = document.getElementById('mobile-search-toggle');
+  const searchOverlay = document.getElementById('mobile-search-overlay');
+  const searchInput = document.getElementById('mobile-search-input');
+  const searchClose = document.getElementById('mobile-search-close');
+  
+  function openSearch() {
+    if (searchOverlay) {
+      searchOverlay.style.display = 'block';
+      document.body.style.overflow = 'hidden';
+      setTimeout(() => {
+        if (searchInput) searchInput.focus();
+      }, 100);
+    }
+  }
+  
+  function closeSearch() {
+    if (searchOverlay) {
+      searchOverlay.style.display = 'none';
+      document.body.style.overflow = '';
+    }
+  }
+  
+  if (searchToggle) {
+    searchToggle.addEventListener('click', openSearch);
+  }
+  
+  if (searchClose) {
+    searchClose.addEventListener('click', closeSearch);
+  }
+  
+  // Close search on overlay click (outside form)
+  if (searchOverlay) {
+    searchOverlay.addEventListener('click', function(e) {
+      if (e.target === searchOverlay) {
+        closeSearch();
+      }
+    });
+  }
+  
+  // Close search on ESC key
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && searchOverlay && searchOverlay.style.display === 'block') {
+      closeSearch();
+    }
+  });
+  
+  // Mobile Navigation Active State
+  const currentPath = window.location.pathname;
+  const navItems = document.querySelectorAll('.mobile-nav-item');
+  
+  navItems.forEach(item => {
+    const itemPath = item.getAttribute('data-path');
+    if (itemPath && (currentPath === itemPath || currentPath.startsWith(itemPath + '/'))) {
+      item.classList.add('active');
+    }
+  });
+  
+  // Handle home page specifically
+  if (currentPath === '/') {
+    const homeItem = document.querySelector('.mobile-nav-item[data-path="/"]');
+    if (homeItem) homeItem.classList.add('active');
+  }
+})();
+</script>

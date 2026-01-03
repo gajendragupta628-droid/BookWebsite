@@ -1,0 +1,772 @@
+<div class="category-page">
+  <!-- Category Hero Banner -->
+  <section class="category-hero">
+    <div class="category-hero-overlay"></div>
+    <div class="container-custom category-hero-content">
+      <!-- Breadcrumb -->
+      <nav class="breadcrumb-category">
+        <a href="/">Home</a>
+        <span>/</span>
+        <a href="/search">Books</a>
+        <span>/</span>
+        <span><%= category.name %></span>
+      </nav>
+
+      <div class="hero-inner">
+        <div class="hero-text">
+          <div class="category-icon-large">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+            </svg>
+          </div>
+          <h1 class="category-hero-title"><%= category.name %></h1>
+          <% if (category.description) { %>
+            <p class="category-hero-description"><%= category.description %></p>
+          <% } else { %>
+            <p class="category-hero-description">
+              Explore our curated collection of <%= category.name.toLowerCase() %> books, from bestsellers to hidden gems.
+            </p>
+          <% } %>
+          
+          <div class="category-stats">
+            <div class="stat-item">
+              <span class="stat-value"><%= total || items.length %></span>
+              <span class="stat-label">Books</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-value"><%=Math.floor(Math.random() * 50) + 10%></span>
+              <span class="stat-label">Authors</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-value">4.5★</span>
+              <span class="stat-label">Avg Rating</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Category Content -->
+  <div class="container-custom category-content">
+    <!-- Subcategories (if applicable) -->
+    <% 
+      const subcategories = [
+        // You can populate this from database in future
+      ];
+    %>
+    <% if (subcategories && subcategories.length > 0) { %>
+      <section class="subcategories-section">
+        <h2 class="section-title-small">Browse by Subcategory</h2>
+        <div class="subcategories-grid">
+          <% subcategories.forEach(sub => { %>
+            <a href="/category/<%= sub.slug %>" class="subcategory-card">
+              <svg class="subcategory-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+              </svg>
+              <span class="subcategory-name"><%= sub.name %></span>
+              <span class="subcategory-count"><%= sub.bookCount || 0 %> books</span>
+            </a>
+          <% }); %>
+        </div>
+      </section>
+    <% } %>
+
+    <!-- Filters & Sorting Bar -->
+    <div class="category-controls">
+      <div class="controls-left">
+        <h2 class="controls-title">
+          <span class="results-count"><%= total || items.length %></span> Books in <%= category.name %>
+        </h2>
+      </div>
+
+      <div class="controls-right">
+        <!-- View Toggle -->
+        <div class="view-toggle">
+          <button class="view-btn active" data-view="grid" onclick="toggleView('grid')">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect width="8" height="8" fill="currentColor"/>
+              <rect x="12" width="8" height="8" fill="currentColor"/>
+              <rect y="12" width="8" height="8" fill="currentColor"/>
+              <rect x="12" y="12" width="8" height="8" fill="currentColor"/>
+            </svg>
+          </button>
+          <button class="view-btn" data-view="list" onclick="toggleView('list')">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect width="20" height="4" fill="currentColor"/>
+              <rect y="8" width="20" height="4" fill="currentColor"/>
+              <rect y="16" width="20" height="4" fill="currentColor"/>
+            </svg>
+          </button>
+        </div>
+
+        <!-- Sort Dropdown -->
+        <select onchange="changeSorting(this.value)" class="category-sort-select">
+          <option value="featured" <%= (!sort || sort === 'featured') ? 'selected' : '' %>>Featured</option>
+          <option value="newest" <%= (sort === 'newest') ? 'selected' : '' %>>Newest</option>
+          <option value="popular" <%= (sort === 'popular') ? 'selected' : '' %>>Popular</option>
+          <option value="price-low" <%= (sort === 'price-low') ? 'selected' : '' %>>Price: Low to High</option>
+          <option value="price-high" <%= (sort === 'price-high') ? 'selected' : '' %>>Price: High to Low</option>
+          <option value="rating" <%= (sort === 'rating') ? 'selected' : '' %>>Top Rated</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Products Grid -->
+    <% if (!items || items.length === 0) { %>
+      <div class="category-empty">
+        <div class="empty-icon-large">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+          </svg>
+        </div>
+        <h3 class="empty-title-large">No books found in this category</h3>
+        <p class="empty-description-large">
+          We're constantly adding new books. Check back soon or explore other categories!
+        </p>
+        <a href="/search" class="btn-primary">Browse All Books</a>
+      </div>
+    <% } else { %>
+      <div class="category-products" id="productsContainer">
+        <%- include('../partials/product-grid', { items }) %>
+      </div>
+
+      <!-- Pagination -->
+      <% if (total > perPage) { %>
+        <div class="category-pagination">
+          <%- include('../partials/pagination', { total, page, perPage }) %>
+        </div>
+      <% } %>
+    <% } %>
+
+    <!-- Category Features -->
+    <section class="category-features">
+      <div class="feature-box">
+        <svg class="feature-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+        </svg>
+        <div class="feature-content">
+          <h3 class="feature-title">Fast Delivery</h3>
+          <p class="feature-text">Get your books delivered within 2-5 days across Nepal</p>
+        </div>
+      </div>
+      <div class="feature-box">
+        <svg class="feature-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+        <div class="feature-content">
+          <h3 class="feature-title">Authentic Books</h3>
+          <p class="feature-text">100% genuine books from authorized distributors</p>
+        </div>
+      </div>
+      <div class="feature-box">
+        <svg class="feature-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+        <div class="feature-content">
+          <h3 class="feature-title">Best Prices</h3>
+          <p class="feature-text">Competitive pricing with regular discounts</p>
+        </div>
+      </div>
+      <div class="feature-box">
+        <svg class="feature-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+        </svg>
+        <div class="feature-content">
+          <h3 class="feature-title">Easy Returns</h3>
+          <p class="feature-text">7-day hassle-free return policy</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Related Categories -->
+    <section class="related-categories">
+      <h2 class="section-title-small">You May Also Like</h2>
+      <div class="related-cats-grid">
+        <% 
+          const relatedCategories = [
+            { name: 'Fiction', slug: 'fiction', icon: 'book' },
+            { name: 'Self Help', slug: 'self-help', icon: 'star' },
+            { name: 'Business', slug: 'business', icon: 'briefcase' },
+            { name: 'Children', slug: 'children', icon: 'palette' }
+          ];
+        %>
+        <% relatedCategories.forEach(cat => { %>
+          <% if (cat.slug !== category.slug) { %>
+            <a href="/category/<%= cat.slug %>" class="related-cat-card">
+              <span class="related-cat-icon">
+                <% if (cat.icon === 'book') { %>
+                  <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                  </svg>
+                <% } else if (cat.icon === 'star') { %>
+                  <svg fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                  </svg>
+                <% } else if (cat.icon === 'briefcase') { %>
+                  <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                  </svg>
+                <% } else if (cat.icon === 'palette') { %>
+                  <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"/>
+                  </svg>
+                <% } %>
+              </span>
+              <span class="related-cat-name"><%= cat.name %></span>
+            </a>
+          <% } %>
+        <% }); %>
+      </div>
+    </section>
+  </div>
+</div>
+
+<style>
+/* Category Page Styles */
+.category-page {
+  background: #fafafa;
+  min-height: 100vh;
+}
+
+/* Category Hero */
+.category-hero {
+  position: relative;
+  background: linear-gradient(135deg, #0d0d0f 0%, #1a1a1d 100%);
+  padding: 80px 0;
+  overflow: hidden;
+}
+
+.category-hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23caa660' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v6h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+.category-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 80% 20%, rgba(202, 166, 96, 0.2) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.category-hero-content {
+  position: relative;
+  z-index: 1;
+}
+
+.breadcrumb-category {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: rgba(248, 246, 242, 0.6);
+  margin-bottom: 32px;
+}
+
+.breadcrumb-category a {
+  color: rgba(248, 246, 242, 0.6);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.breadcrumb-category a:hover {
+  color: #caa660;
+}
+
+.hero-inner {
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.category-icon-large {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 24px;
+  color: rgba(248, 246, 242, 0.9);
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.category-hero-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 56px;
+  font-weight: 700;
+  color: #f8f6f2;
+  margin-bottom: 20px;
+  line-height: 1.2;
+}
+
+.category-hero-description {
+  font-size: 18px;
+  line-height: 1.7;
+  color: rgba(248, 246, 242, 0.8);
+  max-width: 600px;
+  margin: 0 auto 40px;
+}
+
+.category-stats {
+  display: flex;
+  justify-content: center;
+  gap: 48px;
+  flex-wrap: wrap;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.stat-value {
+  font-family: 'Playfair Display', serif;
+  font-size: 36px;
+  font-weight: 700;
+  color: #caa660;
+  margin-bottom: 4px;
+}
+
+.stat-label {
+  font-size: 14px;
+  color: rgba(248, 246, 242, 0.7);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Category Content */
+.category-content {
+  padding: 60px 24px;
+}
+
+/* Subcategories */
+.subcategories-section {
+  margin-bottom: 48px;
+}
+
+.section-title-small {
+  font-family: 'Playfair Display', serif;
+  font-size: 28px;
+  font-weight: 700;
+  color: #0d0d0f;
+  margin-bottom: 24px;
+}
+
+.subcategories-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+@media (min-width: 640px) {
+  .subcategories-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.subcategory-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 20px;
+  background: white;
+  border: 2px solid transparent;
+  border-radius: 12px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  text-align: center;
+}
+
+.subcategory-card:hover {
+  border-color: #caa660;
+  transform: translateY(-4px);
+  box-shadow: 0 8px 30px rgba(202, 166, 96, 0.2);
+}
+
+.subcategory-icon {
+  width: 32px;
+  height: 32px;
+  color: rgba(13, 13, 15, 0.6);
+  flex-shrink: 0;
+}
+
+@media (min-width: 640px) {
+  .subcategory-icon {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+.subcategory-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: #0d0d0f;
+}
+
+.subcategory-count {
+  font-size: 13px;
+  color: rgba(13, 13, 15, 0.6);
+}
+
+/* Category Controls */
+.category-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+  padding: 24px 32px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+}
+
+.controls-left {
+  flex: 1;
+}
+
+.controls-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #0d0d0f;
+}
+
+.results-count {
+  color: #caa660;
+  font-weight: 700;
+}
+
+.controls-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.view-toggle {
+  display: none;
+  gap: 4px;
+  background: #f8f6f2;
+  border-radius: 8px;
+  padding: 4px;
+}
+
+@media (min-width: 768px) {
+  .view-toggle {
+    display: flex;
+  }
+}
+
+.view-btn {
+  padding: 8px 12px;
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  color: rgba(13, 13, 15, 0.6);
+  transition: all 0.3s ease;
+}
+
+.view-btn:hover,
+.view-btn.active {
+  background: white;
+  color: #caa660;
+  box-shadow: 0 2px 8px rgba(13, 13, 15, 0.1);
+}
+
+.category-sort-select {
+  padding: 12px 40px 12px 16px;
+  border: 1px solid rgba(13, 13, 15, 0.12);
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 500;
+  color: #0d0d0f;
+  background: white;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%230d0d0f' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  min-height: 48px;
+}
+
+.category-sort-select:focus {
+  outline: none;
+  border-color: rgba(13, 13, 15, 0.25);
+  box-shadow: 0 0 0 3px rgba(13, 13, 15, 0.05);
+}
+
+/* Products Grid */
+.category-products {
+  background: white;
+  border-radius: 12px;
+  padding: 32px;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  margin-bottom: 48px;
+}
+
+/* Empty State */
+.category-empty {
+  background: white;
+  border-radius: 12px;
+  padding: 80px 40px;
+  text-align: center;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  margin-bottom: 48px;
+}
+
+.empty-icon-large {
+  width: 100px;
+  height: 100px;
+  margin: 0 auto 24px;
+  opacity: 0.4;
+  color: rgba(13, 13, 15, 0.4);
+}
+
+.empty-title-large {
+  font-family: 'Playfair Display', serif;
+  font-size: 32px;
+  font-weight: 700;
+  color: #0d0d0f;
+  margin-bottom: 12px;
+}
+
+.empty-description-large {
+  font-size: 17px;
+  line-height: 1.6;
+  color: rgba(13, 13, 15, 0.6);
+  max-width: 500px;
+  margin: 0 auto 32px;
+}
+
+/* Pagination */
+.category-pagination {
+  display: flex;
+  justify-content: center;
+  padding: 32px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  margin-bottom: 48px;
+}
+
+/* Category Features */
+.category-features {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+  margin-bottom: 48px;
+}
+
+@media (min-width: 640px) {
+  .category-features {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .category-features {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.feature-box {
+  display: flex;
+  gap: 16px;
+  padding: 24px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(13, 13, 15, 0.08);
+  transition: all 0.3s ease;
+}
+
+.feature-box:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 30px rgba(13, 13, 15, 0.12);
+}
+
+.feature-icon {
+  width: 40px;
+  height: 40px;
+  background: rgba(13, 13, 15, 0.04);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(13, 13, 15, 0.6);
+  flex-shrink: 0;
+  padding: 8px;
+}
+
+.feature-content {
+  flex: 1;
+}
+
+.feature-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #0d0d0f;
+  margin-bottom: 4px;
+}
+
+.feature-text {
+  font-size: 14px;
+  line-height: 1.5;
+  color: rgba(13, 13, 15, 0.6);
+}
+
+/* Related Categories */
+.related-categories {
+  margin-bottom: 48px;
+}
+
+.related-cats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+@media (min-width: 640px) {
+  .related-cats-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.related-cat-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 32px 24px;
+  background: white;
+  border: 1px solid rgba(13, 13, 15, 0.08);
+  border-radius: 12px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  text-align: center;
+}
+
+.related-cat-card:hover {
+  border-color: rgba(13, 13, 15, 0.2);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+.related-cat-card:hover .related-cat-icon {
+  color: #0d0d0f;
+}
+
+.related-cat-icon {
+  width: 40px;
+  height: 40px;
+  color: rgba(13, 13, 15, 0.6);
+  flex-shrink: 0;
+}
+
+@media (min-width: 640px) {
+  .related-cat-icon {
+    width: 48px;
+    height: 48px;
+  }
+}
+
+.related-cat-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: #0d0d0f;
+}
+
+/* Mobile Responsive */
+@media (max-width: 767px) {
+  .category-hero {
+    padding: 48px 0;
+  }
+
+  .category-hero-title {
+    font-size: 36px;
+  }
+
+  .category-icon-large {
+    width: 60px;
+    height: 60px;
+  }
+
+  .category-stats {
+    gap: 24px;
+  }
+
+  .stat-value {
+    font-size: 28px;
+  }
+
+  .category-content {
+    padding: 40px 24px;
+  }
+
+  .category-controls {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 20px;
+  }
+
+  .controls-right {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .category-sort-select {
+    flex: 1;
+  }
+
+  .category-products {
+    padding: 20px;
+  }
+
+  .category-empty {
+    padding: 48px 24px;
+  }
+}
+</style>
+
+<script>
+function changeSorting(sortValue) {
+  const url = new URL(window.location.href);
+  url.searchParams.set('sort', sortValue);
+  url.searchParams.set('page', '1');
+  window.location.href = url.toString();
+}
+
+function toggleView(viewType) {
+  // Update button states
+  document.querySelectorAll('.view-btn').forEach(btn => {
+    btn.classList.remove('active');
+  });
+  event.target.closest('.view-btn').classList.add('active');
+
+  // Update grid layout
+  const container = document.getElementById('productsContainer');
+  if (viewType === 'list') {
+    // Add list view class
+    container.classList.add('list-view');
+  } else {
+    // Remove list view class for grid
+    container.classList.remove('list-view');
+  }
+}
+</script>

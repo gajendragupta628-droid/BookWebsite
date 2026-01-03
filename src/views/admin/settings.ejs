@@ -1,0 +1,262 @@
+<% layout('../layouts/admin') %>
+
+<div class="admin-card-header" style="margin-top: 0;">
+  <h1 class="admin-card-title" style="font-size: 1.75rem; margin: 0;">Settings</h1>
+</div>
+
+<% if (typeof flash !== 'undefined' && flash.success && flash.success.length > 0) { %>
+  <div class="admin-alert admin-alert-success" style="margin-bottom: 1.5rem;">
+    <%= flash.success[0] %>
+  </div>
+<% } %>
+
+<% if (typeof flash !== 'undefined' && flash.error && flash.error.length > 0) { %>
+  <div class="admin-alert admin-alert-danger" style="margin-bottom: 1.5rem;">
+    <%= flash.error[0] %>
+  </div>
+<% } %>
+
+<!-- Store Configuration -->
+<div class="admin-card" style="margin-bottom: 1.5rem;">
+  <div class="admin-card-header">
+    <h2 class="admin-card-title">Store Configuration</h2>
+  </div>
+  <div class="admin-card-body">
+    <div class="admin-settings-grid">
+      <div class="admin-setting-item">
+        <div class="admin-setting-label">Store Name</div>
+        <div class="admin-setting-value"><%= settings.storeName %></div>
+        <div class="admin-setting-note">Set via STORE_NAME environment variable</div>
+      </div>
+      <div class="admin-setting-item">
+        <div class="admin-setting-label">Currency</div>
+        <div class="admin-setting-value"><%= settings.storeCurrency %></div>
+        <div class="admin-setting-note">Set via STORE_CURRENCY environment variable</div>
+      </div>
+      <div class="admin-setting-item">
+        <div class="admin-setting-label">Base URL</div>
+        <div class="admin-setting-value"><%= settings.baseUrl %></div>
+        <div class="admin-setting-note">Set via BASE_URL environment variable</div>
+      </div>
+      <div class="admin-setting-item">
+        <div class="admin-setting-label">Cash on Delivery</div>
+        <div class="admin-setting-value">
+          <% if (settings.enableCOD) { %>
+            <span class="admin-badge admin-badge-success">Enabled</span>
+          <% } else { %>
+            <span class="admin-badge admin-badge-danger">Disabled</span>
+          <% } %>
+        </div>
+        <div class="admin-setting-note">Set via ENABLE_COD environment variable</div>
+      </div>
+    </div>
+    <div class="admin-setting-warning" style="margin-top: 1rem; padding: 1rem; background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.3); border-radius: 8px;">
+      <strong>Note:</strong> Store configuration is managed through environment variables. Contact your technical team to modify these settings.
+    </div>
+  </div>
+</div>
+
+<!-- Service Configuration Status -->
+<div class="admin-card" style="margin-bottom: 1.5rem;">
+  <div class="admin-card-header">
+    <h2 class="admin-card-title">Service Configuration</h2>
+  </div>
+  <div class="admin-card-body">
+    <div class="admin-settings-grid">
+      <div class="admin-setting-item">
+        <div class="admin-setting-label">Cloudinary</div>
+        <div class="admin-setting-value">
+          <% if (settings.cloudinaryConfigured) { %>
+            <span class="admin-badge admin-badge-success">Configured</span>
+          <% } else { %>
+            <span class="admin-badge admin-badge-danger">Not Configured</span>
+          <% } %>
+        </div>
+        <div class="admin-setting-note">Required for image uploads</div>
+      </div>
+      <div class="admin-setting-item">
+        <div class="admin-setting-label">Email (SMTP)</div>
+        <div class="admin-setting-value">
+          <% if (settings.smtpConfigured) { %>
+            <span class="admin-badge admin-badge-success">Configured</span>
+          <% } else { %>
+            <span class="admin-badge admin-badge-danger">Not Configured</span>
+          <% } %>
+        </div>
+        <div class="admin-setting-note">Required for order notifications</div>
+      </div>
+      <div class="admin-setting-item">
+        <div class="admin-setting-label">Google OAuth</div>
+        <div class="admin-setting-value">
+          <% if (settings.googleOAuthConfigured) { %>
+            <span class="admin-badge admin-badge-success">Configured</span>
+          <% } else { %>
+            <span class="admin-badge admin-badge-warning">Not Configured</span>
+          <% } %>
+        </div>
+        <div class="admin-setting-note">Optional - for Google sign-in</div>
+      </div>
+      <div class="admin-setting-item">
+        <div class="admin-setting-label">Pexels API</div>
+        <div class="admin-setting-value">
+          <% if (settings.pexelsConfigured) { %>
+            <span class="admin-badge admin-badge-success">Configured</span>
+          <% } else { %>
+            <span class="admin-badge admin-badge-warning">Not Configured</span>
+          <% } %>
+        </div>
+        <div class="admin-setting-note">Optional - for book cover images</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Change Password -->
+<div class="admin-card" style="margin-bottom: 1.5rem;">
+  <div class="admin-card-header">
+    <h2 class="admin-card-title">Change Password</h2>
+  </div>
+  <div class="admin-card-body">
+    <form action="/admin/settings/change-password" method="POST" class="admin-form">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      
+      <div class="admin-form-group">
+        <label class="admin-form-label">Current Password</label>
+        <input type="password" name="currentPassword" class="admin-form-input" required>
+      </div>
+      
+      <div class="admin-form-group">
+        <label class="admin-form-label">New Password</label>
+        <input type="password" name="newPassword" class="admin-form-input" required minlength="8">
+        <div class="admin-form-help">Must be at least 8 characters long</div>
+      </div>
+      
+      <div class="admin-form-group">
+        <label class="admin-form-label">Confirm New Password</label>
+        <input type="password" name="confirmPassword" class="admin-form-input" required minlength="8">
+      </div>
+      
+      <div class="admin-form-actions">
+        <button type="submit" class="admin-btn admin-btn-primary">Change Password</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Current Admin Info -->
+<% if (currentAdmin) { %>
+<div class="admin-card" style="margin-bottom: 1.5rem;">
+  <div class="admin-card-header">
+    <h2 class="admin-card-title">Your Account</h2>
+  </div>
+  <div class="admin-card-body">
+    <div class="admin-settings-grid">
+      <div class="admin-setting-item">
+        <div class="admin-setting-label">Email</div>
+        <div class="admin-setting-value"><%= currentAdmin.email %></div>
+      </div>
+      <div class="admin-setting-item">
+        <div class="admin-setting-label">Account Created</div>
+        <div class="admin-setting-value"><%= new Date(currentAdmin.createdAt).toLocaleDateString() %></div>
+      </div>
+    </div>
+  </div>
+</div>
+<% } %>
+
+<!-- Admin User Management -->
+<div class="admin-card">
+  <div class="admin-card-header">
+    <h2 class="admin-card-title">Admin User Management</h2>
+  </div>
+  <div class="admin-card-body">
+    <p style="color: var(--admin-text-muted); margin-bottom: 1rem;">
+      Manage admin users who can access the admin panel.
+    </p>
+    <a href="/admin/admins" class="admin-btn admin-btn-primary">Manage Admin Users</a>
+  </div>
+</div>
+
+<style>
+.admin-settings-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+
+.admin-setting-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.admin-setting-label {
+  font-weight: 600;
+  color: var(--admin-text);
+  font-size: 0.875rem;
+}
+
+.admin-setting-value {
+  font-size: 1rem;
+  color: var(--admin-text);
+}
+
+.admin-setting-note {
+  font-size: 0.75rem;
+  color: var(--admin-text-muted);
+  margin-top: 0.25rem;
+}
+
+.admin-setting-warning {
+  font-size: 0.875rem;
+  color: rgba(245, 158, 11, 0.9);
+}
+
+.admin-form {
+  max-width: 500px;
+}
+
+.admin-form-group {
+  margin-bottom: 1.5rem;
+}
+
+.admin-form-label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: var(--admin-text);
+  font-size: 0.875rem;
+}
+
+.admin-form-input {
+  width: 100%;
+  padding: 0.75rem;
+  background: var(--admin-bg-secondary);
+  border: 1px solid var(--admin-border);
+  border-radius: 6px;
+  color: var(--admin-text);
+  font-size: 0.875rem;
+}
+
+.admin-form-input:focus {
+  outline: none;
+  border-color: var(--admin-primary);
+  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.1);
+}
+
+.admin-form-help {
+  margin-top: 0.25rem;
+  font-size: 0.75rem;
+  color: var(--admin-text-muted);
+}
+
+.admin-form-actions {
+  margin-top: 1.5rem;
+}
+
+@media (max-width: 768px) {
+  .admin-settings-grid {
+    grid-template-columns: 1fr;
+  }
+}
+</style>

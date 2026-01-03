@@ -1,0 +1,15 @@
+<div style="font-family: Inter, Arial, sans-serif; color:#0d0d0f">
+  <h2>New order <%= order.number %></h2>
+  <p>Customer: <%= order.customer.name %> (<%= order.customer.phone %>)</p>
+  <table style="width:100%; border-collapse:collapse">
+    <thead><tr><th align="left">Item</th><th align="right">Total</th></tr></thead>
+    <tbody>
+      <% order.items.forEach(function(it){ %>
+        <tr><td><%= it.titleSnapshot %> × <%= it.qty %></td><td align="right"><%= order.totals.currency %> <%= (it.qty*it.priceAtPurchase).toFixed(2) %></td></tr>
+      <% }) %>
+    </tbody>
+  </table>
+  <p><strong>Total:</strong> <%= order.totals.currency %> <%= order.totals.grandTotal.toFixed(2) %></p>
+  <p>Open: <a href="<%= env.BASE_URL %>/admin/orders">Admin Orders</a></p>
+</div>
+

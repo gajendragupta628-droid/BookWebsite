@@ -1,0 +1,320 @@
+<div class="policies-page">
+  <div class="container-custom policies-wrapper">
+    <!-- Header -->
+    <div class="policies-header">
+      <h1 class="policies-title">Policies</h1>
+      <p class="policies-subtitle">Our terms, privacy, and policies</p>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <div class="policies-tabs">
+      <button class="tab-btn active" data-tab="shipping" onclick="switchTab('shipping')">Shipping</button>
+      <button class="tab-btn" data-tab="returns" onclick="switchTab('returns')">Returns</button>
+      <button class="tab-btn" data-tab="privacy" onclick="switchTab('privacy')">Privacy</button>
+      <button class="tab-btn" data-tab="terms" onclick="switchTab('terms')">Terms</button>
+    </div>
+
+    <!-- Content Sections -->
+    <div class="policies-content">
+      <!-- Shipping Policy -->
+      <section class="policy-section active" id="shipping">
+        <div class="policy-card">
+          <h2 class="policy-title">Shipping Policy</h2>
+          <div class="policy-body">
+            <h3>Delivery Timeframes</h3>
+            <p>We aim to deliver all orders within 2-5 business days for orders within Kathmandu Valley and 5-7 business days for other areas of Nepal. Delivery times may vary during peak seasons or due to unforeseen circumstances.</p>
+            
+            <h3>Shipping Costs</h3>
+            <p>Shipping costs are calculated based on your location and order weight. Free shipping is available for orders above a certain threshold. Exact shipping costs will be displayed at checkout.</p>
+            
+            <h3>Order Tracking</h3>
+            <p>Once your order is shipped, you'll receive a tracking number via email and SMS. You can use this number to track your order in real-time through our tracking system.</p>
+            
+            <h3>International Shipping</h3>
+            <p>Currently, we only ship within Nepal. International shipping options may be available in the future.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Returns Policy -->
+      <section class="policy-section" id="returns">
+        <div class="policy-card">
+          <h2 class="policy-title">Returns & Refunds Policy</h2>
+          <div class="policy-body">
+            <h3>Return Window</h3>
+            <p>You can return unopened books in their original condition within 7 days of delivery. Damaged or defective items can be returned within 14 days of delivery.</p>
+            
+            <h3>Return Process</h3>
+            <p>To initiate a return, please contact our customer service team with your order number. Once approved, we'll provide you with return instructions and a return authorization number.</p>
+            
+            <h3>Refund Processing</h3>
+            <p>Refunds will be processed within 5-7 business days after we receive and inspect the returned items. The refund will be issued to the original payment method used for the purchase.</p>
+            
+            <h3>Non-Returnable Items</h3>
+            <p>Personalized items, digital products, and items damaged due to customer misuse are not eligible for returns.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Privacy Policy -->
+      <section class="policy-section" id="privacy">
+        <div class="policy-card">
+          <h2 class="policy-title">Privacy Policy</h2>
+          <div class="policy-body">
+            <h3>Information We Collect</h3>
+            <p>We collect information that you provide directly to us, including your name, email address, phone number, shipping address, and payment information when you make a purchase or create an account.</p>
+            
+            <h3>How We Use Your Information</h3>
+            <p>We use the information we collect to process your orders, communicate with you about your orders, send you marketing communications (with your consent), and improve our services.</p>
+            
+            <h3>Data Security</h3>
+            <p>We implement appropriate security measures to protect your personal information. However, no method of transmission over the internet is 100% secure.</p>
+            
+            <h3>Your Rights</h3>
+            <p>You have the right to access, update, or delete your personal information at any time. You can also opt-out of marketing communications by updating your preferences in your account settings.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Terms of Service -->
+      <section class="policy-section" id="terms">
+        <div class="policy-card">
+          <h2 class="policy-title">Terms of Service</h2>
+          <div class="policy-body">
+            <h3>Acceptance of Terms</h3>
+            <p>By accessing and using this website, you accept and agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use our services.</p>
+            
+            <h3>Use of Website</h3>
+            <p>You agree to use our website only for lawful purposes and in a way that does not infringe the rights of others or restrict their use of the website.</p>
+            
+            <h3>Product Information</h3>
+            <p>We strive to provide accurate product information, but we do not warrant that product descriptions or other content on this site is accurate, complete, or error-free.</p>
+            
+            <h3>Limitation of Liability</h3>
+            <p>To the fullest extent permitted by law, we shall not be liable for any indirect, incidental, special, or consequential damages arising from your use of our services.</p>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Contact Section -->
+    <div class="policies-contact">
+      <p>Have questions about our policies?</p>
+      <a href="/contact" class="btn-contact">Contact Us</a>
+    </div>
+  </div>
+</div>
+
+<style>
+.policies-page {
+  background: #fafafa;
+  min-height: 100vh;
+  padding: 40px 0 80px;
+}
+
+.policies-wrapper {
+  padding: 0 24px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.policies-header {
+  text-align: center;
+  margin-bottom: 48px;
+}
+
+.policies-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(32px, 6vw, 48px);
+  font-weight: 600;
+  color: #0d0d0f;
+  margin-bottom: 12px;
+  letter-spacing: -0.01em;
+}
+
+.policies-subtitle {
+  font-size: 18px;
+  color: rgba(13, 13, 15, 0.6);
+}
+
+.policies-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.tab-btn {
+  padding: 12px 24px;
+  background: white;
+  border: 1px solid rgba(13, 13, 15, 0.12);
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 15px;
+  color: rgba(13, 13, 15, 0.6);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-height: 44px;
+}
+
+.tab-btn:hover {
+  border-color: rgba(13, 13, 15, 0.25);
+  background: rgba(13, 13, 15, 0.02);
+  color: #0d0d0f;
+}
+
+.tab-btn.active {
+  background: #0d0d0f;
+  color: white;
+  border-color: #0d0d0f;
+}
+
+.policies-content {
+  position: relative;
+}
+
+.policy-section {
+  display: none;
+}
+
+.policy-section.active {
+  display: block;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.policy-card {
+  background: white;
+  border-radius: 12px;
+  padding: 48px;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.policy-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 32px;
+  font-weight: 600;
+  color: #0d0d0f;
+  margin-bottom: 32px;
+  letter-spacing: -0.01em;
+}
+
+.policy-body {
+  font-size: 16px;
+  line-height: 1.8;
+  color: rgba(13, 13, 15, 0.8);
+}
+
+.policy-body h3 {
+  font-size: 20px;
+  font-weight: 600;
+  color: #0d0d0f;
+  margin-top: 32px;
+  margin-bottom: 12px;
+}
+
+.policy-body h3:first-child {
+  margin-top: 0;
+}
+
+.policy-body p {
+  margin-bottom: 20px;
+}
+
+.policy-body p:last-child {
+  margin-bottom: 0;
+}
+
+.policies-contact {
+  margin-top: 48px;
+  text-align: center;
+  padding: 32px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.policies-contact p {
+  font-size: 16px;
+  color: rgba(13, 13, 15, 0.7);
+  margin-bottom: 16px;
+}
+
+.btn-contact {
+  display: inline-block;
+  padding: 14px 32px;
+  background: #0d0d0f;
+  color: white;
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 16px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(13, 13, 15, 0.15);
+  min-height: 48px;
+}
+
+.btn-contact:hover {
+  background: #1a1a1d;
+  box-shadow: 0 4px 12px rgba(13, 13, 15, 0.25);
+  transform: translateY(-1px);
+}
+
+@media (max-width: 640px) {
+  .policies-wrapper {
+    padding: 0 16px;
+  }
+  
+  .policy-card {
+    padding: 32px 24px;
+  }
+  
+  .policy-title {
+    font-size: 28px;
+  }
+  
+  .policies-tabs {
+    gap: 6px;
+  }
+  
+  .tab-btn {
+    padding: 10px 16px;
+    font-size: 14px;
+    flex: 1;
+    min-width: 0;
+  }
+}
+</style>
+
+<script>
+function switchTab(tabName) {
+  // Hide all sections
+  document.querySelectorAll('.policy-section').forEach(section => {
+    section.classList.remove('active');
+  });
+  
+  // Remove active class from all buttons
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.classList.remove('active');
+  });
+  
+  // Show selected section
+  document.getElementById(tabName).classList.add('active');
+  
+  // Add active class to clicked button
+  document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+}
+</script>

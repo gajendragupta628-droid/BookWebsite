@@ -1,0 +1,2542 @@
+<!-- Debug: Check if pexelsImages is available -->
+<% if (typeof pexelsImages !== 'undefined') { %>
+  <!-- Pexels images loaded: <%= JSON.stringify(Object.keys(pexelsImages || {})) %> -->
+<% } else { %>
+  <!-- Warning: pexelsImages is undefined -->
+<% } %>
+
+<!-- Hero Section with Search -->
+<section class="hero-section">
+  <div class="container-custom hero-content">
+    <div class="hero-grid">
+      <div class="hero-text">
+        <h1 class="hero-title">
+          Inspire Nepal, One Book at a Time
+        </h1>
+        <p class="hero-description">
+          Nepal's leading platform for motivational and self-help books. Discover powerful stories and strategies that inspire change, fuel success, and unlock your full potential. Transform your life with books that matter.
+        </p>
+        
+        <!-- Enhanced Search Bar -->
+        <div class="search-wrapper">
+          <form action="/search" method="GET" class="search-form">
+            <input 
+              type="text" 
+              name="q" 
+              placeholder="Search for motivation, success, self-help..." 
+              class="search-input"
+            />
+            <button type="submit" class="search-button">
+              Search
+            </button>
+          </form>
+        </div>
+
+        <!-- Quick Action Buttons -->
+        <div class="hero-actions">
+          <a href="/search?category=motivational" class="btn-primary">
+            Explore Motivational Books
+          </a>
+          <a href="/search?category=self-help" class="btn-secondary">
+            Self-Help Collection
+          </a>
+          <a href="/search?sort=popular" class="btn-tertiary">
+            Bestsellers
+          </a>
+        </div>
+
+        <!-- Trust Badges -->
+        <div class="trust-badges">
+          <div class="badge-item">
+            <svg class="badge-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+            </svg>
+            <span class="badge-text">Curated Selection</span>
+          </div>
+          <div class="badge-item">
+            <svg class="badge-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M13 2L3 14H12L11 22L21 10H12L13 2Z"/>
+            </svg>
+            <span class="badge-text">Fast Delivery</span>
+          </div>
+          <div class="badge-item">
+            <svg class="badge-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M9 11L12 14L22 4M21 12V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H16"/>
+            </svg>
+            <span class="badge-text">Authentic Books</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Hero Image -->
+      <div class="hero-image-wrapper">
+        <% const hero = (banners && banners.length) ? banners[0] : null; %>
+        <div class="hero-image-container">
+          <% if (hero && hero.image) { %>
+            <!-- Custom banner image -->
+            <img src="<%= hero.image %>" alt="<%= hero.title || 'Featured Books' %>" class="hero-image" loading="eager" />
+          <% } else { %>
+            <!-- Hero image from Unsplash -->
+            <img 
+              src="https://images.unsplash.com/photo-1521587760476-6c12a4b040da?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8Ym9va3NoZWxmfGVufDB8fDB8fHww&fm=jpg&q=60&w=3000" 
+              alt="Transform Your Life with Motivational Books" 
+              class="hero-image" 
+              loading="eager"
+            />
+          <% } %>
+          <div class="hero-image-overlay"></div>
+          
+          <% if (hero) { %>
+            <div class="hero-banner-card">
+              <div class="banner-title"><%= hero.title %></div>
+              <% if (hero.subtitle) { %>
+                <div class="banner-subtitle"><%= hero.subtitle %></div>
+              <% } %>
+              <% if (hero.ctaText && hero.ctaHref) { %>
+                <a href="<%= hero.ctaHref %>" class="banner-cta">
+                  <%= hero.ctaText %>
+                </a>
+              <% } %>
+            </div>
+          <% } %>
+        </div>
+
+        <!-- Floating Stats -->
+        <div class="floating-stat">
+          <div class="stat-number"><%= (newArrivals || []).length %>+</div>
+          <div class="stat-label">New This Week</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Category Quick Links -->
+<section class="category-bar">
+  <div class="container-custom">
+    <div class="category-scroll">
+      <span class="category-label">Browse by Genre:</span>
+      <% (categories || []).slice(0, 8).forEach(cat => { %>
+        <a href="/category/<%= cat.slug %>" class="category-pill">
+          <%= cat.name %>
+        </a>
+      <% }); %>
+      <a href="/search" class="category-pill-all">
+        View All →
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Premium 3D Book Showcase Section -->
+<section class="premium-bookshelf-section">
+  <div class="container-custom">
+    <div class="bookshelf-header">
+      <p class="bookshelf-subtitle"><%= bookshelfSection && bookshelfSection.subtitle ? bookshelfSection.subtitle : 'Explore From Our Amazing Collection of' %></p>
+      <h2 class="bookshelf-title"><%= bookshelfSection && bookshelfSection.title ? bookshelfSection.title : 'Thousands of Nepali Books' %></h2>
+    </div>
+
+    <div class="bookshelf-container">
+      <button class="bookshelf-nav bookshelf-nav-left" aria-label="Previous books">
+        <svg class="bookshelf-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="M15 18l-6-6 6-6"/>
+        </svg>
+      </button>
+
+      <div class="bookshelf-stage">
+        <div class="bookshelf-track">
+          <% 
+            const bookshelfBooksToShow = bookshelfBooks && bookshelfBooks.length > 0 ? bookshelfBooks : [];
+            // Duplicate for seamless carousel
+            const bookshelfCovers = [...bookshelfBooksToShow, ...bookshelfBooksToShow];
+            
+            bookshelfCovers.forEach((book, idx) => { 
+              const imageUrl = book.images && book.images.length > 0 ? book.images[0].src : '';
+              const bookLink = `/book/${book.slug || book._id}`;
+          %>
+            <div class="bookshelf-book">
+              <a href="<%= bookLink %>">
+                <div class="book-cover-3d">
+                  <% if (imageUrl) { %>
+                    <img src="<%= imageUrl %>" alt="<%= book.title %>" loading="lazy" onerror="this.style.display='none';" />
+                  <% } else { %>
+                    <div class="book-cover-placeholder"><span><%= book.title %></span></div>
+                  <% } %>
+                </div>
+              </a>
+            </div>
+          <% 
+            });
+          %>
+        </div>
+        
+        <!-- Wooden Shelf -->
+        <div class="wooden-shelf"></div>
+      </div>
+
+      <button class="bookshelf-nav bookshelf-nav-right" aria-label="Next books">
+        <svg class="bookshelf-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="M9 18l6-6-6-6"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="bookshelf-cta">
+      <a href="/search" class="btn-explore-books">EXPLORE BOOKS</a>
+    </div>
+  </div>
+</section>
+
+<!-- Best Sellers Section -->
+<section class="section-padding" id="best-sellers">
+  <div class="container-custom">
+    <div class="section-header">
+      <div class="section-header-text">
+        <h2 class="section-title"><%= bestSellersSection && bestSellersSection.title ? bestSellersSection.title : 'Best Sellers' %></h2>
+        <p class="section-subtitle"><%= bestSellersSection && bestSellersSection.subtitle ? bestSellersSection.subtitle : 'Find your next great read among our best sellers' %></p>
+      </div>
+      <a href="/search?sort=popular" class="view-all-link">
+        Show All
+        <span>→</span>
+      </a>
+    </div>
+    <div class="books-grid">
+      <% (bestSellers && bestSellers.length > 0 ? bestSellers : featured || []).slice(0, 8).forEach(book => { %>
+        <%- include('../partials/product-card', { book, session, store }) %>
+      <% }); %>
+    </div>
+    <div class="view-all-mobile">
+      <a href="/search?sort=popular" class="btn-secondary">
+        Show All Best Sellers →
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Promotional Banner - Special Offer -->
+<section class="promo-section">
+  <div class="container-custom">
+    <div class="promo-grid">
+      <div class="promo-content">
+        <div class="promo-badge">Transform Your Mind</div>
+        <h2 class="promo-title">
+          <%= promoSection && promoSection.title ? promoSection.title : 'Start Your Success Journey Today' %>
+        </h2>
+        <p class="promo-description">
+          <%= promoSection && promoSection.subtitle ? promoSection.subtitle : 'Discover books by world-renowned motivational speakers and thought leaders. From mindset shifts to actionable strategies for success and happiness.' %>
+        </p>
+        <a href="/search?category=motivational" class="btn-primary-large">
+          Explore Motivational Books →
+        </a>
+      </div>
+      <div class="promo-images">
+        <% 
+          const promoBooksToShow = promoBooks && promoBooks.length > 0 ? promoBooks.slice(0, 6) : [];
+        %>
+        <% promoBooksToShow.forEach((book, i) => { %>
+          <div class="promo-image-item promo-image-<%= i + 1 %>">
+            <% const imageUrl = book.images && book.images.length > 0 ? book.images[0].src : ''; %>
+            <% if (imageUrl) { %>
+              <img 
+                src="<%= imageUrl %>" 
+                alt="<%= book.title %>" 
+                style="width: 100%; height: 100%; object-fit: cover;" 
+                loading="lazy"
+                onerror="this.style.display='none';" 
+              />
+            <% } else { %>
+              <div class="promo-image-placeholder"><%= book.title %></div>
+            <% } %>
+          </div>
+        <% }); %>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- New Arrivals Section -->
+<section class="section-padding" id="new-arrivals">
+  <div class="container-custom">
+    <div class="section-header">
+      <div class="section-header-text">
+        <h2 class="section-title"><%= newArrivalsSection && newArrivalsSection.title ? newArrivalsSection.title : 'New Arrivals' %></h2>
+        <p class="section-subtitle"><%= newArrivalsSection && newArrivalsSection.subtitle ? newArrivalsSection.subtitle : 'Explore fresh arrivals and find your next great read' %></p>
+      </div>
+      <a href="/search?sort=newest" class="view-all-link">
+        Show All
+        <span>→</span>
+      </a>
+    </div>
+    <div class="books-grid">
+      <% (newArrivals || []).slice(0, 12).forEach(book => { %>
+        <%- include('../partials/product-card', { book, session, store }) %>
+      <% }); %>
+    </div>
+    <div class="view-all-mobile">
+      <a href="/search?sort=newest" class="btn-secondary">
+        Show All New Arrivals →
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Featured Collection - Personal Growth -->
+<section class="nepali-section">
+  <div class="container-custom">
+    <div class="nepali-header">
+      <div class="nepali-badge">Featured Collection</div>
+      <h2 class="nepali-title">
+        Master Your Mind, Master Your Life<br />
+        <span class="nepali-highlight"><%= featuredSection && featuredSection.title ? featuredSection.title : 'Top Personal Development Books' %></span>
+      </h2>
+      <p class="nepali-description">
+        <%= featuredSection && featuredSection.subtitle ? featuredSection.subtitle : 'Handpicked collection of transformative books on mindset, productivity, leadership, and achieving your biggest goals' %>
+      </p>
+    </div>
+
+    <div class="nepali-books-grid">
+      <% 
+        const featuredBooksToShow = featured && featured.length > 0 ? featured.slice(0, 6) : [];
+      %>
+      <% featuredBooksToShow.forEach((book, idx) => { %>
+        <a href="/book/<%= book.slug || book._id %>" class="nepali-book-card">
+          <div class="nepali-book-placeholder">
+            <% const imageUrl = book.images && book.images.length > 0 ? book.images[0].src : ''; %>
+            <% if (imageUrl) { %>
+              <img 
+                src="<%= imageUrl %>" 
+                alt="<%= book.title %>" 
+                style="width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0;" 
+                loading="lazy"
+                onerror="this.style.display='none';" 
+              />
+            <% } %>
+            <div class="nepali-book-title" style="position: relative; z-index: 1;"><%= book.title %></div>
+          </div>
+        </a>
+      <% }); %>
+    </div>
+
+    <div class="nepali-cta">
+      <a href="/search?category=personal-development" class="btn-gold-large">
+        Explore Personal Development →
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Personalized Recommendations Section -->
+<section class="recommendations-section">
+  <div class="geometric-background"></div>
+  <div class="container-custom">
+    <div class="recommendations-grid">
+      <div class="recommendations-content">
+        <h2 class="recommendations-title"><%= recommendationsSection && recommendationsSection.title ? recommendationsSection.title : 'Our picks for you' %></h2>
+        <p class="recommendations-description">
+          <%= recommendationsSection && recommendationsSection.subtitle ? recommendationsSection.subtitle : 'We will curate special book recommendations for you based on your genre preferences.' %>
+        </p>
+        <% if (session && session.user) { %>
+          <a href="/account" class="btn-recommendations">VIEW YOUR RECOMMENDATIONS</a>
+        <% } else { %>
+          <p class="recommendations-prompt">Login or create account to get started.</p>
+          <a href="/login" class="btn-recommendations">LOGIN | REGISTER</a>
+        <% } %>
+      </div>
+      
+      <div class="recommendations-books-3d">
+        <div class="books-grid-3d">
+          <% 
+            const recommendationsBooksToShow = recommendationsBooks && recommendationsBooks.length > 0 ? recommendationsBooks.slice(0, 12) : [];
+            // Duplicate to fill grid if needed
+            const recommendationCovers = [...recommendationsBooksToShow, ...recommendationsBooksToShow].slice(0, 12);
+            
+            recommendationCovers.forEach((book, idx) => { 
+              const imageUrl = book.images && book.images.length > 0 ? book.images[0].src : '';
+              const bookLink = `/book/${book.slug || book._id}`;
+          %>
+            <div class="book-3d-item" style="--delay: <%= idx * 0.05 %>s;">
+              <a href="<%= bookLink %>">
+                <% if (imageUrl) { %>
+                  <img src="<%= imageUrl %>" alt="<%= book.title %>" loading="lazy" onerror="this.style.display='none';" />
+                <% } else { %>
+                  <div class="book-3d-placeholder"><span><%= book.title %></span></div>
+                <% } %>
+              </a>
+            </div>
+          <% 
+            });
+          %>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Bestselling Authors -->
+<section class="section-padding authors-section">
+  <div class="container-custom">
+    <div class="section-header-center">
+      <h2 class="section-title">Inspiring Authors & Thought Leaders</h2>
+      <p class="section-subtitle">Learn from the world's most influential voices in personal development, success, and motivation</p>
+    </div>
+
+    <div class="authors-grid">
+      <% 
+        // Authors with real images
+        const displayAuthors = topAuthors && topAuthors.length > 0 ? topAuthors : [
+          { 
+            name: 'James Clear', 
+            slug: 'james-clear',
+            image: 'https://d3d00swyhr67nd.cloudfront.net/w1200h1200/collection/NPG/NPG/NPG_NPG_x126501-001.jpg'
+          },
+          { 
+            name: 'Fyodor Dostoevsky', 
+            slug: 'fyodor-dostoevsky',
+            image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Dostoevsky_1872.jpg/962px-Dostoevsky_1872.jpg?20090305235810'
+          },
+          { 
+            name: 'Robert Greene', 
+            slug: 'robert-greene',
+            image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Robert_Greene_B%26W.jpg/250px-Robert_Greene_B%26W.jpg'
+          },
+          { 
+            name: 'Stephen King', 
+            slug: 'stephen-king',
+            image: 'https://i.guim.co.uk/img/media/ec9e960778df01881392d2625fec039dad3c4671/0_219_6720_4032/master/6720.jpg?width=465&dpr=1&s=none&crop=none'
+          },
+          { 
+            name: 'Maya Angelou', 
+            slug: 'maya-angelou',
+            image: 'https://www.freshair.com/sites/default/files/styles/square_800/public/2021-03/Maya%20Angelou%20LARGE.jpg?itok=svWVsHBl'
+          },
+          { 
+            name: 'Mark Twain', 
+            slug: 'mark-twain',
+            image: 'https://dl6pgk4f88hky.cloudfront.net/2021/06/h_01745065-scaled.jpg'
+          },
+          { 
+            name: 'J.D. Salinger', 
+            slug: 'jd-salinger',
+            image: 'https://capitalizemytitle.com/wp-content/uploads/2021/09/J.D.-Salinger.jpg'
+          },
+          { 
+            name: 'Dorothy Parker', 
+            slug: 'dorothy-parker',
+            image: 'https://s26162.pcdn.co/wp-content/uploads/2015/08/dorothy-parker.jpg'
+          },
+          { 
+            name: 'Avni Doshi', 
+            slug: 'avni-doshi',
+            image: 'https://www.usatoday.com/gcdn/presto/2022/04/29/USAT/2517f123-2f22-4e39-a7bb-4472e150b837-avni_2_c_sharon_haridas.jpg?width=471&height=610&fit=crop&format=pjpg&auto=webp'
+          }
+        ];
+      %>
+      <% displayAuthors.slice(0, 9).forEach((author, idx) => { %>
+        <a href="/author/<%= author.slug %>" class="author-card">
+          <div class="author-avatar">
+            <% if (author.image) { %>
+              <img src="<%= author.image %>" alt="<%= author.name %>" class="author-photo" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+              <span class="author-initial" style="display: none;"><%= author.name.charAt(0) %></span>
+            <% } else { %>
+              <span class="author-initial"><%= author.name.charAt(0) %></span>
+            <% } %>
+          </div>
+          <div class="author-name"><%= author.name %></div>
+          <% if (author.bookCount) { %>
+            <div class="author-books"><%= author.bookCount %> books</div>
+          <% } %>
+        </a>
+      <% }); %>
+    </div>
+  </div>
+</section>
+
+<!-- Features / USP Section -->
+<section class="features-section">
+  <div class="container-custom">
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">🎯</div>
+        <h3 class="feature-title">Handpicked for Growth</h3>
+        <p class="feature-description">
+          Every book selected to inspire positive change and personal transformation
+        </p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">⚡</div>
+        <h3 class="feature-title">Actionable Wisdom</h3>
+        <p class="feature-description">
+          Real strategies and practical advice you can apply immediately
+        </p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🌟</div>
+        <h3 class="feature-title">Life-Changing Impact</h3>
+        <p class="feature-description">
+          Transform your mindset, habits, and ultimately your entire life
+        </p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">💪</div>
+        <h3 class="feature-title">Build Success Habits</h3>
+        <p class="feature-description">
+          Develop the routines and mindset of highly successful people
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Newsletter Section -->
+<section class="newsletter-section">
+  <div class="newsletter-container">
+    <div class="newsletter-badge">Join Our Community</div>
+    <h2 class="newsletter-title">Get Weekly Motivation & Book Insights</h2>
+    <p class="newsletter-description">
+      Receive inspiring quotes, success tips, new book releases, and exclusive motivational content to fuel your personal growth journey!
+    </p>
+    
+    <form action="/newsletter/subscribe" method="POST" class="newsletter-form">
+      <input 
+        type="email" 
+        name="email" 
+        placeholder="Enter your email address" 
+        required
+        class="newsletter-input"
+      />
+      <button type="submit" class="newsletter-button">
+        Subscribe
+      </button>
+    </form>
+
+    <div class="newsletter-benefits">
+      <div class="benefit-item">
+        <span>✓</span>
+        <span>Daily Motivation</span>
+      </div>
+      <div class="benefit-item">
+        <span>✓</span>
+        <span>Success Tips</span>
+      </div>
+      <div class="benefit-item">
+        <span>✓</span>
+        <span>Exclusive Content</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Social Proof / Community Section -->
+<section class="section-padding stats-section">
+  <div class="container-custom">
+    <div class="section-header-center">
+      <h2 class="section-title">Join a Community of Go-Getters</h2>
+      <p class="section-subtitle stats-subtitle">
+        Connect with thousands of ambitious individuals committed to personal growth, success, and living their best lives through transformative books!
+      </p>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-emoji">🚀</div>
+        <div class="stat-value">10,000+</div>
+        <div class="stat-label-text">Lives Transformed</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-emoji">⭐</div>
+        <div class="stat-value">5,000+</div>
+        <div class="stat-label-text">Success Stories</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-emoji">📚</div>
+        <div class="stat-value">2,000+</div>
+        <div class="stat-label-text">Motivational Titles</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+/* Custom CSS for Ultra-Premium Landing Page */
+
+/* Container - Mobile First */
+.container-custom {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+@media (min-width: 640px) {
+  .container-custom {
+    padding: 0 24px;
+  }
+}
+
+/* Hero Section - Mobile First */
+.hero-section {
+  background: linear-gradient(135deg, #f8f6f2 0%, #ffffff 50%, #f8f6f2 100%);
+  padding: 32px 0;
+  position: relative;
+  overflow: hidden;
+}
+
+@media (min-width: 640px) {
+  .hero-section {
+    padding: 48px 0;
+  }
+}
+
+@media (min-width: 768px) {
+  .hero-section {
+    padding: 80px 0;
+  }
+}
+
+.hero-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at 20% 50%, rgba(202, 166, 96, 0.1) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 1;
+}
+
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 48px;
+  align-items: stretch;
+}
+
+@media (min-width: 768px) {
+  .hero-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.hero-text {
+  text-align: center;
+}
+
+@media (min-width: 768px) {
+  .hero-text {
+    text-align: left;
+  }
+}
+
+.hero-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(32px, 8vw, 56px);
+  font-weight: 600;
+  line-height: 1.2;
+  color: #0d0d0f;
+  margin-bottom: 20px;
+  letter-spacing: -0.01em;
+}
+
+@media (min-width: 640px) {
+  .hero-title {
+    font-size: clamp(36px, 6vw, 56px);
+    margin-bottom: 24px;
+  }
+}
+
+@media (min-width: 768px) {
+  .hero-title {
+    font-size: 64px;
+  }
+}
+
+.hero-description {
+  font-size: 15px;
+  line-height: 1.6;
+  color: rgba(13, 13, 15, 0.7);
+  margin-bottom: 24px;
+}
+
+@media (min-width: 640px) {
+  .hero-description {
+    font-size: 17px;
+    line-height: 1.7;
+    margin-bottom: 32px;
+  }
+}
+
+@media (min-width: 768px) {
+  .hero-description {
+    font-size: 20px;
+  }
+}
+
+/* Search */
+.search-wrapper {
+  max-width: 600px;
+  margin: 0 auto 32px;
+}
+
+@media (min-width: 768px) {
+  .search-wrapper {
+    margin: 0 0 32px;
+  }
+}
+
+.search-form {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-input {
+  width: 100%;
+  padding: 14px 120px 14px 48px;
+  font-size: 16px; /* Prevents iOS zoom */
+  border: 1px solid rgba(13, 13, 15, 0.12);
+  border-radius: 8px;
+  background: white;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(13, 13, 15, 0.06);
+  min-height: 48px;
+}
+
+.search-input::placeholder {
+  color: rgba(13, 13, 15, 0.4);
+}
+
+@media (min-width: 640px) {
+  .search-input {
+    padding: 16px 160px 16px 24px;
+  }
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: rgba(13, 13, 15, 0.25);
+  box-shadow: 0 4px 12px rgba(13, 13, 15, 0.12);
+}
+
+.search-form::before {
+  content: '';
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%23999' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  pointer-events: none;
+}
+
+.search-button {
+  position: absolute;
+  right: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 10px 24px;
+  background: #0d0d0f;
+  color: #f8f6f2;
+  border: none;
+  border-radius: 6px;
+  font-weight: 500;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-height: 40px;
+  white-space: nowrap;
+}
+
+@media (min-width: 640px) {
+  .search-button {
+    right: 6px;
+    padding: 12px 32px;
+    font-size: 15px;
+    min-height: 44px;
+  }
+}
+
+.search-button:hover {
+  background: #1a1a1d;
+}
+
+/* Hero Actions */
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+  margin-bottom: 32px;
+}
+
+@media (min-width: 768px) {
+  .hero-actions {
+    justify-content: flex-start;
+  }
+}
+
+.btn-primary {
+  padding: 14px 28px;
+  background: #0d0d0f;
+  color: #f8f6f2;
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 15px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(13, 13, 15, 0.15);
+  min-height: 48px;
+  letter-spacing: 0.01em;
+}
+
+@media (min-width: 640px) {
+  .btn-primary {
+    padding: 14px 32px;
+  }
+}
+
+.btn-primary:hover {
+  background: #1a1a1d;
+  box-shadow: 0 4px 12px rgba(13, 13, 15, 0.25);
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  padding: 14px 28px;
+  background: white;
+  color: #0d0d0f;
+  border: 1px solid rgba(13, 13, 15, 0.12);
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 15px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  letter-spacing: 0.01em;
+}
+
+@media (min-width: 640px) {
+  .btn-secondary {
+    padding: 14px 32px;
+  }
+}
+
+.btn-secondary:hover {
+  border-color: rgba(13, 13, 15, 0.25);
+  background: rgba(13, 13, 15, 0.02);
+}
+
+.btn-tertiary {
+  padding: 14px 28px;
+  background: rgba(13, 13, 15, 0.04);
+  color: #0d0d0f;
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 15px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  border: 1px solid transparent;
+}
+
+.btn-tertiary:hover {
+  background: rgba(13, 13, 15, 0.08);
+  border-color: rgba(13, 13, 15, 0.1);
+}
+
+/* Trust Badges */
+.trust-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  justify-content: center;
+  font-size: 14px;
+  color: rgba(13, 13, 15, 0.6);
+}
+
+@media (min-width: 768px) {
+  .trust-badges {
+    justify-content: flex-start;
+  }
+}
+
+.badge-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.badge-icon {
+  width: 18px;
+  height: 18px;
+  color: rgba(13, 13, 15, 0.5);
+  flex-shrink: 0;
+}
+
+.badge-text {
+  font-weight: 500;
+}
+
+/* Hero Image */
+.hero-image-wrapper {
+  position: relative;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+  .hero-image-container {
+    position: relative;
+    width: 100%;
+    flex: 1;
+    min-height: 450px;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(13, 13, 15, 0.12);
+  }
+  
+  @media (min-width: 768px) {
+    .hero-image-container {
+      min-height: 550px;
+    }
+  }
+  
+  @media (min-width: 1024px) {
+    .hero-image-container {
+      min-height: 600px;
+    }
+  }
+
+.hero-image-container picture {
+  display: block;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  inset: 0;
+}
+
+.hero-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+
+.hero-image-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(13, 13, 15, 0.6) 0%, transparent 50%);
+}
+
+.hero-banner-card {
+  position: absolute;
+  bottom: 24px;
+  left: 24px;
+  right: 24px;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(12px);
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(13, 13, 15, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.banner-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 22px;
+  font-weight: 600;
+  color: #0d0d0f;
+  margin-bottom: 8px;
+}
+
+.banner-subtitle {
+  color: rgba(13, 13, 15, 0.7);
+  margin-bottom: 16px;
+}
+
+.banner-cta {
+  display: inline-block;
+  padding: 10px 20px;
+  background: #0d0d0f;
+  color: #f8f6f2;
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 14px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(13, 13, 15, 0.15);
+}
+
+.banner-cta:hover {
+  background: #1a1a1d;
+  box-shadow: 0 4px 12px rgba(13, 13, 15, 0.25);
+}
+
+.floating-stat {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .floating-stat {
+    display: block;
+    position: absolute;
+    top: -16px;
+    right: -16px;
+    background: white;
+    padding: 16px 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(13, 13, 15, 0.12);
+    text-align: center;
+    border: 1px solid rgba(13, 13, 15, 0.08);
+  }
+}
+
+.stat-number {
+  font-family: 'Playfair Display', serif;
+  font-size: 28px;
+  font-weight: 600;
+  color: #0d0d0f;
+}
+
+.stat-label {
+  font-size: 13px;
+  color: rgba(13, 13, 15, 0.6);
+  margin-top: 4px;
+}
+
+/* Premium 3D Bookshelf Section */
+.premium-bookshelf-section {
+  background: linear-gradient(to bottom, #e8e8ed 0%, #f5f5f7 100%);
+  padding: 80px 0 100px;
+  position: relative;
+  overflow: hidden;
+}
+
+.bookshelf-header {
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.bookshelf-subtitle {
+  font-size: 18px;
+  color: rgba(13, 13, 15, 0.6);
+  margin-bottom: 8px;
+  font-weight: 400;
+  letter-spacing: 0.3px;
+}
+
+.bookshelf-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(32px, 8vw, 48px);
+  font-weight: 600;
+  color: #0d0d0f;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+}
+
+@media (max-width: 767px) {
+  .bookshelf-title {
+    font-size: 32px;
+  }
+}
+
+.bookshelf-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  margin-bottom: 48px;
+  perspective: 2000px;
+}
+
+.bookshelf-stage {
+  flex: 1;
+  max-width: 1000px;
+  position: relative;
+  overflow: hidden;
+  padding: 40px 20px 80px;
+}
+
+.bookshelf-track {
+  display: flex;
+  gap: 24px;
+  padding: 0 20px;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.bookshelf-book {
+  flex: 0 0 auto;
+  width: 160px;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-style: preserve-3d;
+}
+
+@media (max-width: 767px) {
+  .bookshelf-book {
+    width: 120px;
+  }
+}
+
+.bookshelf-book:hover {
+  transform: translateY(-8px) scale(1.02);
+  z-index: 10;
+}
+
+.book-cover-3d {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 2/3;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 
+    0 4px 16px rgba(13, 13, 15, 0.12),
+    0 2px 6px rgba(13, 13, 15, 0.08);
+  transition: all 0.2s ease;
+  transform-style: preserve-3d;
+  background: white;
+}
+
+.book-cover-3d::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -8px;
+  width: 8px;
+  height: 100%;
+  background: linear-gradient(to right, 
+    rgba(13, 13, 15, 0.4) 0%, 
+    rgba(13, 13, 15, 0.2) 50%, 
+    rgba(13, 13, 15, 0.1) 100%);
+  transform: skewY(-2deg);
+  z-index: -1;
+}
+
+.book-cover-3d::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    120deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.1) 45%,
+    rgba(255, 255, 255, 0.3) 50%,
+    rgba(255, 255, 255, 0.1) 55%,
+    transparent 100%
+  );
+  pointer-events: none;
+}
+
+.bookshelf-book:hover .book-cover-3d {
+  box-shadow: 
+    0 8px 24px rgba(13, 13, 15, 0.2),
+    0 4px 12px rgba(13, 13, 15, 0.15);
+}
+
+.book-cover-3d img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.book-cover-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+  text-align: center;
+  color: white;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 1.3;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.book-cover-placeholder span {
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.book-gradient-1 { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+.book-gradient-2 { background: linear-gradient(135deg, #764ba2 0%, #667eea 100%); }
+.book-gradient-3 { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+.book-gradient-4 { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+.book-gradient-5 { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
+.book-gradient-6 { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); }
+.book-gradient-7 { background: linear-gradient(135deg, #30cfd0 0%, #330867 100%); }
+.book-gradient-8 { background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); }
+
+.wooden-shelf {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 50px;
+  background: linear-gradient(to bottom,
+    #8b6f47 0%,
+    #6d563a 20%,
+    #5a4730 40%,
+    #4a3a26 60%,
+    #3d301f 100%
+  );
+  border-radius: 4px;
+  box-shadow: 
+    0 8px 20px rgba(13, 13, 15, 0.4),
+    inset 0 2px 4px rgba(255, 255, 255, 0.1),
+    inset 0 -2px 4px rgba(13, 13, 15, 0.3);
+  z-index: 1;
+}
+
+.wooden-shelf::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 8px;
+  background: linear-gradient(to bottom,
+    rgba(139, 111, 71, 0.8) 0%,
+    rgba(109, 86, 58, 0.6) 50%,
+    transparent 100%
+  );
+  border-radius: 4px 4px 0 0;
+}
+
+.wooden-shelf::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 5%;
+  right: 5%;
+  height: 8px;
+  background: rgba(13, 13, 15, 0.2);
+  filter: blur(8px);
+  border-radius: 50%;
+}
+
+.bookshelf-nav {
+  flex: 0 0 auto;
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  background: white;
+  border: 1px solid rgba(13, 13, 15, 0.12);
+  color: #0d0d0f;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(13, 13, 15, 0.08);
+  z-index: 10;
+}
+
+.bookshelf-nav-icon {
+  width: 20px;
+  height: 20px;
+  color: #0d0d0f;
+  flex-shrink: 0;
+}
+
+.bookshelf-nav:hover {
+  background: rgba(13, 13, 15, 0.04);
+  border-color: rgba(13, 13, 15, 0.2);
+  box-shadow: 0 4px 12px rgba(13, 13, 15, 0.12);
+}
+
+.bookshelf-nav:hover .bookshelf-nav-icon {
+  color: #0d0d0f;
+}
+
+.bookshelf-nav:active {
+  transform: scale(0.95);
+}
+
+@media (max-width: 767px) {
+  .bookshelf-nav {
+    width: 36px;
+    height: 36px;
+    border-radius: 6px;
+    box-shadow: 0 2px 6px rgba(13, 13, 15, 0.1);
+  }
+  
+  .bookshelf-nav-icon {
+    width: 18px;
+    height: 18px;
+    stroke-width: 2.5;
+  }
+}
+
+@media (min-width: 768px) {
+  .bookshelf-nav-icon {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+.bookshelf-cta {
+  text-align: center;
+}
+
+.btn-explore-books {
+  display: inline-block;
+  padding: 14px 32px;
+  background: white;
+  color: #0d0d0f;
+  border: 1px solid rgba(13, 13, 15, 0.12);
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(13, 13, 15, 0.08);
+}
+
+.btn-explore-books:hover {
+  background: #0d0d0f;
+  color: white;
+  border-color: #0d0d0f;
+  box-shadow: 0 4px 12px rgba(13, 13, 15, 0.2);
+}
+
+/* Category Bar */
+.category-bar {
+  background: white;
+  padding: 16px 0;
+  border-top: 1px solid rgba(13, 13, 15, 0.08);
+  border-bottom: 1px solid rgba(13, 13, 15, 0.08);
+}
+
+.category-scroll {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.category-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.category-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: rgba(13, 13, 15, 0.7);
+  white-space: nowrap;
+}
+
+.category-pill {
+  padding: 8px 16px;
+  background: white;
+  color: #0d0d0f;
+  border: 1px solid rgba(13, 13, 15, 0.12);
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.category-pill:hover {
+  border-color: rgba(13, 13, 15, 0.25);
+  background: rgba(13, 13, 15, 0.02);
+  color: #0d0d0f;
+}
+
+.category-pill-all {
+  padding: 8px 16px;
+  background: rgba(13, 13, 15, 0.04);
+  color: #0d0d0f;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+}
+
+.category-pill-all:hover {
+  background: rgba(13, 13, 15, 0.08);
+  border-color: rgba(13, 13, 15, 0.12);
+}
+
+/* Section Styles - Mobile First */
+.section-padding {
+  padding: 48px 0;
+}
+
+@media (min-width: 640px) {
+  .section-padding {
+    padding: 64px 0;
+  }
+}
+
+@media (min-width: 768px) {
+  .section-padding {
+    padding: 80px 0;
+  }
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 40px;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.section-header-text {
+  flex: 1;
+}
+
+.section-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(28px, 7vw, 40px);
+  font-weight: 600;
+  color: #0d0d0f;
+  margin-bottom: 8px;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+}
+
+@media (min-width: 768px) {
+  .section-title {
+    font-size: 40px;
+  }
+}
+
+.section-subtitle {
+  font-size: 16px;
+  color: rgba(13, 13, 15, 0.6);
+}
+
+.view-all-link {
+  display: none;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background: white;
+  color: #0d0d0f;
+  border: 1px solid rgba(13, 13, 15, 0.12);
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+@media (min-width: 768px) {
+  .view-all-link {
+    display: inline-flex;
+  }
+}
+
+.view-all-link:hover {
+  border-color: rgba(13, 13, 15, 0.25);
+  background: rgba(13, 13, 15, 0.02);
+}
+
+.section-header-center {
+  text-align: center;
+  margin-bottom: 48px;
+}
+
+.section-header-center .section-title {
+  margin-bottom: 12px;
+}
+
+.section-header-center .section-subtitle {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+/* Books Grid - Mobile First */
+.books-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+@media (min-width: 640px) {
+  .books-grid {
+    gap: 16px;
+  }
+}
+
+@media (min-width: 768px) {
+  .books-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+  }
+}
+
+.view-all-mobile {
+  display: block;
+  text-align: center;
+  margin-top: 40px;
+}
+
+@media (min-width: 768px) {
+  .view-all-mobile {
+    display: none;
+  }
+}
+
+/* Promo Section */
+.promo-section {
+  background: linear-gradient(135deg, rgba(202, 166, 96, 0.25) 0%, rgba(202, 166, 96, 0.15) 50%, #f8f6f2 100%);
+  padding: 80px 0;
+}
+
+.promo-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 48px;
+  align-items: center;
+}
+
+@media (min-width: 768px) {
+  .promo-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.promo-badge {
+  display: inline-block;
+  padding: 6px 14px;
+  background: rgba(13, 13, 15, 0.08);
+  color: #0d0d0f;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 24px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.promo-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(32px, 8vw, 48px);
+  font-weight: 600;
+  color: #0d0d0f;
+  line-height: 1.3;
+  margin-bottom: 24px;
+  letter-spacing: -0.01em;
+}
+
+.promo-description {
+  font-size: 18px;
+  line-height: 1.7;
+  color: rgba(13, 13, 15, 0.7);
+  margin-bottom: 32px;
+}
+
+.btn-primary-large {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 32px;
+  background: #0d0d0f;
+  color: #f8f6f2;
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 16px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(13, 13, 15, 0.15);
+}
+
+.btn-primary-large:hover {
+  background: #1a1a1d;
+  box-shadow: 0 4px 12px rgba(13, 13, 15, 0.25);
+  transform: translateY(-1px);
+}
+
+.promo-images {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.promo-image-item {
+  aspect-ratio: 3/4;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(13, 13, 15, 0.08);
+  transition: all 0.2s ease;
+}
+
+.promo-image-item:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(13, 13, 15, 0.15);
+}
+
+.promo-image-2 {
+  margin-top: 32px;
+}
+
+.promo-image-3 {
+  margin-top: 64px;
+}
+
+.promo-image-placeholder {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #caa660 0%, #b8954d 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+/* Nepali Section */
+.nepali-section {
+  background: #0d0d0f;
+  color: #f8f6f2;
+  padding: 80px 0;
+}
+
+.nepali-header {
+  text-align: center;
+  margin-bottom: 48px;
+}
+
+.nepali-badge {
+  display: inline-block;
+  padding: 6px 14px;
+  background: rgba(248, 246, 242, 0.1);
+  color: rgba(248, 246, 242, 0.8);
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 24px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.nepali-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(32px, 8vw, 48px);
+  font-weight: 600;
+  line-height: 1.3;
+  margin-bottom: 16px;
+  letter-spacing: -0.01em;
+}
+
+.nepali-highlight {
+  color: rgba(248, 246, 242, 0.9);
+}
+
+.nepali-description {
+  font-size: 17px;
+  line-height: 1.7;
+  color: rgba(248, 246, 242, 0.7);
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.nepali-books-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin-bottom: 48px;
+}
+
+@media (min-width: 768px) {
+  .nepali-books-grid {
+    grid-template-columns: repeat(6, 1fr);
+  }
+}
+
+.nepali-book-card {
+  aspect-ratio: 3/4;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  display: block;
+}
+
+.nepali-book-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(13, 13, 15, 0.2);
+}
+
+.nepali-book-placeholder {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(15, 118, 110, 0.1) 0%, rgba(15, 118, 110, 0.05) 100%);
+  border: 1px solid rgba(15, 118, 110, 0.25);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 16px;
+  position: relative;
+  overflow: hidden;
+}
+
+.nepali-book-placeholder::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, transparent 0%, rgba(15, 118, 110, 0.16) 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.nepali-book-card:hover .nepali-book-placeholder::before {
+  opacity: 1;
+}
+
+.nepali-book-icon {
+  font-size: 48px;
+}
+
+.nepali-book-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #f8f6f2;
+  text-align: center;
+  line-height: 1.4;
+}
+
+.nepali-cta {
+  text-align: center;
+}
+
+.btn-gold-large {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 32px;
+  background: #0d0d0f;
+  color: #f8f6f2;
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 16px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(13, 13, 15, 0.15);
+}
+
+.btn-gold-large:hover {
+  background: #1a1a1d;
+  box-shadow: 0 4px 12px rgba(13, 13, 15, 0.25);
+  transform: translateY(-1px);
+}
+
+/* Personalized Recommendations Section */
+.recommendations-section {
+  position: relative;
+  padding: 100px 0;
+  overflow: hidden;
+  background: #f5f5f5;
+}
+
+.geometric-background {
+  position: absolute;
+  inset: 0;
+  background-image: 
+    linear-gradient(30deg, #e0e0e0 12%, transparent 12.5%, transparent 87%, #e0e0e0 87.5%, #e0e0e0),
+    linear-gradient(150deg, #e0e0e0 12%, transparent 12.5%, transparent 87%, #e0e0e0 87.5%, #e0e0e0),
+    linear-gradient(30deg, #e0e0e0 12%, transparent 12.5%, transparent 87%, #e0e0e0 87.5%, #e0e0e0),
+    linear-gradient(150deg, #e0e0e0 12%, transparent 12.5%, transparent 87%, #e0e0e0 87.5%, #e0e0e0),
+    linear-gradient(60deg, #ebebeb 25%, transparent 25.5%, transparent 75%, #ebebeb 75%, #ebebeb),
+    linear-gradient(60deg, #ebebeb 25%, transparent 25.5%, transparent 75%, #ebebeb 75%, #ebebeb);
+  background-size: 80px 140px;
+  background-position: 0 0, 0 0, 40px 70px, 40px 70px, 0 0, 40px 70px;
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.recommendations-grid {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 60px;
+  align-items: center;
+}
+
+@media (min-width: 968px) {
+  .recommendations-grid {
+    grid-template-columns: 1fr 1.2fr;
+    gap: 80px;
+  }
+}
+
+.recommendations-content {
+  max-width: 500px;
+}
+
+@media (max-width: 967px) {
+  .recommendations-content {
+    text-align: center;
+    margin: 0 auto;
+  }
+}
+
+.recommendations-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(28px, 7vw, 42px);
+  font-weight: 600;
+  color: #0d0d0f;
+  margin-bottom: 20px;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+}
+
+@media (max-width: 767px) {
+  .recommendations-title {
+    font-size: 32px;
+  }
+}
+
+.recommendations-description {
+  font-size: 18px;
+  line-height: 1.7;
+  color: rgba(13, 13, 15, 0.7);
+  margin-bottom: 24px;
+}
+
+.recommendations-prompt {
+  font-size: 16px;
+  color: rgba(13, 13, 15, 0.8);
+  margin-bottom: 24px;
+  font-weight: 500;
+}
+
+.btn-recommendations {
+  display: inline-block;
+  padding: 14px 32px;
+  background: #0d0d0f;
+  color: #f8f6f2;
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  text-decoration: none;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(13, 13, 15, 0.15);
+}
+
+.btn-recommendations:hover {
+  background: #1a1a1d;
+  box-shadow: 0 4px 12px rgba(13, 13, 15, 0.25);
+  transform: translateY(-1px);
+}
+
+.recommendations-books-3d {
+  position: relative;
+  perspective: 1500px;
+  min-height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.books-grid-3d {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  gap: 16px;
+  transform: rotateX(25deg) rotateY(-20deg) rotateZ(5deg);
+  transform-style: preserve-3d;
+  padding: 40px;
+  max-width: 600px;
+  width: 100%;
+}
+
+@media (max-width: 767px) {
+  .books-grid-3d {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    padding: 20px;
+    transform: rotateX(20deg) rotateY(-15deg) rotateZ(3deg);
+  }
+  
+  .book-3d-item:nth-child(n+10) {
+    display: none;
+  }
+}
+
+.book-3d-item {
+  aspect-ratio: 2/3;
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 
+    0 4px 16px rgba(13, 13, 15, 0.15),
+    0 2px 6px rgba(13, 13, 15, 0.1);
+  transition: all 0.3s ease;
+  transform: translateZ(0);
+  animation: fadeInBook 0.5s ease forwards;
+  animation-delay: var(--delay, 0s);
+  opacity: 0;
+  background: white;
+}
+
+@keyframes fadeInBook {
+  from {
+    opacity: 0;
+    transform: translateZ(-50px) scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: translateZ(0) scale(1);
+  }
+}
+
+.book-3d-item:hover {
+  transform: translateZ(20px) scale(1.03);
+  box-shadow: 
+    0 12px 32px rgba(13, 13, 15, 0.25),
+    0 4px 12px rgba(13, 13, 15, 0.15);
+  z-index: 10;
+}
+
+.book-3d-item a {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.book-3d-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.book-3d-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  text-align: center;
+  color: white;
+  font-weight: 600;
+  font-size: 11px;
+  line-height: 1.2;
+}
+
+.book-3d-placeholder span {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.book-rec-gradient-1 { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+.book-rec-gradient-2 { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+.book-rec-gradient-3 { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+.book-rec-gradient-4 { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
+.book-rec-gradient-5 { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); }
+.book-rec-gradient-6 { background: linear-gradient(135deg, #30cfd0 0%, #330867 100%); }
+
+/* Authors Section */
+.authors-section {
+  background: #f8f6f2;
+}
+
+.authors-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+}
+
+@media (min-width: 768px) {
+  .authors-grid {
+    grid-template-columns: repeat(6, 1fr);
+  }
+}
+
+.author-card {
+  text-align: center;
+  text-decoration: none;
+  display: block;
+  transition: transform 0.3s ease;
+}
+
+.author-card:hover {
+  transform: translateY(-4px);
+}
+
+.author-avatar {
+  aspect-ratio: 1;
+  border-radius: 12px;
+  background: rgba(13, 13, 15, 0.04);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px;
+  box-shadow: 0 2px 8px rgba(13, 13, 15, 0.08);
+  transition: all 0.2s ease;
+  border: 1px solid rgba(13, 13, 15, 0.08);
+  overflow: hidden;
+  position: relative;
+}
+
+.author-card:hover .author-avatar {
+  box-shadow: 0 4px 12px rgba(13, 13, 15, 0.12);
+  transform: translateY(-2px);
+}
+
+.author-photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.3s ease;
+}
+
+.author-card:hover .author-photo {
+  transform: scale(1.1);
+}
+
+.author-initial {
+  font-size: 20px;
+  font-weight: 600;
+  color: rgba(13, 13, 15, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.author-name {
+  font-size: 13px;
+  font-weight: 500;
+  color: #0d0d0f;
+  margin-bottom: 4px;
+  transition: color 0.2s ease;
+}
+
+.author-card:hover .author-name {
+  color: #0d0d0f;
+}
+
+.author-books {
+  font-size: 12px;
+  color: rgba(13, 13, 15, 0.6);
+}
+
+/* Features Section */
+.features-section {
+  background: white;
+  padding: 80px 0;
+  border-top: 1px solid rgba(13, 13, 15, 0.08);
+  border-bottom: 1px solid rgba(13, 13, 15, 0.08);
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 32px;
+}
+
+@media (min-width: 768px) {
+  .features-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.feature-card {
+  text-align: center;
+  padding: 24px;
+}
+
+.feature-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 12px;
+  background: rgba(13, 13, 15, 0.04);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+  color: rgba(13, 13, 15, 0.6);
+  font-size: 24px;
+}
+
+.feature-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 18px;
+  font-weight: 600;
+  color: #0d0d0f;
+  margin-bottom: 12px;
+}
+
+.feature-description {
+  font-size: 14px;
+  line-height: 1.6;
+  color: rgba(13, 13, 15, 0.6);
+}
+
+/* Newsletter Section */
+.newsletter-section {
+  background: linear-gradient(135deg, #0d0d0f 0%, #1a1a1d 100%);
+  color: #f8f6f2;
+  padding: 80px 24px;
+}
+
+.newsletter-container {
+  max-width: 700px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.newsletter-badge {
+  display: inline-block;
+  padding: 6px 14px;
+  background: rgba(248, 246, 242, 0.1);
+  color: rgba(248, 246, 242, 0.8);
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 24px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.newsletter-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(28px, 7vw, 40px);
+  font-weight: 600;
+  margin-bottom: 16px;
+  letter-spacing: -0.01em;
+}
+
+.newsletter-description {
+  font-size: 17px;
+  line-height: 1.7;
+  color: rgba(248, 246, 242, 0.7);
+  margin-bottom: 32px;
+}
+
+.newsletter-form {
+  display: flex;
+  gap: 8px;
+  max-width: 500px;
+  margin: 0 auto 32px;
+}
+
+.newsletter-input {
+  flex: 1;
+  padding: 14px 20px;
+  border: 1px solid rgba(248, 246, 242, 0.15);
+  background: rgba(248, 246, 242, 0.08);
+  backdrop-filter: blur(10px);
+  color: #f8f6f2;
+  border-radius: 8px;
+  font-size: 16px; /* Prevents iOS zoom */
+  transition: all 0.2s ease;
+  min-height: 48px;
+}
+
+.newsletter-input::placeholder {
+  color: rgba(248, 246, 242, 0.4);
+}
+
+.newsletter-input:focus {
+  outline: none;
+  border-color: rgba(248, 246, 242, 0.3);
+  background: rgba(248, 246, 242, 0.12);
+}
+
+.newsletter-button {
+  padding: 16px 32px;
+  background: #0d0d0f;
+  color: #f8f6f2;
+  border: none;
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 15px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(13, 13, 15, 0.2);
+}
+
+.newsletter-button:hover {
+  background: #1a1a1d;
+  box-shadow: 0 4px 12px rgba(13, 13, 15, 0.3);
+}
+
+.newsletter-benefits {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 24px;
+  font-size: 14px;
+  color: rgba(248, 246, 242, 0.6);
+}
+
+.benefit-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: rgba(248, 246, 242, 0.7);
+}
+
+.benefit-item span:first-child {
+  color: rgba(248, 246, 242, 0.5);
+  font-size: 12px;
+}
+
+/* Stats Section */
+.stats-section {
+  background: #f8f6f2;
+}
+
+.stats-subtitle {
+  font-size: 17px;
+  max-width: 800px;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 32px;
+}
+
+@media (min-width: 768px) {
+  .stats-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.stat-card {
+  background: white;
+  border-radius: 12px;
+  padding: 32px 24px;
+  text-align: center;
+  box-shadow: 0 2px 12px rgba(13, 13, 15, 0.06);
+  transition: all 0.2s ease;
+  border: 1px solid rgba(13, 13, 15, 0.06);
+}
+
+.stat-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(13, 13, 15, 0.12);
+}
+
+.stat-emoji {
+  font-size: 48px;
+  margin-bottom: 16px;
+  opacity: 0.7;
+}
+
+.stat-value {
+  font-family: 'Playfair Display', serif;
+  font-size: 42px;
+  font-weight: 600;
+  color: #0d0d0f;
+  margin-bottom: 8px;
+}
+
+.stat-label-text {
+  font-size: 15px;
+  color: rgba(13, 13, 15, 0.6);
+}
+
+/* Additional Mobile Optimizations */
+@media (max-width: 639px) {
+  .hero-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .hero-actions .btn-primary,
+  .hero-actions .btn-secondary,
+  .hero-actions .btn-tertiary {
+    width: 100%;
+  }
+
+  .trust-badges {
+    flex-direction: column;
+    gap: 16px;
+    align-items: center;
+  }
+
+  .category-scroll {
+    gap: 8px;
+    padding-bottom: 4px;
+  }
+
+  .category-pill,
+  .category-pill-all {
+    padding: 8px 16px;
+    font-size: 13px;
+  }
+
+  .promo-title {
+    font-size: clamp(28px, 8vw, 36px);
+  }
+
+  .nepali-title {
+    font-size: clamp(28px, 8vw, 32px);
+  }
+
+  .newsletter-title {
+    font-size: clamp(28px, 8vw, 32px);
+  }
+
+  .newsletter-form {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .newsletter-button {
+    width: 100%;
+  }
+
+  .bookshelf-title {
+    font-size: clamp(28px, 8vw, 32px);
+  }
+
+  .authors-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+
+  .features-grid {
+    gap: 24px;
+  }
+}
+</style>
+
+<script>
+// Premium 3D Bookshelf Carousel with Smooth Auto-Slide
+(function() {
+  const track = document.querySelector('.bookshelf-track');
+  const leftBtn = document.querySelector('.bookshelf-nav-left');
+  const rightBtn = document.querySelector('.bookshelf-nav-right');
+  
+  if (!track || !leftBtn || !rightBtn) return;
+  
+  const originalBooks = track.querySelectorAll('.bookshelf-book');
+  if (originalBooks.length === 0) return;
+  
+  // Clone books for infinite scroll effect
+  const cloneBooks = () => {
+    // Clone all books twice for seamless infinite scroll
+    const fragment = document.createDocumentFragment();
+    originalBooks.forEach(book => {
+      fragment.appendChild(book.cloneNode(true));
+    });
+    track.appendChild(fragment);
+  };
+  
+  cloneBooks();
+  
+  const allBooks = track.querySelectorAll('.bookshelf-book');
+  const bookWidth = allBooks[0].offsetWidth;
+  const gap = 24;
+  const scrollAmount = bookWidth + gap;
+  
+  let currentPosition = 0;
+  let isAutoScrolling = false; // Start as false, will be enabled by startAutoScroll
+  let animationId = null;
+  const scrollSpeed = 0.5; // Pixels per frame - adjust for speed (0.3-1.0 is good)
+  
+  // Smooth continuous auto-scroll animation
+  function smoothAutoScroll() {
+    if (!isAutoScrolling) return;
+    
+    currentPosition -= scrollSpeed;
+    
+    // Calculate reset point (when first set of books is completely scrolled)
+    const resetPoint = -(scrollAmount * originalBooks.length);
+    
+    // Seamless reset when reaching the cloned section
+    if (currentPosition <= resetPoint) {
+      currentPosition = 0;
+    }
+    
+    track.style.transform = `translateX(${currentPosition}px)`;
+    animationId = requestAnimationFrame(smoothAutoScroll);
+  }
+  
+  // Start smooth auto-scroll
+  function startAutoScroll() {
+    if (!isAutoScrolling) {
+      isAutoScrolling = true;
+      smoothAutoScroll();
+    }
+  }
+  
+  // Stop auto-scroll
+  function stopAutoScroll() {
+    isAutoScrolling = false;
+    if (animationId) {
+      cancelAnimationFrame(animationId);
+      animationId = null;
+    }
+  }
+  
+  // Manual slide left (previous books)
+  function slideLeft() {
+    stopAutoScroll();
+    const targetPosition = currentPosition + (scrollAmount * 3);
+    animateToPosition(targetPosition, () => {
+      setTimeout(startAutoScroll, 1000);
+    });
+  }
+  
+  // Manual slide right (next books)
+  function slideRight() {
+    stopAutoScroll();
+    const targetPosition = currentPosition - (scrollAmount * 3);
+    animateToPosition(targetPosition, () => {
+      setTimeout(startAutoScroll, 1000);
+    });
+  }
+  
+  // Smooth animation to target position
+  function animateToPosition(target, callback) {
+    const start = currentPosition;
+    const distance = target - start;
+    const duration = 600; // milliseconds
+    const startTime = performance.now();
+    
+    function animate(currentTime) {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      
+      // Easing function (easeInOutCubic) for smooth motion
+      const easing = progress < 0.5
+        ? 4 * progress * progress * progress
+        : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+      
+      currentPosition = start + (distance * easing);
+      track.style.transform = `translateX(${currentPosition}px)`;
+      
+      if (progress < 1) {
+        requestAnimationFrame(animate);
+      } else {
+        if (callback) callback();
+      }
+    }
+    
+    requestAnimationFrame(animate);
+  }
+  
+  // Button event listeners
+  leftBtn.addEventListener('click', slideLeft);
+  rightBtn.addEventListener('click', slideRight);
+  
+  // Pause on hover for better UX
+  const bookshelfContainer = document.querySelector('.bookshelf-container');
+  if (bookshelfContainer) {
+    bookshelfContainer.addEventListener('mouseenter', stopAutoScroll);
+    bookshelfContainer.addEventListener('mouseleave', () => {
+      setTimeout(startAutoScroll, 500);
+    });
+  }
+  
+  // Touch support for mobile with smooth swipe
+  let touchStartX = 0;
+  let touchEndX = 0;
+  let isDragging = false;
+  let dragStartPosition = 0;
+  
+  track.addEventListener('touchstart', (e) => {
+    touchStartX = e.changedTouches[0].screenX;
+    isDragging = true;
+    dragStartPosition = currentPosition;
+    stopAutoScroll();
+  });
+  
+  track.addEventListener('touchmove', (e) => {
+    if (!isDragging) return;
+    const currentX = e.changedTouches[0].screenX;
+    const diff = currentX - touchStartX;
+    currentPosition = dragStartPosition + diff;
+    track.style.transform = `translateX(${currentPosition}px)`;
+  });
+  
+  track.addEventListener('touchend', (e) => {
+    touchEndX = e.changedTouches[0].screenX;
+    isDragging = false;
+    setTimeout(startAutoScroll, 1000);
+    isDragging = false;
+    
+    const swipeDistance = touchEndX - touchStartX;
+    
+    if (Math.abs(swipeDistance) > 50) {
+      // Significant swipe detected
+      if (swipeDistance > 0) {
+        // Swipe right (show previous)
+        slideLeft();
+      } else {
+        // Swipe left (show next)
+        slideRight();
+      }
+    } else {
+      // Small swipe, return to original position smoothly
+      animateToPosition(dragStartPosition, () => {
+        setTimeout(startAutoScroll, 500);
+      });
+    }
+  });
+  
+  // Responsive adjustments
+  function handleResize() {
+    stopAutoScroll();
+    currentPosition = 0;
+    track.style.transform = 'translateX(0)';
+    setTimeout(startAutoScroll, 500);
+  }
+  
+  let resizeTimeout;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(handleResize, 250);
+  });
+  
+  // Start the smooth auto-scroll on page load
+  setTimeout(() => {
+    startAutoScroll();
+  }, 500);
+})();
+</script>

@@ -1,0 +1,580 @@
+<div class="admin-card-header" style="margin-top: 0;">
+  <h1 class="admin-card-title" style="font-size: 1.75rem; margin: 0;">Home Page Settings</h1>
+  <p style="color: var(--admin-text-muted); margin-top: 0.5rem; font-size: 0.875rem;">Manage which books appear in each section of your home page</p>
+</div>
+
+<!-- Tabs -->
+<div class="home-settings-tabs">
+  <% const sectionNames = {
+    bestSellers: 'Best Sellers',
+    newArrivals: 'New Arrivals',
+    bookshelf: 'Premium Bookshelf',
+    promo: 'Promotional Banner',
+    featured: 'Featured Collection',
+    recommendations: 'Recommendations'
+  }; %>
+  <% sections.forEach((section, idx) => { %>
+    <button 
+      class="home-settings-tab <%= idx === 0 ? 'active' : '' %>" 
+      data-section="<%= section.sectionId %>"
+      onclick="switchTab('<%= section.sectionId %>')"
+    >
+      <%= sectionNames[section.sectionId] || section.sectionId %>
+    </button>
+  <% }); %>
+</div>
+
+<!-- Tab Content -->
+<% sections.forEach((section, idx) => { %>
+  <div class="home-settings-content <%= idx === 0 ? 'active' : '' %>" data-section="<%= section.sectionId %>">
+    <div class="admin-card">
+      <div class="admin-card-header">
+        <div class="admin-card-title"><%= sectionNames[section.sectionId] || section.sectionId %></div>
+        <label class="admin-toggle">
+          <input 
+            type="checkbox" 
+            <%= section.enabled ? 'checked' : '' %>
+            onchange="toggleSection('<%= section.sectionId %>', this.checked)"
+          >
+          <span class="admin-toggle-slider"></span>
+        </label>
+      </div>
+
+      <div class="admin-form-grid" style="margin-bottom: 1.5rem;">
+        <div class="admin-form-group">
+          <label class="admin-form-label">Section Title</label>
+          <input 
+            type="text" 
+            class="admin-form-input" 
+            value="<%= section.title || '' %>"
+            placeholder="Enter section title"
+            onchange="updateSectionField('<%= section.sectionId %>', 'title', this.value)"
+          >
+        </div>
+        <div class="admin-form-group">
+          <label class="admin-form-label">Section Subtitle</label>
+          <input 
+            type="text" 
+            class="admin-form-input" 
+            value="<%= section.subtitle || '' %>"
+            placeholder="Enter section subtitle"
+            onchange="updateSectionField('<%= section.sectionId %>', 'subtitle', this.value)"
+          >
+        </div>
+        <div class="admin-form-group">
+          <label class="admin-form-label">Display Limit</label>
+          <input 
+            type="number" 
+            class="admin-form-input" 
+            value="<%= section.displayLimit || 8 %>"
+            min="1"
+            max="50"
+            onchange="updateSectionField('<%= section.sectionId %>', 'displayLimit', parseInt(this.value))"
+          >
+          <span class="admin-form-hint">Number of books to display</span>
+        </div>
+      </div>
+
+      <!-- Book Selection -->
+      <div class="book-selection-container">
+        <div class="book-selection-header">
+          <h3 style="margin: 0; font-size: 1rem; font-weight: 600;">Selected Books</h3>
+          <button 
+            type="button" 
+            class="admin-btn admin-btn-sm admin-btn-primary"
+            onclick="openBookPicker('<%= section.sectionId %>')"
+          >
+            + Add Books
+          </button>
+        </div>
+
+        <!-- Selected Books List (Drag & Drop) -->
+        <div 
+          class="selected-books-list" 
+          id="selectedBooks-<%= section.sectionId %>"
+          data-section="<%= section.sectionId %>"
+        >
+          <% if (section.books && section.books.length > 0) { %>
+            <% section.books.forEach((book, bookIdx) => { %>
+              <div 
+                class="selected-book-item" 
+                data-book-id="<%= book._id %>"
+                draggable="true"
+              >
+                <div class="book-item-handle">
+                  <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16" />
+                  </svg>
+                </div>
+                <div class="book-item-image">
+                  <% if (book.images && book.images.length > 0) { %>
+                    <img src="<%= book.images[0].src %>" alt="<%= book.title %>" />
+                  <% } else { %>
+                    <div class="book-item-placeholder">No Image</div>
+                  <% } %>
+                </div>
+                <div class="book-item-info">
+                  <div class="book-item-title"><%= book.title %></div>
+                  <div class="book-item-price">Rs. <%= (book.priceSale || 0).toFixed(2) %></div>
+                </div>
+                <button 
+                  class="book-item-remove"
+                  onclick="removeBook('<%= section.sectionId %>', '<%= book._id %>')"
+                  aria-label="Remove book"
+                >
+                  <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+            <% }); %>
+          <% } else { %>
+            <div class="empty-state">
+              <p>No books selected. Click "Add Books" to select books for this section.</p>
+            </div>
+          <% } %>
+        </div>
+      </div>
+    </div>
+  </div>
+<% }); %>
+
+<!-- Book Picker Modal -->
+<div class="book-picker-modal" id="bookPickerModal">
+  <div class="book-picker-overlay" onclick="closeBookPicker()"></div>
+  <div class="book-picker-content">
+    <div class="book-picker-header">
+      <h2>Select Books</h2>
+      <button class="book-picker-close" onclick="closeBookPicker()" aria-label="Close">
+        <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+    <div class="book-picker-search">
+      <input 
+        type="text" 
+        id="bookSearchInput"
+        class="admin-form-input" 
+        placeholder="Search books by title, author, or ISBN..."
+        onkeyup="searchBooks()"
+      >
+      <div class="book-picker-filters">
+        <select id="bookCategoryFilter" class="admin-form-select" onchange="searchBooks()">
+          <option value="">All Categories</option>
+        </select>
+        <select id="bookAuthorFilter" class="admin-form-select" onchange="searchBooks()">
+          <option value="">All Authors</option>
+        </select>
+      </div>
+    </div>
+    <div class="book-picker-results" id="bookPickerResults">
+      <div class="loading-state">Loading books...</div>
+    </div>
+    <div class="book-picker-footer">
+      <button class="admin-btn admin-btn-secondary" onclick="closeBookPicker()">Cancel</button>
+      <button class="admin-btn admin-btn-primary" onclick="addSelectedBooks()">Add Selected Books</button>
+    </div>
+  </div>
+</div>
+
+<script src="/public/js/admin-home-settings.js"></script>
+<style>
+/* Home Settings Styles */
+.home-settings-tabs {
+  display: flex;
+  gap: 0.5rem;
+  overflow-x: auto;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.5rem;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.home-settings-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.home-settings-tab {
+  padding: 0.75rem 1.25rem;
+  background: var(--admin-card);
+  border: 1px solid var(--admin-border);
+  border-radius: 0.5rem;
+  color: var(--admin-text-muted);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: var(--admin-transition);
+  min-height: 44px;
+}
+
+.home-settings-tab:hover {
+  background: var(--admin-hover);
+  color: var(--admin-text);
+}
+
+.home-settings-tab.active {
+  background: var(--admin-primary);
+  color: #000;
+  border-color: var(--admin-primary);
+}
+
+.home-settings-content {
+  display: none;
+}
+
+.home-settings-content.active {
+  display: block;
+}
+
+.admin-toggle {
+  position: relative;
+  display: inline-block;
+  width: 48px;
+  height: 24px;
+  cursor: pointer;
+}
+
+.admin-toggle input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.admin-toggle-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(148, 163, 184, 0.3);
+  transition: 0.3s;
+  border-radius: 24px;
+}
+
+.admin-toggle-slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: 0.3s;
+  border-radius: 50%;
+}
+
+.admin-toggle input:checked + .admin-toggle-slider {
+  background-color: var(--admin-primary);
+}
+
+.admin-toggle input:checked + .admin-toggle-slider:before {
+  transform: translateX(24px);
+}
+
+.book-selection-container {
+  margin-top: 1.5rem;
+}
+
+.book-selection-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.selected-books-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  min-height: 100px;
+}
+
+.selected-book-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem;
+  background: var(--admin-card);
+  border: 1px solid var(--admin-border);
+  border-radius: 0.5rem;
+  transition: var(--admin-transition);
+  cursor: move;
+}
+
+.selected-book-item:hover {
+  background: var(--admin-hover);
+  border-color: var(--admin-primary);
+}
+
+.selected-book-item.dragging {
+  opacity: 0.5;
+}
+
+.book-item-handle {
+  color: var(--admin-text-muted);
+  cursor: grab;
+  min-width: 20px;
+}
+
+.book-item-handle:active {
+  cursor: grabbing;
+}
+
+.book-item-image {
+  width: 60px;
+  height: 80px;
+  border-radius: 0.375rem;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: var(--admin-hover);
+}
+
+.book-item-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.book-item-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  color: var(--admin-text-muted);
+}
+
+.book-item-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.book-item-title {
+  font-weight: 500;
+  font-size: 0.875rem;
+  margin-bottom: 0.25rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.book-item-price {
+  font-size: 0.75rem;
+  color: var(--admin-text-muted);
+}
+
+.book-item-remove {
+  padding: 0.5rem;
+  background: transparent;
+  border: none;
+  color: var(--admin-text-muted);
+  cursor: pointer;
+  border-radius: 0.375rem;
+  transition: var(--admin-transition);
+  min-width: 44px;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.book-item-remove:hover {
+  background: rgba(239, 68, 68, 0.1);
+  color: var(--admin-danger);
+}
+
+.empty-state {
+  padding: 2rem;
+  text-align: center;
+  color: var(--admin-text-muted);
+  font-size: 0.875rem;
+}
+
+/* Book Picker Modal */
+.book-picker-modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+}
+
+.book-picker-modal.active {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.book-picker-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
+}
+
+.book-picker-content {
+  position: relative;
+  background: var(--admin-card);
+  border-radius: 0.75rem;
+  width: 90%;
+  max-width: 800px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  z-index: 1001;
+  box-shadow: var(--admin-shadow-lg);
+}
+
+.book-picker-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  border-bottom: 1px solid var(--admin-border);
+}
+
+.book-picker-header h2 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.book-picker-close {
+  padding: 0.5rem;
+  background: transparent;
+  border: none;
+  color: var(--admin-text);
+  cursor: pointer;
+  border-radius: 0.375rem;
+  transition: var(--admin-transition);
+  min-width: 44px;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.book-picker-close:hover {
+  background: var(--admin-hover);
+}
+
+.book-picker-search {
+  padding: 1.5rem;
+  border-bottom: 1px solid var(--admin-border);
+}
+
+.book-picker-filters {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.book-picker-results {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1.5rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 1rem;
+}
+
+.book-picker-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  padding: 1.5rem;
+  border-top: 1px solid var(--admin-border);
+}
+
+.book-picker-item {
+  border: 2px solid var(--admin-border);
+  border-radius: 0.5rem;
+  overflow: hidden;
+  cursor: pointer;
+  transition: var(--admin-transition);
+  background: var(--admin-card);
+}
+
+.book-picker-item:hover {
+  border-color: var(--admin-primary);
+  transform: translateY(-2px);
+}
+
+.book-picker-item.selected {
+  border-color: var(--admin-primary);
+  background: rgba(13, 148, 136, 0.1);
+}
+
+.book-picker-item-image {
+  aspect-ratio: 2/3;
+  background: var(--admin-hover);
+  position: relative;
+}
+
+.book-picker-item-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.book-picker-item-checkbox {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  width: 24px;
+  height: 24px;
+  background: var(--admin-primary);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #000;
+}
+
+.book-picker-item-info {
+  padding: 0.75rem;
+}
+
+.book-picker-item-title {
+  font-size: 0.75rem;
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.book-picker-item-price {
+  font-size: 0.7rem;
+  color: var(--admin-text-muted);
+}
+
+.loading-state {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 2rem;
+  color: var(--admin-text-muted);
+}
+
+@media (max-width: 768px) {
+  .book-picker-content {
+    width: 100%;
+    max-height: 100vh;
+    border-radius: 0;
+  }
+
+  .book-picker-filters {
+    grid-template-columns: 1fr;
+  }
+
+  .book-picker-results {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 0.75rem;
+  }
+}
+</style>
+

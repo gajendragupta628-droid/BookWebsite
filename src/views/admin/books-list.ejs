@@ -1,0 +1,142 @@
+<div class="admin-card-header" style="margin-top: 0;">
+  <h1 class="admin-card-title" style="font-size: 1.75rem; margin: 0;">Books Management</h1>
+  <div class="admin-card-actions">
+    <a href="/admin/books/new" class="admin-btn admin-btn-primary">
+      <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+      </svg>
+      Add New Book
+    </a>
+  </div>
+</div>
+
+<% if (typeof flash !== 'undefined' && flash.success && flash.success.length > 0) { %>
+  <div class="admin-alert admin-alert-success" style="margin-bottom: 1.5rem;">
+    <%= flash.success[0] %>
+  </div>
+<% } %>
+
+<% if (typeof flash !== 'undefined' && flash.error && flash.error.length > 0) { %>
+  <div class="admin-alert admin-alert-danger" style="margin-bottom: 1.5rem;">
+    <%= flash.error[0] %>
+  </div>
+<% } %>
+
+<!-- Search and Filters -->
+<div class="admin-card">
+  <div class="admin-filters">
+    <form method="get" class="admin-search" style="flex: 1;">
+      <input 
+        name="q" 
+        value="<%= q || '' %>" 
+        placeholder="Search books by title, ISBN, author..." 
+        class="admin-form-input"
+        style="width: 100%; margin: 0;"
+      />
+    </form>
+    <button type="submit" form="searchForm" class="admin-btn admin-btn-secondary">
+      <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+      </svg>
+      Search
+    </button>
+  </div>
+</div>
+
+<!-- Bulk Upload -->
+<div class="admin-card">
+  <div class="admin-card-header">
+    <div class="admin-card-title" style="font-size: 1rem;">Bulk Upload</div>
+  </div>
+  <form action="/admin/books/bulk-upload" method="post" enctype="multipart/form-data" class="admin-form">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+    <div style="display: flex; gap: 1rem; align-items: flex-end; flex-wrap: wrap;">
+      <div class="admin-form-group" style="flex: 1; min-width: 250px; margin: 0;">
+        <label class="admin-form-label">Upload CSV or Excel File</label>
+        <input type="file" name="file" accept=".csv,.xlsx" class="admin-form-input" required />
+        <span class="admin-form-hint">CSV/XLSX columns: title, subtitle, authors(|), category, isbn13, priceMRP, priceSale, stock, language, binding, pages, publisher, publicationDate, tags(|), imageUrl</span>
+      </div>
+      <button type="submit" class="admin-btn admin-btn-secondary" style="margin-bottom: 0;">
+        <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+        </svg>
+        Upload
+      </button>
+    </div>
+  </form>
+</div>
+
+<!-- Books Table -->
+<div class="admin-card">
+  <% if (books && books.length > 0) { %>
+    <div class="admin-table-container">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Category</th>
+            <th>Price</th>
+            <th>Stock</th>
+            <th>Status</th>
+            <th>Created</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+        <% books.forEach(function(b) { %>
+          <tr>
+            <td>
+              <div style="font-weight: 600;"><%= b.title %></div>
+              <% if (b.subtitle) { %>
+                <div style="font-size: 0.75rem; color: var(--admin-text-muted); margin-top: 0.25rem;"><%= b.subtitle %></div>
+              <% } %>
+            </td>
+            <td><%= (b.categories && b.categories.length > 0) ? b.categories.join(', ') : 'Uncategorized' %></td>
+            <td>
+              <strong><%= store.currency %> <%= b.priceSale?.toFixed(2) || '0.00' %></strong>
+              <% if (b.priceMRP && b.priceMRP > b.priceSale) { %>
+                <div style="font-size: 0.75rem; color: var(--admin-text-muted); text-decoration: line-through;"><%= store.currency %> <%= b.priceMRP.toFixed(2) %></div>
+              <% } %>
+            </td>
+            <td>
+              <% 
+                const stock = b.stock || 0;
+                const threshold = b.lowStockThreshold || 5;
+                let stockClass = '';
+                if (stock === 0) stockClass = 'admin-badge-danger';
+                else if (stock <= threshold) stockClass = 'admin-badge-warning';
+                else stockClass = 'admin-badge-success';
+              %>
+              <span class="admin-badge <%= stockClass %>"><%= stock %> units</span>
+            </td>
+            <td>
+              <% if (b.featured) { %>
+                <span class="admin-badge admin-badge-primary">Featured</span>
+              <% } else { %>
+                <span class="admin-badge admin-badge-info">Active</span>
+              <% } %>
+            </td>
+            <td><%= new Date(b.createdAt).toLocaleDateString() %></td>
+            <td>
+              <div class="admin-table-actions">
+                <a href="/admin/books/<%= b._id %>/edit" class="admin-btn admin-btn-sm admin-btn-secondary">Edit</a>
+              </div>
+            </td>
+          </tr>
+        <% }) %>
+        </tbody>
+      </table>
+    </div>
+  <% } else { %>
+    <div class="admin-empty">
+      <svg class="admin-empty-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+      </svg>
+      <div class="admin-empty-title">No books found</div>
+      <p>Add your first book to get started or use bulk upload to import multiple books at once.</p>
+      <div style="margin-top: 1rem;">
+        <a href="/admin/books/new" class="admin-btn admin-btn-primary">Add Your First Book</a>
+      </div>
+    </div>
+  <% } %>
+</div>

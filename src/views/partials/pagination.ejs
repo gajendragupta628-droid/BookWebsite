@@ -1,0 +1,8 @@
+<% if (total > perPage) { const pages = Math.ceil(total / perPage); %>
+<div class="mt-8 flex justify-center gap-2">
+  <% for (let i=1;i<=pages;i++){ %>
+    <a href="?page=<%= i %>" class="px-3 py-1 rounded border <%= (i===page)?'bg-gold text-charcoal border-gold':'border-charcoal/20 hover:border-gold' %>"><%= i %></a>
+  <% } %>
+</div>
+<% } %>
+

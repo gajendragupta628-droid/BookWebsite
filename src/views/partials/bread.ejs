@@ -1,0 +1,10 @@
+<nav aria-label="Breadcrumb" class="text-sm text-charcoal/70 mb-4">
+  <ol class="flex items-center gap-1">
+    <li><a href="/" class="hover:text-gold">Home</a></li>
+    <% if (crumbs) { crumbs.forEach(function(c){ %>
+      <li>/</li>
+      <li><a href="<%= c.href %>" class="hover:text-gold"><%= c.label %></a></li>
+    <% }) } %>
+  </ol>
+</nav>
+

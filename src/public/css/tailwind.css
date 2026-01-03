@@ -1,0 +1,133 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root{
+  /* Storefront palette: professional, clean, book-focused (no harsh gold/black) */
+  --color-charcoal:#1e293b; /* soft slate for body text */
+  --color-onyx:#020617;     /* deep, ink-like accents */
+  --color-ivory:#f5efe6;    /* warm, paper-like background */
+  --color-gold:#0d9488;     /* refined teal accent for CTAs and highlights */
+}
+
+html,body{font-feature-settings:"cv02","cv03","cv04","cv11"}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-ivory);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-gold);
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #b8954d;
+}
+
+/* Smooth scroll */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Custom animations */
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+.animate-slide-in-up {
+  animation: slideInUp 0.6s ease-out;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.4s ease-out;
+}
+
+/* Loading skeleton */
+.skeleton {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 1000px 100%;
+  animation: shimmer 2s infinite;
+}
+
+/* Enhanced shadows */
+.shadow-premium {
+  box-shadow: 0 20px 60px rgba(13, 13, 15, 0.12);
+}
+
+/* Hover effects */
+.hover-lift {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hover-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(13, 13, 15, 0.15);
+}
+
+/* Custom gradient backgrounds */
+.bg-gradient-premium {
+  background: linear-gradient(135deg, #f5efe6 0%, #ffffff 100%);
+}
+
+.bg-gradient-gold {
+  background: linear-gradient(135deg, #0d9488 0%, #14b8a6 100%);
+}
+
+/* Text gradients / accents */
+.text-gradient-gold {
+  background: linear-gradient(135deg, #0d9488 0%, #14b8a6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Focus styles */
+input:focus, textarea:focus, select:focus, button:focus {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 2px;
+}
+
+/* Better image loading */
+img {
+  image-rendering: -webkit-optimize-contrast;
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+  /* Prevent zoom on input focus */
+  input, select, textarea {
+    font-size: 16px !important;
+  }
+}

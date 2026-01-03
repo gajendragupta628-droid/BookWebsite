@@ -1,0 +1,115 @@
+<div class="admin-card-header" style="margin-top: 0;">
+  <h1 class="admin-card-title" style="font-size: 1.75rem; margin: 0;">Orders Management</h1>
+  <div class="admin-card-actions">
+    <a href="/admin/orders/export.csv" class="admin-btn admin-btn-secondary">
+      <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+      </svg>
+      Export CSV
+    </a>
+  </div>
+</div>
+
+<!-- Filters -->
+<div class="admin-card">
+  <form method="get" class="admin-filters">
+    <div class="admin-form-group" style="flex: 1; margin: 0;">
+      <select name="status" class="admin-form-select" onchange="this.form.submit()">
+        <option value="">All Statuses</option>
+        <option value="New" <%= filter.status === 'New' ? 'selected' : '' %>>New</option>
+        <option value="Confirmed" <%= filter.status === 'Confirmed' ? 'selected' : '' %>>Confirmed</option>
+        <option value="Packed" <%= filter.status === 'Packed' ? 'selected' : '' %>>Packed</option>
+        <option value="Shipped" <%= filter.status === 'Shipped' ? 'selected' : '' %>>Shipped</option>
+        <option value="Delivered" <%= filter.status === 'Delivered' ? 'selected' : '' %>>Delivered</option>
+        <option value="Cancelled" <%= filter.status === 'Cancelled' ? 'selected' : '' %>>Cancelled</option>
+        <option value="Returned" <%= filter.status === 'Returned' ? 'selected' : '' %>>Returned</option>
+      </select>
+    </div>
+    
+    <div class="admin-form-group" style="flex: 1; margin: 0;">
+      <input 
+        type="text" 
+        name="phone" 
+        value="<%= filter.phone || '' %>" 
+        placeholder="Search by phone..." 
+        class="admin-form-input"
+      />
+    </div>
+    
+    <button type="submit" class="admin-btn admin-btn-secondary">
+      <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+      </svg>
+      Filter
+    </button>
+    
+    <% if (filter.status || filter.phone) { %>
+      <a href="/admin/orders" class="admin-btn admin-btn-secondary">Clear</a>
+    <% } %>
+  </form>
+</div>
+
+<!-- Orders Table -->
+<div class="admin-card">
+  <% if (orders && orders.length > 0) { %>
+    <div class="admin-table-container">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Order #</th>
+            <th>Customer</th>
+            <th>Phone</th>
+            <th>Items</th>
+            <th>Total</th>
+            <th>Status</th>
+            <th>Date</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+        <% orders.forEach(function(o){ %>
+          <tr>
+            <td><strong><%= o.number %></strong></td>
+            <td><%= o.customer?.name || 'N/A' %></td>
+            <td><%= o.customer?.phone || 'N/A' %></td>
+            <td><%= (o.items || []).length %> items</td>
+            <td><strong><%= store.currency %> <%= o.totals?.grandTotal?.toFixed(2) || '0.00' %></strong></td>
+            <td>
+              <% 
+                let statusClass = 'admin-badge-primary';
+                if (o.status === 'Delivered') statusClass = 'admin-badge-success';
+                else if (o.status === 'Cancelled' || o.status === 'Returned') statusClass = 'admin-badge-danger';
+                else if (o.status === 'Shipped') statusClass = 'admin-badge-info';
+                else if (o.status === 'Packed') statusClass = 'admin-badge-warning';
+              %>
+              <span class="admin-badge <%= statusClass %>"><%= o.status || 'New' %></span>
+            </td>
+            <td>
+              <%= new Date(o.createdAt).toLocaleDateString() %>
+              <div style="font-size: 0.75rem; color: var(--admin-text-muted);"><%= new Date(o.createdAt).toLocaleTimeString() %></div>
+            </td>
+            <td>
+              <div class="admin-table-actions">
+                <a href="/admin/orders/<%= o._id %>" class="admin-btn admin-btn-sm admin-btn-secondary">View Details</a>
+              </div>
+            </td>
+          </tr>
+        <% }) %>
+        </tbody>
+      </table>
+    </div>
+  <% } else { %>
+    <div class="admin-empty">
+      <svg class="admin-empty-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+      </svg>
+      <div class="admin-empty-title">No orders found</div>
+      <p>Orders will appear here when customers make purchases.</p>
+      <% if (filter.status || filter.phone) { %>
+        <div style="margin-top: 1rem;">
+          <a href="/admin/orders" class="admin-btn admin-btn-secondary">Clear Filters</a>
+        </div>
+      <% } %>
+    </div>
+  <% } %>
+</div>

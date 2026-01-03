@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Admin — <%= (meta && meta.title) ? meta.title + ' — ' : '' %>Motivational Books</title>
+  <link rel="icon" type="image/png" href="/assets/logo.png">
+  <link rel="apple-touch-icon" href="/assets/logo.png">
+  <link rel="stylesheet" href="/public/css/app.css" />
+  <link rel="stylesheet" href="/public/css/admin.css" />
+</head>
+<body class="admin-body">
+  <div class="admin-container">
+    <!-- Mobile Header -->
+    <header class="admin-mobile-header">
+      <button class="admin-mobile-menu-btn" id="menuToggle" aria-label="Toggle menu">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      </button>
+      <div class="admin-logo">Admin Panel</div>
+      <form action="/admin/logout" method="post" style="margin: 0;">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        <button class="admin-btn admin-btn-sm admin-btn-primary" type="submit">Logout</button>
+      </form>
+    </header>
+
+    <!-- Sidebar Overlay (Mobile) -->
+    <div class="admin-sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- Sidebar -->
+    <aside class="admin-sidebar" id="sidebar">
+      <div class="admin-sidebar-header">
+        <div class="admin-logo">📚 Bookstore Admin</div>
+        <button class="admin-close-btn" id="closeMenu" aria-label="Close menu">
+          <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+      <%- include('../partials/admin-nav') %>
+      <div style="padding: 1rem; border-top: 1px solid var(--admin-border); margin-top: auto;">
+        <div style="font-size: 0.75rem; color: var(--admin-text-muted); text-align: center;">
+          Admin v1.0
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="admin-main">
+      <!-- Desktop Header -->
+      <div class="admin-header">
+        <div class="admin-header-title">Motivational Books Admin</div>
+        <div class="admin-header-actions">
+          <form action="/admin/logout" method="post" style="margin: 0;">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+            <button class="admin-btn admin-btn-sm admin-btn-secondary" type="submit">Logout</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Page Content -->
+      <div id="adminContent">
+        <%- body %>
+      </div>
+    </main>
+  </div>
+
+  <script defer src="/public/js/admin.js"></script>
+  
+  <script>
+    // Mobile menu toggle
+    const menuToggle = document.getElementById('menuToggle');
+    const closeMenu = document.getElementById('closeMenu');
+    const sidebar = document.getElementById('sidebar');
+    const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+    function openSidebar() {
+      sidebar.classList.add('open');
+      sidebarOverlay.classList.add('show');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeSidebar() {
+      sidebar.classList.remove('open');
+      sidebarOverlay.classList.remove('show');
+      document.body.style.overflow = '';
+    }
+
+    if (menuToggle) {
+      menuToggle.addEventListener('click', openSidebar);
+    }
+
+    if (closeMenu) {
+      closeMenu.addEventListener('click', closeSidebar);
+    }
+
+    if (sidebarOverlay) {
+      sidebarOverlay.addEventListener('click', closeSidebar);
+    }
+
+    // Close sidebar on navigation
+    document.querySelectorAll('.admin-nav-link').forEach(link => {
+      link.addEventListener('click', () => {
+        if (window.innerWidth < 1024) {
+          closeSidebar();
+        }
+      });
+    });
+
+    // Active link highlighting
+    const currentPath = window.location.pathname;
+    document.querySelectorAll('.admin-nav-link').forEach(link => {
+      if (link.getAttribute('href') === currentPath) {
+        link.classList.add('active');
+      }
+    });
+  </script>
+</body>
+</html>

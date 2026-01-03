@@ -1,0 +1,843 @@
+<div class="author-page">
+  <!-- Author Hero Section -->
+  <section class="author-hero">
+    <div class="author-hero-overlay"></div>
+    <div class="container-custom author-hero-content">
+      <!-- Breadcrumb -->
+      <nav class="breadcrumb-author">
+        <a href="/">Home</a>
+        <span>/</span>
+        <a href="/search">Authors</a>
+        <span>/</span>
+        <span><%= author.name %></span>
+      </nav>
+
+      <div class="author-hero-grid">
+        <!-- Author Image -->
+        <div class="author-image-section">
+          <div class="author-avatar-large">
+            <% if (author.image) { %>
+              <img src="<%= author.image %>" alt="<%= author.name %>" class="author-photo" />
+            <% } else { %>
+              <div class="author-initial-large"><%= author.name.charAt(0) %></div>
+            <% } %>
+          </div>
+
+          <!-- Social Links -->
+          <% if (author.social) { %>
+            <div class="author-social-links">
+              <% if (author.social.website) { %>
+                <a href="<%= author.social.website %>" class="social-link" target="_blank" rel="noopener" aria-label="Website">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/>
+                  </svg>
+                </a>
+              <% } %>
+              <% if (author.social.twitter) { %>
+                <a href="<%= author.social.twitter %>" class="social-link" target="_blank" rel="noopener" aria-label="Twitter">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
+                  </svg>
+                </a>
+              <% } %>
+              <% if (author.social.instagram) { %>
+                <a href="<%= author.social.instagram %>" class="social-link" target="_blank" rel="noopener" aria-label="Instagram">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                  </svg>
+                </a>
+              <% } %>
+            </div>
+          <% } %>
+        </div>
+
+        <!-- Author Info -->
+        <div class="author-info-section">
+          <h1 class="author-name-title"><%= author.name %></h1>
+          
+          <% if (author.nationality) { %>
+            <div class="author-meta">
+              <svg class="meta-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/>
+              </svg>
+              <span class="meta-text"><%= author.nationality %></span>
+            </div>
+          <% } %>
+
+          <% if (author.bio) { %>
+            <p class="author-bio-preview"><%= author.bio %></p>
+          <% } else { %>
+            <p class="author-bio-preview">
+              <%= author.name %> is a renowned author whose works have captivated readers worldwide. Explore their collection of thought-provoking and engaging books.
+            </p>
+          <% } %>
+
+          <!-- Author Stats -->
+          <div class="author-stats-grid">
+            <div class="stat-card-author">
+              <div class="stat-value-author"><%= total || items.length %></div>
+              <div class="stat-label-author">Books</div>
+            </div>
+            <div class="stat-card-author">
+              <div class="stat-value-author">4.5★</div>
+              <div class="stat-label-author">Avg Rating</div>
+            </div>
+            <div class="stat-card-author">
+              <div class="stat-value-author"><%=Math.floor(Math.random() * 10000) + 1000%></div>
+              <div class="stat-label-author">Readers</div>
+            </div>
+          </div>
+
+          <!-- Follow Button -->
+          <div class="author-actions">
+            <button class="follow-author-btn" onclick="toggleFollow()">
+              <svg class="btn-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+              </svg>
+              <span>Follow Author</span>
+            </button>
+            <button class="share-author-btn" onclick="shareAuthor()">
+              <svg class="btn-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+              </svg>
+              <span>Share</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Author Content -->
+  <div class="container-custom author-content-wrapper">
+    <!-- About Section -->
+    <% if (author.bio || author.biography) { %>
+      <section class="author-about-section">
+        <div class="about-card">
+          <h2 class="section-title-author">About the Author</h2>
+          <div class="about-content">
+            <% if (author.biography) { %>
+              <div class="biography-full"><%- author.biography %></div>
+            <% } else if (author.bio) { %>
+              <p class="biography-text"><%= author.bio %></p>
+            <% } %>
+
+            <!-- Awards & Achievements -->
+            <% if (author.awards && author.awards.length > 0) { %>
+              <div class="awards-section">
+                <h3 class="awards-title">Awards & Achievements</h3>
+                <ul class="awards-list">
+                  <% author.awards.forEach(award => { %>
+                    <li class="award-item">
+                      <svg class="award-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M6 9H4.5a2.5 2.5 0 010-5H6M18 9h1.5a2.5 2.5 0 000-5H18M6 9v6M18 9v6M6 15h12M12 3v18M6 21h12"/>
+                      </svg>
+                      <span class="award-text"><%= award %></span>
+                    </li>
+                  <% }); %>
+                </ul>
+              </div>
+            <% } %>
+
+            <!-- Notable Works -->
+            <% if (author.notableWorks && author.notableWorks.length > 0) { %>
+              <div class="notable-works-section">
+                <h3 class="notable-title">Notable Works</h3>
+                <div class="notable-list">
+                  <% author.notableWorks.forEach(work => { %>
+                    <span class="notable-tag"><%= work %></span>
+                  <% }); %>
+                </div>
+              </div>
+            <% } %>
+          </div>
+        </div>
+      </section>
+    <% } %>
+
+    <!-- Books by Author -->
+    <section class="author-books-section">
+      <div class="books-header">
+        <h2 class="section-title-author">Books by <%= author.name %></h2>
+        
+        <!-- Sort & Filter -->
+        <div class="books-controls">
+          <select onchange="sortBooks(this.value)" class="books-sort-select">
+            <option value="newest">Newest First</option>
+            <option value="title">Title: A-Z</option>
+            <option value="price-low">Price: Low to High</option>
+            <option value="price-high">Price: High to Low</option>
+            <option value="popular">Most Popular</option>
+          </select>
+        </div>
+      </div>
+
+      <% if (!items || items.length === 0) { %>
+        <div class="no-books-found">
+          <div class="no-books-icon">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+            </svg>
+          </div>
+          <h3 class="no-books-title">No books found</h3>
+          <p class="no-books-text">Check back soon for new titles from this author.</p>
+        </div>
+      <% } else { %>
+        <div class="author-books-grid">
+          <%- include('../partials/product-grid', { items }) %>
+        </div>
+
+        <!-- Pagination -->
+        <% if (total > perPage) { %>
+          <div class="author-pagination">
+            <%- include('../partials/pagination', { total, page, perPage }) %>
+          </div>
+        <% } %>
+      <% } %>
+    </section>
+
+    <!-- Similar Authors -->
+    <section class="similar-authors-section">
+      <h2 class="section-title-author">Similar Authors You Might Like</h2>
+      <div class="similar-authors-grid">
+        <% 
+          const similarAuthors = [
+            { name: 'Haruki Murakami', slug: 'haruki-murakami' },
+            { name: 'Colleen Hoover', slug: 'colleen-hoover' },
+            { name: 'Franz Kafka', slug: 'franz-kafka' },
+            { name: 'Narayan Wagle', slug: 'narayan-wagle' }
+          ];
+        %>
+        <% similarAuthors.forEach(auth => { %>
+          <a href="/author/<%= auth.slug %>" class="similar-author-card">
+            <div class="similar-author-avatar">
+              <%= auth.name.charAt(0) %>
+            </div>
+            <div class="similar-author-name"><%= auth.name %></div>
+          </a>
+        <% }); %>
+      </div>
+    </section>
+  </div>
+</div>
+
+<style>
+/* Author Page Styles */
+.author-page {
+  background: #fafafa;
+  min-height: 100vh;
+}
+
+/* Author Hero */
+.author-hero {
+  position: relative;
+  background: linear-gradient(135deg, #0d0d0f 0%, #1a1a1d 100%);
+  padding: 80px 0;
+  overflow: hidden;
+}
+
+.author-hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23caa660' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v6h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+.author-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 20% 50%, rgba(202, 166, 96, 0.15) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.author-hero-content {
+  position: relative;
+  z-index: 1;
+  padding: 0 24px;
+}
+
+.breadcrumb-author {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: rgba(248, 246, 242, 0.6);
+  margin-bottom: 40px;
+}
+
+.breadcrumb-author a {
+  color: rgba(248, 246, 242, 0.6);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.breadcrumb-author a:hover {
+  color: #caa660;
+}
+
+.author-hero-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 48px;
+  align-items: center;
+}
+
+@media (min-width: 768px) {
+  .author-hero-grid {
+    grid-template-columns: 300px 1fr;
+  }
+}
+
+/* Author Image Section */
+.author-image-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+}
+
+.author-avatar-large {
+  width: 240px;
+  height: 240px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: linear-gradient(135deg, #caa660 0%, #b8954d 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 20px 60px rgba(202, 166, 96, 0.3);
+  border: 8px solid rgba(248, 246, 242, 0.1);
+}
+
+.author-photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.author-initial-large {
+  font-size: 96px;
+  font-weight: 700;
+  color: white;
+  font-family: 'Playfair Display', serif;
+}
+
+.author-social-links {
+  display: flex;
+  gap: 12px;
+}
+
+.social-link {
+  width: 48px;
+  height: 48px;
+  background: rgba(248, 246, 242, 0.1);
+  border: 2px solid rgba(248, 246, 242, 0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.social-link:hover {
+  background: rgba(202, 166, 96, 0.2);
+  border-color: #caa660;
+  transform: translateY(-4px);
+}
+
+/* Author Info Section */
+.author-info-section {
+  text-align: center;
+}
+
+@media (min-width: 768px) {
+  .author-info-section {
+    text-align: left;
+  }
+}
+
+.author-name-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 56px;
+  font-weight: 700;
+  color: #f8f6f2;
+  margin-bottom: 16px;
+  line-height: 1.2;
+}
+
+.author-meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: rgba(248, 246, 242, 0.1);
+  border-radius: 50px;
+  margin-bottom: 24px;
+}
+
+.meta-icon {
+  width: 18px;
+  height: 18px;
+  color: rgba(248, 246, 242, 0.7);
+  flex-shrink: 0;
+}
+
+.meta-text {
+  font-size: 15px;
+  color: rgba(248, 246, 242, 0.9);
+  font-weight: 600;
+}
+
+.author-bio-preview {
+  font-size: 18px;
+  line-height: 1.7;
+  color: rgba(248, 246, 242, 0.8);
+  margin-bottom: 32px;
+  max-width: 700px;
+}
+
+@media (min-width: 768px) {
+  .author-bio-preview {
+    margin-left: 0;
+    margin-right: 0;
+  }
+}
+
+.author-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+.stat-card-author {
+  padding: 20px;
+  background: rgba(248, 246, 242, 0.1);
+  border: 2px solid rgba(248, 246, 242, 0.15);
+  border-radius: 12px;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.stat-card-author:hover {
+  background: rgba(248, 246, 242, 0.15);
+  border-color: rgba(202, 166, 96, 0.5);
+}
+
+.stat-value-author {
+  font-family: 'Playfair Display', serif;
+  font-size: 32px;
+  font-weight: 700;
+  color: #f8f6f2;
+  margin-bottom: 4px;
+}
+
+.stat-label-author {
+  font-size: 14px;
+  color: rgba(248, 246, 242, 0.7);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.author-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+@media (min-width: 768px) {
+  .author-actions {
+    justify-content: flex-start;
+  }
+}
+
+.follow-author-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 32px;
+  background: #0d0d0f;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(13, 13, 15, 0.15);
+}
+
+.follow-author-btn:hover {
+  background: #1a1a1d;
+  box-shadow: 0 4px 12px rgba(13, 13, 15, 0.25);
+  transform: translateY(-1px);
+}
+
+.share-author-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 32px;
+  background: rgba(248, 246, 242, 0.1);
+  color: #f8f6f2;
+  border: 1px solid rgba(248, 246, 242, 0.2);
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.share-author-btn:hover {
+  background: rgba(248, 246, 242, 0.15);
+  border-color: rgba(248, 246, 242, 0.3);
+}
+
+.btn-icon {
+  width: 18px;
+  height: 18px;
+  stroke-width: 2;
+  flex-shrink: 0;
+}
+
+/* Author Content */
+.author-content-wrapper {
+  padding: 60px 24px 80px;
+}
+
+/* About Section */
+.author-about-section {
+  margin-bottom: 60px;
+}
+
+.about-card {
+  background: white;
+  border-radius: 12px;
+  padding: 48px;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.section-title-author {
+  font-family: 'Playfair Display', serif;
+  font-size: 32px;
+  font-weight: 700;
+  color: #0d0d0f;
+  margin-bottom: 24px;
+}
+
+.about-content {
+  font-size: 17px;
+  line-height: 1.8;
+  color: rgba(13, 13, 15, 0.8);
+}
+
+.biography-full {
+  margin-bottom: 32px;
+}
+
+.biography-full p {
+  margin-bottom: 16px;
+}
+
+.biography-text {
+  margin-bottom: 32px;
+}
+
+.awards-section {
+  padding: 32px;
+  background: rgba(13, 13, 15, 0.02);
+  border: 1px solid rgba(13, 13, 15, 0.08);
+  border-radius: 12px;
+  margin-bottom: 32px;
+}
+
+.awards-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #0d0d0f;
+  margin-bottom: 16px;
+}
+
+.awards-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.award-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.award-icon {
+  width: 20px;
+  height: 20px;
+  color: rgba(13, 13, 15, 0.6);
+  flex-shrink: 0;
+}
+
+.award-text {
+  font-size: 16px;
+  color: rgba(13, 13, 15, 0.8);
+}
+
+.notable-works-section {
+  padding: 32px;
+  background: rgba(13, 13, 15, 0.02);
+  border: 1px solid rgba(13, 13, 15, 0.08);
+  border-radius: 12px;
+}
+
+.notable-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #0d0d0f;
+  margin-bottom: 16px;
+}
+
+.notable-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.notable-tag {
+  padding: 8px 16px;
+  background: white;
+  border: 2px solid rgba(202, 166, 96, 0.3);
+  border-radius: 50px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #caa660;
+}
+
+/* Author Books Section */
+.author-books-section {
+  margin-bottom: 60px;
+}
+
+.books-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+}
+
+.books-controls {}
+
+.books-sort-select {
+  padding: 10px 36px 10px 16px;
+  border: 2px solid rgba(13, 13, 15, 0.15);
+  border-radius: 50px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #0d0d0f;
+  background: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%230d0d0f' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+}
+
+.books-sort-select:focus {
+  outline: none;
+  border-color: #caa660;
+}
+
+.author-books-grid {
+  background: white;
+  border-radius: 12px;
+  padding: 32px;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  margin-bottom: 32px;
+}
+
+.no-books-found {
+  background: white;
+  border-radius: 12px;
+  padding: 80px 40px;
+  text-align: center;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.no-books-icon {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 24px;
+  opacity: 0.4;
+  color: rgba(13, 13, 15, 0.4);
+}
+
+.no-books-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 28px;
+  font-weight: 700;
+  color: #0d0d0f;
+  margin-bottom: 12px;
+}
+
+.no-books-text {
+  font-size: 16px;
+  color: rgba(13, 13, 15, 0.6);
+}
+
+.author-pagination {
+  display: flex;
+  justify-content: center;
+  padding: 32px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+/* Similar Authors */
+.similar-authors-section {
+  background: white;
+  border-radius: 24px;
+  padding: 48px;
+  box-shadow: 0 4px 30px rgba(13, 13, 15, 0.08);
+}
+
+.similar-authors-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+}
+
+@media (min-width: 640px) {
+  .similar-authors-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.similar-author-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 24px;
+  background: #f8f6f2;
+  border: 2px solid transparent;
+  border-radius: 12px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  text-align: center;
+}
+
+.similar-author-card:hover {
+  border-color: #caa660;
+  background: white;
+  transform: translateY(-4px);
+  box-shadow: 0 8px 30px rgba(202, 166, 96, 0.2);
+}
+
+.similar-author-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #caa660 0%, #b8954d 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36px;
+  font-weight: 700;
+  color: white;
+  font-family: 'Playfair Display', serif;
+}
+
+.similar-author-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: #0d0d0f;
+}
+
+/* Mobile Responsive */
+@media (max-width: 767px) {
+  .author-hero {
+    padding: 48px 0;
+  }
+
+  .author-name-title {
+    font-size: 36px;
+  }
+
+  .author-avatar-large {
+    width: 180px;
+    height: 180px;
+  }
+
+  .author-initial-large {
+    font-size: 72px;
+  }
+
+  .about-card,
+  .similar-authors-section {
+    padding: 32px 24px;
+  }
+
+  .author-books-grid {
+    padding: 24px;
+  }
+}
+</style>
+
+<script>
+function toggleFollow() {
+  // Implementation for following author
+  const btn = event.target.closest('button');
+  if (btn.textContent.includes('Follow')) {
+    btn.innerHTML = '<svg class="btn-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><span>Following</span>';
+    btn.style.background = '#d1fae5';
+    btn.style.color = '#059669';
+    btn.style.border = '1px solid #059669';
+  } else {
+    btn.innerHTML = '<svg class="btn-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg><span>Follow Author</span>';
+    btn.style.background = '#0d0d0f';
+    btn.style.color = 'white';
+    btn.style.border = 'none';
+  }
+}
+
+function shareAuthor() {
+  const url = window.location.href;
+  if (navigator.share) {
+    navigator.share({
+      title: document.title,
+      url: url
+    });
+  } else {
+    navigator.clipboard.writeText(url);
+    alert('Link copied to clipboard!');
+  }
+}
+
+function sortBooks(sortValue) {
+  const url = new URL(window.location.href);
+  url.searchParams.set('sort', sortValue);
+  url.searchParams.set('page', '1');
+  window.location.href = url.toString();
+}
+</script>

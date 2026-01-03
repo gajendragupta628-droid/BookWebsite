@@ -1,0 +1,659 @@
+<div class="product-card">
+  <!-- Image Container -->
+  <div class="product-card-image-wrapper">
+    <a href="/book/<%= book.slug %>" class="product-card-image-link">
+      <% 
+        let imgSrc;
+        if (book.images && book.images[0] && book.images[0].src) {
+          imgSrc = book.images[0].src;
+        } else if (book.isbn) {
+          imgSrc = `https://covers.openlibrary.org/b/isbn/${book.isbn}-L.jpg`;
+        } else {
+          imgSrc = `https://placehold.co/400x600/E5E7EB/374151?text=${encodeURIComponent(book.title.substring(0, 30))}`;
+        }
+      %>
+      <img 
+        src="<%= imgSrc %>" 
+        alt="<%= (book.images && book.images[0] && (book.images[0].alt || book.title)) || book.title %>" 
+        loading="lazy" 
+        decoding="async" 
+        class="product-card-image"
+        onerror="this.onerror=null; this.src='https://images.pexels.com/photos/768125/pexels-photo-768125.jpeg?auto=compress&cs=tinysrgb&w=400';"
+      />
+    </a>
+
+    <!-- Badges Container -->
+    <div class="product-card-badges">
+      <% if (book.discountPercent && book.discountPercent > 0) { %>
+        <span class="product-badge product-badge-discount">
+          -<%= book.discountPercent %>% OFF
+        </span>
+      <% } %>
+      <% 
+        const isNew = book.createdAt && (new Date() - new Date(book.createdAt)) < (30 * 24 * 60 * 60 * 1000);
+        const isBestseller = book.sales && book.sales > 50;
+      %>
+      <% if (isNew) { %>
+        <span class="product-badge product-badge-new">NEW</span>
+      <% } %>
+      <% if (isBestseller) { %>
+        <span class="product-badge product-badge-bestseller">BESTSELLER</span>
+      <% } %>
+    </div>
+
+    <!-- Wishlist Button -->
+    <% const inWL = (session && session.wishlist && (session.wishlist.items||[]).includes(String(book._id))); %>
+    <button 
+      aria-label="<%= inWL ? 'Remove from Wishlist' : 'Add to Wishlist' %>" 
+      data-toggle-wishlist 
+      data-id="<%= book._id %>" 
+      aria-pressed="<%= inWL ? 'true' : 'false' %>" 
+      class="product-card-wishlist <%= inWL ? 'product-card-wishlist-active' : '' %>"
+    >
+      <svg class="wishlist-icon" fill="<%= inWL ? 'currentColor' : 'none' %>" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"/>
+      </svg>
+    </button>
+  </div>
+
+  <!-- Product Info -->
+  <div class="product-card-content">
+    <!-- Title -->
+    <h3 class="product-card-title">
+      <a href="/book/<%= book.slug %>"><%= book.title %></a>
+    </h3>
+
+    <!-- Author -->
+    <div class="product-card-author">
+      <%= book.authors || 'Unknown Author' %>
+    </div>
+
+    <!-- Rating -->
+    <% if (book.rating) { %>
+      <div class="product-card-rating">
+        <div class="rating-stars">
+          <% for(let i = 0; i < 5; i++) { %>
+            <svg class="star-icon <%= i < Math.floor(book.rating) ? 'star-filled' : 'star-empty' %>" viewBox="0 0 20 20">
+              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+            </svg>
+          <% } %>
+        </div>
+        <span class="rating-count">(<%= book.reviewCount || 0 %>)</span>
+      </div>
+    <% } %>
+
+    <!-- Price -->
+    <div class="product-card-price">
+      <div class="price-row">
+        <span class="price-current"><%= store.currency %>&nbsp;<%= book.priceSale.toFixed(2) %></span>
+      </div>
+      <% if (book.priceMRP && book.priceMRP > book.priceSale) { %>
+        <div class="price-row">
+          <span class="price-original"><%= store.currency %>&nbsp;<%= (book.priceMRP).toFixed(2) %></span>
+        </div>
+        <% 
+          const discountPercent = book.discountPercent || Math.round(((book.priceMRP - book.priceSale) / book.priceMRP) * 100);
+        %>
+        <% if (discountPercent > 0) { %>
+          <div class="price-row">
+            <span class="price-discount">Save <%= discountPercent %>%</span>
+          </div>
+        <% } %>
+      <% } %>
+    </div>
+
+    <!-- Stock Status -->
+    <% if (book.stock !== undefined) { %>
+      <div class="product-card-stock">
+        <% if (book.stock > 10) { %>
+          <span class="stock-status stock-in">
+            <svg class="stock-icon" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+            </svg>
+            <span>In Stock</span>
+          </span>
+        <% } else if (book.stock > 0) { %>
+          <span class="stock-status stock-low">
+            <svg class="stock-icon" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+            </svg>
+            <span>Only <%= book.stock %> left</span>
+          </span>
+        <% } else { %>
+          <span class="stock-status stock-out">
+            <svg class="stock-icon" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+            </svg>
+            <span>Out of Stock</span>
+          </span>
+        <% } %>
+      </div>
+    <% } %>
+
+    <!-- Add to Cart Button -->
+    <% const inCart = (session && session.cart && (session.cart.items||[]).some(it => String(it.bookId) === String(book._id))); %>
+    <button 
+      data-add-to-cart 
+      data-id="<%= book._id %>" 
+      class="product-card-button <%= inCart ? 'product-card-button-active' : '' %>"
+      data-state="<%= inCart ? 'in-cart' : 'idle' %>"
+      <%= (book.stock !== undefined && book.stock === 0) ? 'disabled' : '' %>
+    >
+      <% if (inCart) { %>
+        <svg class="button-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+        </svg>
+        <span>In Cart</span>
+      <% } else { %>
+        <svg class="button-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
+        </svg>
+        <span><%= book.stock === 0 ? 'Out of Stock' : 'Add to Cart' %></span>
+      <% } %>
+    </button>
+  </div>
+</div>
+
+<style>
+/* Product Card - Ultra Modern Premium Design */
+.product-card {
+  display: flex;
+  flex-direction: column;
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 10px;
+  overflow: hidden;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  height: 100%;
+  position: relative;
+}
+
+.product-card:hover {
+  border-color: rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
+  transform: translateY(-1px);
+}
+
+/* Image Container - More Compact on Mobile */
+.product-card-image-wrapper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 2.8 / 4;
+  overflow: hidden;
+  background: #fafafa;
+}
+
+@media (min-width: 640px) {
+  .product-card-image-wrapper {
+    aspect-ratio: 3 / 4;
+  }
+}
+
+.product-card-image-link {
+  display: block;
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.product-card-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.product-card:hover .product-card-image {
+  transform: scale(1.03);
+}
+
+/* Badges - Smaller and Sleeker */
+.product-card-badges {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  z-index: 2;
+}
+
+@media (min-width: 640px) {
+  .product-card-badges {
+    top: 12px;
+    left: 12px;
+    gap: 6px;
+  }
+}
+
+.product-badge {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  line-height: 1.3;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+}
+
+@media (min-width: 640px) {
+  .product-badge {
+    padding: 4px 10px;
+    font-size: 10px;
+  }
+}
+
+.product-badge-discount,
+.product-badge-new,
+.product-badge-bestseller {
+  background: #000000;
+  color: #ffffff;
+}
+
+/* Wishlist Button - Smaller and More Refined */
+.product-card-wishlist {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 2;
+  padding: 0;
+}
+
+.product-card-wishlist:hover {
+  background: #ffffff;
+  border-color: rgba(0, 0, 0, 0.1);
+  transform: scale(1.05);
+}
+
+.product-card-wishlist-active {
+  background: #000000;
+  color: #ffffff;
+  border-color: #000000;
+}
+
+.product-card-wishlist-active:hover {
+  background: #1a1a1a;
+}
+
+.wishlist-icon {
+  width: 14px;
+  height: 14px;
+  stroke-width: 1.5;
+}
+
+@media (min-width: 640px) {
+  .product-card-wishlist {
+    top: 12px;
+    right: 12px;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+  }
+
+  .wishlist-icon {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+/* Content - Compact on Mobile */
+.product-card-content {
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  flex: 1;
+  gap: 6px;
+}
+
+@media (min-width: 640px) {
+  .product-card-content {
+    padding: 16px;
+    gap: 8px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .product-card-content {
+    padding: 20px;
+    gap: 10px;
+  }
+}
+
+/* Title - More Compact */
+.product-card-title {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.35;
+  color: #111827;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: 35px;
+  transition: color 0.2s ease;
+  letter-spacing: -0.01em;
+}
+
+@media (min-width: 640px) {
+  .product-card-title {
+    font-size: 15px;
+    min-height: 40px;
+    line-height: 1.4;
+  }
+}
+
+@media (min-width: 1024px) {
+  .product-card-title {
+    font-size: 16px;
+    min-height: 44px;
+  }
+}
+
+.product-card-title a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.product-card-title a:hover {
+  color: #374151;
+}
+
+/* Author - Compact */
+.product-card-author {
+  font-size: 11px;
+  color: #6b7280;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  overflow: hidden;
+}
+
+@media (min-width: 640px) {
+  .product-card-author {
+    font-size: 12px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .product-card-author {
+    font-size: 13px;
+  }
+}
+
+/* Rating - Smaller */
+.product-card-rating {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 1px;
+}
+
+.rating-stars {
+  display: flex;
+  gap: 1px;
+}
+
+.star-icon {
+  width: 11px;
+  height: 11px;
+  color: #d1d5db;
+  transition: color 0.2s ease;
+}
+
+@media (min-width: 640px) {
+  .star-icon {
+    width: 12px;
+    height: 12px;
+  }
+}
+
+.star-filled {
+  color: #fbbf24;
+  fill: currentColor;
+}
+
+.star-empty {
+  color: #e5e7eb;
+}
+
+.rating-count {
+  font-size: 10px;
+  color: #9ca3af;
+}
+
+@media (min-width: 640px) {
+  .rating-count {
+    font-size: 11px;
+  }
+}
+
+/* Price - Three Rows Layout */
+.product-card-price {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: 2px;
+}
+
+.price-row {
+  display: flex;
+  align-items: center;
+  line-height: 1.2;
+}
+
+.price-current {
+  font-size: 15px;
+  font-weight: 700;
+  color: #111827;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+}
+
+@media (min-width: 640px) {
+  .price-current {
+    font-size: 17px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .price-current {
+    font-size: 19px;
+  }
+}
+
+.price-original {
+  font-size: 12px;
+  color: #9ca3af;
+  text-decoration: line-through;
+  white-space: nowrap;
+}
+
+@media (min-width: 640px) {
+  .price-original {
+    font-size: 13px;
+  }
+}
+
+.price-discount {
+  font-size: 11px;
+  font-weight: 600;
+  color: #059669;
+  white-space: nowrap;
+}
+
+@media (min-width: 640px) {
+  .price-discount {
+    font-size: 12px;
+  }
+}
+
+@media (min-width: 640px) {
+  .price-original {
+    font-size: 13px;
+  }
+}
+
+/* Stock Status - Compact */
+.product-card-stock {
+  margin-top: 1px;
+}
+
+.stock-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 9px;
+  font-weight: 500;
+  padding: 3px 6px;
+  border-radius: 4px;
+}
+
+@media (min-width: 640px) {
+  .stock-status {
+    font-size: 10px;
+    padding: 4px 8px;
+    gap: 4px;
+  }
+}
+
+.stock-icon {
+  width: 10px;
+  height: 10px;
+}
+
+@media (min-width: 640px) {
+  .stock-icon {
+    width: 11px;
+    height: 11px;
+  }
+}
+
+.stock-in {
+  color: #059669;
+  background: #d1fae5;
+}
+
+.stock-low {
+  color: #d97706;
+  background: #fef3c7;
+}
+
+.stock-out {
+  color: #dc2626;
+  background: #fee2e2;
+}
+
+/* Button - Compact and Sleek */
+.product-card-button {
+  width: 100%;
+  margin-top: 8px;
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background: #000000;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  min-height: 38px;
+  letter-spacing: 0.01em;
+}
+
+@media (min-width: 640px) {
+  .product-card-button {
+    padding: 12px 16px;
+    font-size: 13px;
+    min-height: 42px;
+    margin-top: 10px;
+    border-radius: 8px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .product-card-button {
+    padding: 14px 20px;
+    font-size: 14px;
+    min-height: 44px;
+    margin-top: 12px;
+  }
+}
+
+.product-card-button:hover:not(:disabled) {
+  background: #1a1a1a;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+}
+
+.product-card-button:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.product-card-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: #9ca3af;
+}
+
+.product-card-button-active {
+  background: #f3f4f6;
+  color: #111827;
+  border: 1px solid #e5e7eb;
+}
+
+.product-card-button-active:hover {
+  background: #e5e7eb;
+}
+
+.button-icon {
+  width: 14px;
+  height: 14px;
+  stroke-width: 2;
+}
+
+@media (min-width: 640px) {
+  .button-icon {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+/* Desktop Enhancements */
+@media (min-width: 1024px) {
+  .product-card {
+    border-radius: 12px;
+  }
+
+  .product-card:hover {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    transform: translateY(-2px);
+  }
+}
+
+/* Large Desktop */
+@media (min-width: 1280px) {
+  .product-card:hover {
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.1);
+    transform: translateY(-3px);
+  }
+}
+</style>

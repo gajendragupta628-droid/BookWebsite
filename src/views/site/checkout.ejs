@@ -1,0 +1,910 @@
+<div class="checkout-page">
+  <div class="container-custom checkout-wrapper">
+    <!-- Header -->
+    <div class="checkout-header">
+      <h1 class="checkout-title">Checkout</h1>
+      <div class="checkout-breadcrumb">
+        <a href="/cart">Cart</a>
+        <span>→</span>
+        <span>Checkout</span>
+      </div>
+    </div>
+
+    <% if (typeof error !== 'undefined' && error) { %>
+      <div class="error-message">
+        <svg class="error-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 9V13M12 17H12.01M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z"/>
+        </svg>
+        <span><%= error %></span>
+      </div>
+    <% } %>
+
+    <form method="post" action="/checkout" class="checkout-grid">
+      <!-- Left Column: Shipping Information -->
+      <div class="checkout-main">
+        <!-- Saved Addresses Section (if logged in and has addresses) -->
+        <% if (currentUser && savedAddresses && savedAddresses.length > 0) { %>
+          <div class="checkout-section">
+            <h2 class="section-title">Select Delivery Address</h2>
+            
+            <div class="saved-addresses">
+              <% savedAddresses.forEach((addr, index) => { %>
+                <label class="address-option <%= addr.isDefault ? 'default' : '' %>">
+                  <input 
+                    type="radio" 
+                    name="selectedAddressIndex" 
+                    value="<%= index %>" 
+                    <%= (addr.isDefault || (defaultAddress && addr._id === defaultAddress._id)) ? 'checked' : '' %>
+                    onchange="toggleAddressForm(false)"
+                    class="address-radio"
+                  />
+                  <div class="address-card-content">
+                    <div class="address-card-header">
+                      <span class="address-label"><%= addr.label || 'Address' %></span>
+                      <% if (addr.isDefault) { %>
+                        <span class="default-tag">Default</span>
+                      <% } %>
+                    </div>
+                    <div class="address-details">
+                      <div class="address-name"><%= addr.fullName %></div>
+                      <div class="address-text">
+                        <%= addr.addressLine1 %><% if (addr.addressLine2) { %>, <%= addr.addressLine2 %><% } %><br/>
+                        <%= addr.city %>, <%= addr.state %> <%= addr.postalCode %><br/>
+                        <%= addr.country %>
+                      </div>
+                      <div class="address-phone">Phone: <%= addr.phone %></div>
+                    </div>
+                  </div>
+                </label>
+              <% }); %>
+              
+              <!-- Add New Address Option -->
+              <label class="address-option new-address-option">
+                <input 
+                  type="radio" 
+                  name="selectedAddressIndex" 
+                  value="" 
+                  onchange="toggleAddressForm(true)"
+                  class="address-radio"
+                />
+                <div class="new-address-content">
+                  <div class="new-address-icon">+</div>
+                  <div class="new-address-text">Add New Address</div>
+                </div>
+              </label>
+            </div>
+          </div>
+        <% } %>
+
+        <!-- Shipping Address Form -->
+        <div id="shippingForm" class="checkout-section" <%= (currentUser && savedAddresses && savedAddresses.length > 0) ? 'style="display: none;"' : '' %>>
+          <h2 class="section-title">
+            <% if (currentUser && savedAddresses && savedAddresses.length > 0) { %>
+              New Delivery Address
+            <% } else { %>
+              Delivery Address
+            <% } %>
+          </h2>
+          
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label">Full Name *</label>
+              <input 
+                type="text" 
+                name="name" 
+                id="name"
+                placeholder="John Doe" 
+                class="form-input" 
+                <%= (currentUser && savedAddresses && savedAddresses.length > 0) ? '' : 'required' %>
+                value="<%= currentUser ? currentUser.name : '' %>"
+              />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Phone Number *</label>
+              <input 
+                type="tel" 
+                name="phone" 
+                id="phone"
+                placeholder="+977 98XXXXXXXX" 
+                class="form-input" 
+                <%= (currentUser && savedAddresses && savedAddresses.length > 0) ? '' : 'required' %>
+                value="<%= currentUser && currentUser.phone ? currentUser.phone : '' %>"
+              />
+            </div>
+
+            <div class="form-group-full">
+              <label class="form-label">Email (optional)</label>
+              <input 
+                type="email" 
+                name="email" 
+                id="email"
+                placeholder="your@email.com" 
+                class="form-input"
+                value="<%= currentUser ? currentUser.email : '' %>"
+              />
+            </div>
+
+            <div class="form-group-full">
+              <label class="form-label">Address Line 1 *</label>
+              <input 
+                type="text" 
+                name="address1" 
+                id="address1"
+                placeholder="Street address, P.O. box, company name" 
+                class="form-input" 
+                <%= (currentUser && savedAddresses && savedAddresses.length > 0) ? '' : 'required' %>
+              />
+            </div>
+
+            <div class="form-group-full">
+              <label class="form-label">Address Line 2</label>
+              <input 
+                type="text" 
+                name="address2" 
+                id="address2"
+                placeholder="Apartment, suite, unit, etc. (optional)" 
+                class="form-input"
+              />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">City *</label>
+              <input 
+                type="text" 
+                name="city" 
+                id="city"
+                placeholder="Kathmandu" 
+                class="form-input" 
+                <%= (currentUser && savedAddresses && savedAddresses.length > 0) ? '' : 'required' %>
+              />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">State/Province *</label>
+              <input 
+                type="text" 
+                name="state" 
+                id="state"
+                placeholder="Bagmati" 
+                class="form-input" 
+                <%= (currentUser && savedAddresses && savedAddresses.length > 0) ? '' : 'required' %>
+              />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Postal Code *</label>
+              <input 
+                type="text" 
+                name="postalCode" 
+                id="postalCode"
+                placeholder="44600" 
+                class="form-input" 
+                <%= (currentUser && savedAddresses && savedAddresses.length > 0) ? '' : 'required' %>
+              />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Country *</label>
+              <input 
+                type="text" 
+                name="country" 
+                id="country"
+                value="Nepal" 
+                class="form-input" 
+                <%= (currentUser && savedAddresses && savedAddresses.length > 0) ? '' : 'required' %>
+              />
+            </div>
+
+            <% if (currentUser) { %>
+              <div class="form-group-full save-address-option">
+                <label class="checkbox-label-checkout">
+                  <input type="checkbox" name="saveAddress" id="saveAddress" />
+                  <span>Save this address for future orders</span>
+                </label>
+                <div class="save-address-label-input" style="display: none;">
+                  <label class="form-label-small">Label this address as:</label>
+                  <input 
+                    type="text" 
+                    name="addressLabel" 
+                    id="addressLabel"
+                    placeholder="e.g., Home, Office" 
+                    class="form-input-small"
+                  />
+                </div>
+              </div>
+            <% } %>
+          </div>
+        </div>
+
+        <!-- Order Notes -->
+        <div class="checkout-section">
+          <h2 class="section-title">Order Notes (Optional)</h2>
+          <textarea 
+            name="notes" 
+            id="notes"
+            placeholder="Special instructions for your order..." 
+            class="form-textarea"
+            rows="3"
+          ></textarea>
+      </div>
+      </div>
+
+      <!-- Right Column: Order Summary -->
+      <aside class="checkout-sidebar">
+        <!-- Order Summary -->
+        <div class="order-summary">
+          <h2 class="summary-title">Order Summary</h2>
+          
+    <% if ((cart.items||[]).length) { %>
+            <div class="summary-items">
+        <% cart.items.forEach(function(it){ %>
+                <div class="summary-item">
+            <% const img = it.image || (it.isbn ? `https://covers.openlibrary.org/b/isbn/${it.isbn}-S.jpg` : 'https://images.pexels.com/photos/45717/pexels-photo-45717.jpeg?auto=compress&cs=tinysrgb&w=100'); %>
+                  <img src="<%= img %>" alt="<%= it.title %>" class="item-thumb" />
+                  <div class="item-details">
+                    <div class="item-title"><%= it.title %></div>
+                    <div class="item-qty">Qty: <%= it.qty %></div>
+                  </div>
+                  <div class="item-price"><%= store.currency %>&nbsp;<%= (it.price * it.qty).toFixed(2) %></div>
+                </div>
+              <% }) %>
+            </div>
+          <% } %>
+
+          <div class="summary-totals">
+            <div class="total-row">
+              <span>Subtotal</span>
+              <span><%= store.currency %>&nbsp;<%= totals.subtotal.toFixed(2) %></span>
+            </div>
+            <div class="total-row">
+              <span>Shipping</span>
+              <span><%= store.currency %>&nbsp;<%= totals.shipping.toFixed(2) %></span>
+            </div>
+            <% if (totals.discountTotal > 0) { %>
+              <div class="total-row discount">
+                <span>Discount</span>
+                <span>-&nbsp;<%= store.currency %>&nbsp;<%= totals.discountTotal.toFixed(2) %></span>
+              </div>
+            <% } %>
+            <div class="total-row grand-total">
+              <span>Total</span>
+              <span><%= store.currency %>&nbsp;<%= totals.grandTotal.toFixed(2) %></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Payment Method -->
+        <div class="payment-method">
+          <h3 class="payment-title">Payment Method</h3>
+          <label class="payment-option">
+            <input type="radio" name="payment" value="COD" checked />
+            <div class="payment-content">
+              <svg class="payment-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+              <div class="payment-details">
+                <div class="payment-name">Cash on Delivery</div>
+                <div class="payment-desc">Pay when you receive</div>
+              </div>
+            </div>
+          </label>
+        </div>
+
+        <!-- Place Order Button -->
+        <button type="submit" class="btn-place-order">
+          <span>Place Order</span>
+          <span>→</span>
+        </button>
+
+        <!-- Trust Signals -->
+        <div class="trust-signals">
+          <div class="trust-item">
+            <svg class="trust-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+            </svg>
+            <span class="trust-text">Secure Checkout</span>
+          </div>
+          <div class="trust-item">
+            <svg class="trust-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M13 10V3L4 14h7v7l9-11h-7z"/>
+            </svg>
+            <span class="trust-text">Fast Delivery</span>
+          </div>
+          <div class="trust-item">
+            <svg class="trust-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 7V5a2 2 0 012-2h2m18 0h2a2 2 0 012 2v2m0 18v-2a2 2 0 00-2-2h-2M7 21H5a2 2 0 01-2-2v-2m18-10h2a2 2 0 012 2v2M7 3h10a2 2 0 012 2v10a2 2 0 01-2 2H7a2 2 0 01-2-2V5a2 2 0 012-2z"/>
+            </svg>
+            <span class="trust-text">Easy Returns</span>
+          </div>
+      </div>
+  </aside>
+    </form>
+  </div>
+</div>
+
+<style>
+/* Checkout Page */
+.checkout-page {
+  background: #fafafa;
+  padding: 40px 0 80px;
+  min-height: 100vh;
+}
+
+.checkout-wrapper {
+  padding: 0 24px;
+}
+
+.checkout-header {
+  margin-bottom: 32px;
+}
+
+.checkout-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 36px;
+  font-weight: 700;
+  color: #0d0d0f;
+  margin-bottom: 8px;
+}
+
+.checkout-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: rgba(13, 13, 15, 0.6);
+}
+
+.checkout-breadcrumb a {
+  color: rgba(13, 13, 15, 0.6);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.checkout-breadcrumb a:hover {
+  color: #0d0d0f;
+  text-decoration: underline;
+}
+
+.checkout-breadcrumb span {
+  color: rgba(13, 13, 15, 0.4);
+}
+
+.checkout-breadcrumb a:hover {
+  text-decoration: underline;
+}
+
+.error-message {
+  background: rgba(231, 76, 60, 0.1);
+  border-left: 4px solid #e74c3c;
+  color: #c0392b;
+  padding: 16px 20px;
+  border-radius: 8px;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: 500;
+}
+
+.error-icon {
+  width: 20px;
+  height: 20px;
+  color: #e74c3c;
+  flex-shrink: 0;
+}
+
+/* Grid Layout */
+.checkout-grid {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 32px;
+}
+
+.checkout-section {
+  background: white;
+  padding: 32px;
+  border-radius: 12px;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  margin-bottom: 24px;
+}
+
+.section-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 24px;
+  font-weight: 700;
+  color: #0d0d0f;
+  margin-bottom: 24px;
+}
+
+/* Saved Addresses */
+.saved-addresses {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.address-option {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 20px;
+  border: 2px solid rgba(13, 13, 15, 0.1);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.address-option:has(.address-radio:checked) {
+  border-color: #0d0d0f;
+  background: rgba(13, 13, 15, 0.02);
+  box-shadow: 0 2px 8px rgba(13, 13, 15, 0.08);
+}
+
+.address-option:hover {
+  border-color: rgba(13, 13, 15, 0.2);
+}
+
+.address-radio {
+  margin-top: 4px;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+
+.address-card-content {
+  flex: 1;
+}
+
+.address-card-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.address-label {
+  font-weight: 700;
+  font-size: 16px;
+  color: #0d0d0f;
+}
+
+.default-tag {
+  padding: 4px 10px;
+  background: rgba(13, 13, 15, 0.08);
+  color: #0d0d0f;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.address-details {}
+
+.address-name {
+  font-weight: 600;
+  font-size: 15px;
+  color: #0d0d0f;
+  margin-bottom: 6px;
+}
+
+.address-text {
+  font-size: 14px;
+  color: rgba(13, 13, 15, 0.7);
+  line-height: 1.6;
+  margin-bottom: 6px;
+}
+
+.address-phone {
+  font-size: 14px;
+  color: rgba(13, 13, 15, 0.7);
+}
+
+/* New Address Option */
+.new-address-option {
+  justify-content: center;
+  align-items: center;
+  min-height: 100px;
+  border-style: dashed;
+}
+
+.new-address-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.new-address-icon {
+  width: 40px;
+  height: 40px;
+  background: rgba(13, 13, 15, 0.04);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: 600;
+  color: rgba(13, 13, 15, 0.6);
+}
+
+.new-address-text {
+  font-weight: 500;
+  color: rgba(13, 13, 15, 0.7);
+  font-size: 14px;
+}
+
+/* Form Elements */
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.form-group,
+.form-group-full {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-group-full {
+  grid-column: 1 / -1;
+}
+
+.form-label {
+  font-weight: 600;
+  font-size: 14px;
+  color: #0d0d0f;
+}
+
+.form-label-small {
+  font-weight: 600;
+  font-size: 13px;
+  color: rgba(13, 13, 15, 0.7);
+  margin-bottom: 6px;
+}
+
+.form-input,
+.form-input-small,
+.form-textarea {
+  padding: 14px 16px;
+  border: 1px solid rgba(13, 13, 15, 0.12);
+  border-radius: 8px;
+  font-size: 16px; /* Prevents iOS zoom */
+  transition: all 0.2s;
+  font-family: inherit;
+  background: white;
+  min-height: 48px;
+}
+
+.form-input-small {
+  padding: 10px 14px;
+  font-size: 14px;
+}
+
+.form-input:focus,
+.form-input-small:focus,
+.form-textarea:focus {
+  outline: none;
+  border-color: rgba(13, 13, 15, 0.25);
+  box-shadow: 0 0 0 3px rgba(13, 13, 15, 0.05);
+}
+
+.form-textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.checkbox-label-checkout {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.checkbox-label-checkout input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+
+.save-address-label-input {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(13, 13, 15, 0.1);
+}
+
+/* Order Summary */
+.checkout-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.order-summary {
+  background: white;
+  padding: 32px;
+  border-radius: 12px;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.summary-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 24px;
+  font-weight: 700;
+  color: #0d0d0f;
+  margin-bottom: 24px;
+}
+
+.summary-items {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 24px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid rgba(13, 13, 15, 0.1);
+}
+
+.summary-item {
+  display: grid;
+  grid-template-columns: 50px 1fr auto;
+  gap: 12px;
+  align-items: center;
+}
+
+.item-thumb {
+  width: 50px;
+  height: 66px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+.item-details {}
+
+.item-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #0d0d0f;
+  margin-bottom: 4px;
+  line-height: 1.3;
+}
+
+.item-qty {
+  font-size: 13px;
+  color: rgba(13, 13, 15, 0.6);
+}
+
+.item-price {
+  font-size: 15px;
+  font-weight: 600;
+  color: #0d0d0f;
+  white-space: nowrap;
+}
+
+.summary-totals {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.total-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 15px;
+}
+
+.total-row span:last-child {
+  white-space: nowrap;
+}
+
+.total-row.discount {
+  color: #27ae60;
+}
+
+.total-row.grand-total {
+  border-top: 2px solid rgba(13, 13, 15, 0.1);
+  padding-top: 16px;
+  margin-top: 8px;
+  font-size: 20px;
+  font-weight: 700;
+  color: #0d0d0f;
+}
+
+/* Payment Method */
+.payment-method {
+  background: white;
+  padding: 24px;
+  border-radius: 12px;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.payment-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #0d0d0f;
+  margin-bottom: 16px;
+}
+
+.payment-option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  border: 1px solid rgba(13, 13, 15, 0.12);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: white;
+}
+
+.payment-option:hover {
+  border-color: rgba(13, 13, 15, 0.25);
+  background: rgba(13, 13, 15, 0.02);
+}
+
+.payment-option:has(input[type="radio"]:checked) {
+  border-color: #0d0d0f;
+  background: rgba(13, 13, 15, 0.02);
+}
+
+.payment-option input[type="radio"] {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+
+.payment-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.payment-icon {
+  width: 24px;
+  height: 24px;
+  color: rgba(13, 13, 15, 0.6);
+  flex-shrink: 0;
+}
+
+.payment-details {}
+
+.payment-name {
+  font-weight: 600;
+  font-size: 15px;
+  color: #0d0d0f;
+}
+
+.payment-desc {
+  font-size: 13px;
+  color: rgba(13, 13, 15, 0.6);
+}
+
+/* Place Order Button */
+.btn-place-order {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 16px 32px;
+  background: #0d0d0f;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 2px 8px rgba(13, 13, 15, 0.15);
+  min-height: 52px;
+}
+
+.btn-place-order:hover {
+  background: #1a1a1d;
+  box-shadow: 0 4px 12px rgba(13, 13, 15, 0.25);
+  transform: translateY(-1px);
+}
+
+/* Trust Signals */
+.trust-signals {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.trust-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 16px 12px;
+  background: rgba(13, 13, 15, 0.02);
+  border: 1px solid rgba(13, 13, 15, 0.08);
+  border-radius: 10px;
+  text-align: center;
+}
+
+.trust-icon {
+  width: 20px;
+  height: 20px;
+  color: rgba(13, 13, 15, 0.6);
+  flex-shrink: 0;
+}
+
+.trust-text {
+  font-size: 11px;
+  font-weight: 600;
+  color: rgba(13, 13, 15, 0.7);
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .checkout-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .checkout-section {
+    padding: 24px;
+  }
+
+  .order-summary {
+    padding: 24px;
+  }
+
+  .checkout-title {
+    font-size: 28px;
+  }
+
+  .trust-signals {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+
+<script>
+function toggleAddressForm(show) {
+  const form = document.getElementById('shippingForm');
+  const inputs = form.querySelectorAll('input[required], textarea[required]');
+  
+  if (show) {
+    form.style.display = 'block';
+    // Add required attribute back
+    inputs.forEach(input => {
+      if (input.id !== 'email') {
+        input.setAttribute('required', 'required');
+      }
+    });
+  } else {
+    form.style.display = 'none';
+    // Remove required attribute
+    inputs.forEach(input => {
+      input.removeAttribute('required');
+    });
+  }
+}
+
+// Save address checkbox toggle
+<% if (currentUser) { %>
+  document.addEventListener('DOMContentLoaded', function() {
+    const saveCheckbox = document.getElementById('saveAddress');
+    const labelInput = document.querySelector('.save-address-label-input');
+    
+    if (saveCheckbox && labelInput) {
+      saveCheckbox.addEventListener('change', function() {
+        labelInput.style.display = this.checked ? 'block' : 'none';
+      });
+    }
+  });
+<% } %>
+</script>

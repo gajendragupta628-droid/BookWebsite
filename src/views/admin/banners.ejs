@@ -1,0 +1,39 @@
+<h1 class="font-display text-2xl mb-4">Banners</h1>
+<form method="post" class="grid md:grid-cols-3 gap-3 mb-6">
+  <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+  <input name="title" placeholder="Title" class="rounded bg-white/10 border-white/20">
+  <input name="subtitle" placeholder="Subtitle" class="rounded bg-white/10 border-white/20">
+  <input name="image" placeholder="Image URL" class="rounded bg-white/10 border-white/20">
+  <input name="ctaText" placeholder="CTA text" class="rounded bg-white/10 border-white/20">
+  <input name="ctaHref" placeholder="CTA href" class="rounded bg-white/10 border-white/20">
+  <select name="position" class="rounded bg-white/10 border-white/20">
+    <option value="home-hero">Home hero</option>
+    <option value="home-promo">Home promo</option>
+    <option value="category-hero">Category hero</option>
+  </select>
+  <input name="sort" type="number" placeholder="Sort" class="rounded bg-white/10 border-white/20">
+  <label class="inline-flex items-center gap-2 text-sm"><input type="checkbox" name="active"> Active</label>
+  <div></div>
+  <button class="px-4 py-2 rounded bg-gold text-charcoal">Add banner</button>
+</form>
+
+<div class="overflow-auto">
+  <table class="min-w-full text-sm">
+    <thead class="text-white/70"><tr><th class="text-left p-2">Title</th><th class="text-left p-2">Position</th><th class="text-left p-2">Active</th><th class="p-2"></th></tr></thead>
+    <tbody>
+    <% banners.forEach(function(b){ %>
+      <tr class="border-t border-white/10">
+        <td class="p-2"><%= b.title %></td>
+        <td class="p-2"><%= b.position %></td>
+        <td class="p-2"><%= b.active?'Yes':'No' %></td>
+        <td class="p-2">
+          <form method="post" action="/admin/banners/<%= b._id %>/delete" onsubmit="return confirm('Delete?')">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+            <button class="text-red-300">Delete</button>
+          </form>
+        </td>
+      </tr>
+    <% }) %>
+    </tbody>
+  </table>
+</div>

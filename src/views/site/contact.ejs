@@ -1,0 +1,767 @@
+<div class="contact-page">
+  <!-- Contact Hero -->
+  <section class="contact-hero">
+    <div class="contact-hero-overlay"></div>
+    <div class="container-custom contact-hero-content">
+      <h1 class="contact-hero-title">Get In Touch</h1>
+      <p class="contact-hero-subtitle">
+        We'd love to hear from you. Send us a message and we'll respond as soon as possible.
+      </p>
+    </div>
+  </section>
+
+  <!-- Contact Content -->
+  <div class="container-custom contact-content-wrapper">
+    <div class="contact-grid">
+      <!-- Contact Form -->
+      <div class="contact-form-section">
+        <div class="form-card">
+          <h2 class="form-title">Send us a Message</h2>
+          <p class="form-description">
+            Fill out the form below and our team will get back to you within 24 hours.
+          </p>
+
+          <form action="/contact/submit" method="POST" class="contact-form" id="contactForm">
+            <!-- Name -->
+            <div class="form-group">
+              <label class="form-label" for="name">
+                Full Name <span class="required">*</span>
+              </label>
+              <input 
+                type="text" 
+                id="name" 
+                name="name" 
+                class="form-input" 
+                placeholder="Enter your full name"
+                required
+              />
+            </div>
+
+            <!-- Email -->
+            <div class="form-group">
+              <label class="form-label" for="email">
+                Email Address <span class="required">*</span>
+              </label>
+              <input 
+                type="email" 
+                id="email" 
+                name="email" 
+                class="form-input" 
+                placeholder="your.email@example.com"
+                required
+              />
+            </div>
+
+            <!-- Phone -->
+            <div class="form-group">
+              <label class="form-label" for="phone">
+                Phone Number
+              </label>
+              <input 
+                type="tel" 
+                id="phone" 
+                name="phone" 
+                class="form-input" 
+                placeholder="+977 98XXXXXXXX"
+              />
+            </div>
+
+            <!-- Subject -->
+            <div class="form-group">
+              <label class="form-label" for="subject">
+                Subject <span class="required">*</span>
+              </label>
+              <select id="subject" name="subject" class="form-select" required>
+                <option value="">Select a subject</option>
+                <option value="order">Order Inquiry</option>
+                <option value="product">Product Question</option>
+                <option value="shipping">Shipping & Delivery</option>
+                <option value="return">Returns & Refunds</option>
+                <option value="technical">Technical Support</option>
+                <option value="partnership">Business Partnership</option>
+                <option value="feedback">Feedback</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+
+            <!-- Message -->
+            <div class="form-group">
+              <label class="form-label" for="message">
+                Message <span class="required">*</span>
+              </label>
+              <textarea 
+                id="message" 
+                name="message" 
+                class="form-textarea" 
+                rows="6"
+                placeholder="Tell us how we can help you..."
+                required
+              ></textarea>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="form-submit-btn">
+              <span class="btn-text">Send Message</span>
+              <span class="btn-icon">→</span>
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Contact Information -->
+      <div class="contact-info-section">
+        <!-- Contact Cards -->
+        <div class="info-cards">
+          <!-- Address -->
+          <div class="info-card">
+            <svg class="info-icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+              <circle cx="12" cy="10" r="3"/>
+            </svg>
+            <h3 class="info-title">Visit Us</h3>
+            <p class="info-text">
+              Kathmandu, Nepal<br />
+              Open Mon-Sat: 10 AM - 6 PM
+            </p>
+          </div>
+
+          <!-- Phone -->
+          <div class="info-card">
+            <svg class="info-icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+            </svg>
+            <h3 class="info-title">Call Us</h3>
+            <p class="info-text">
+              +977 1-XXXXXXX<br />
+              +977 98XXXXXXXX
+            </p>
+          </div>
+
+          <!-- Email -->
+          <div class="info-card">
+            <svg class="info-icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+              <path d="M22 6l-10 7L2 6"/>
+            </svg>
+            <h3 class="info-title">Email Us</h3>
+            <p class="info-text">
+              info@booksnepal.com<br />
+              support@booksnepal.com
+            </p>
+          </div>
+
+          <!-- Social Media -->
+          <div class="info-card">
+            <svg class="info-icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+            </svg>
+            <h3 class="info-title">Follow Us</h3>
+            <div class="social-links-contact">
+              <a href="#" class="social-link-contact" aria-label="Facebook">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                </svg>
+              </a>
+              <a href="#" class="social-link-contact" aria-label="Instagram">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                </svg>
+              </a>
+              <a href="#" class="social-link-contact" aria-label="Twitter">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
+                </svg>
+              </a>
+              <a href="#" class="social-link-contact" aria-label="YouTube">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Links -->
+        <div class="quick-links-card">
+          <h3 class="quick-links-title">Quick Links</h3>
+          <ul class="quick-links-list">
+            <li><a href="/faq" class="quick-link">FAQ</a></li>
+            <li><a href="/shipping" class="quick-link">Shipping Information</a></li>
+            <li><a href="/returns" class="quick-link">Returns & Refunds</a></li>
+            <li><a href="/policies" class="quick-link">Privacy Policy</a></li>
+            <li><a href="/terms" class="quick-link">Terms & Conditions</a></li>
+          </ul>
+        </div>
+
+        <!-- Hours -->
+        <div class="hours-card">
+          <h3 class="hours-title">Business Hours</h3>
+          <div class="hours-list">
+            <div class="hours-item">
+              <span class="hours-day">Monday - Friday</span>
+              <span class="hours-time">10:00 AM - 6:00 PM</span>
+            </div>
+            <div class="hours-item">
+              <span class="hours-day">Saturday</span>
+              <span class="hours-time">10:00 AM - 5:00 PM</span>
+            </div>
+            <div class="hours-item closed">
+              <span class="hours-day">Sunday</span>
+              <span class="hours-time">Closed</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FAQ Section -->
+    <section class="faq-section">
+      <h2 class="faq-section-title">Frequently Asked Questions</h2>
+      <div class="faq-grid">
+        <div class="faq-item">
+          <h3 class="faq-question">How long does shipping take?</h3>
+          <p class="faq-answer">
+            We typically deliver within 2-5 business days for orders within Kathmandu Valley and 5-7 days for other areas of Nepal.
+          </p>
+        </div>
+        <div class="faq-item">
+          <h3 class="faq-question">What is your return policy?</h3>
+          <p class="faq-answer">
+            We offer a 7-day return policy for unopened books in original condition. Damaged or defective items can be returned within 14 days.
+          </p>
+        </div>
+        <div class="faq-item">
+          <h3 class="faq-question">Do you offer Cash on Delivery?</h3>
+          <p class="faq-answer">
+            Yes! We accept Cash on Delivery (COD) for all orders. We also accept online payments through eSewa, Khalti, and credit/debit cards.
+          </p>
+        </div>
+        <div class="faq-item">
+          <h3 class="faq-question">Are all books genuine?</h3>
+          <p class="faq-answer">
+            Absolutely! All our books are 100% authentic and sourced directly from authorized publishers and distributors.
+          </p>
+        </div>
+        <div class="faq-item">
+          <h3 class="faq-question">Can I track my order?</h3>
+          <p class="faq-answer">
+            Yes! Once your order is shipped, you'll receive a tracking number via email and SMS to monitor your delivery in real-time.
+          </p>
+        </div>
+        <div class="faq-item">
+          <h3 class="faq-question">Do you offer gift wrapping?</h3>
+          <p class="faq-answer">
+            Yes! We offer complimentary gift wrapping for orders. Just select the gift wrap option during checkout.
+          </p>
+        </div>
+      </div>
+      <div class="faq-cta">
+        <p>Can't find what you're looking for?</p>
+        <a href="#contactForm" class="faq-cta-link">Contact our support team</a>
+      </div>
+    </section>
+  </div>
+</div>
+
+<style>
+/* Contact Page Styles */
+.contact-page {
+  background: #fafafa;
+  min-height: 100vh;
+}
+
+/* Contact Hero */
+.contact-hero {
+  position: relative;
+  background: linear-gradient(135deg, #0d0d0f 0%, #1a1a1d 100%);
+  padding: 100px 0 80px;
+  overflow: hidden;
+}
+
+.contact-hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23caa660' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v6h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+.contact-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 50%, rgba(202, 166, 96, 0.2) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.contact-hero-content {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  padding: 0 24px;
+}
+
+.contact-hero-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 56px;
+  font-weight: 700;
+  color: #f8f6f2;
+  margin-bottom: 16px;
+  line-height: 1.2;
+}
+
+.contact-hero-subtitle {
+  font-size: 18px;
+  color: rgba(248, 246, 242, 0.8);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* Contact Content */
+.contact-content-wrapper {
+  padding: 80px 24px;
+}
+
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 48px;
+  margin-bottom: 80px;
+}
+
+@media (min-width: 1024px) {
+  .contact-grid {
+    grid-template-columns: 1.5fr 1fr;
+  }
+}
+
+/* Contact Form */
+.contact-form-section {}
+
+.form-card {
+  background: white;
+  border-radius: 12px;
+  padding: 48px;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.form-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 32px;
+  font-weight: 700;
+  color: #0d0d0f;
+  margin-bottom: 12px;
+}
+
+.form-description {
+  font-size: 16px;
+  color: rgba(13, 13, 15, 0.6);
+  margin-bottom: 32px;
+}
+
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.form-group {}
+
+.form-label {
+  display: block;
+  font-size: 15px;
+  font-weight: 600;
+  color: #0d0d0f;
+  margin-bottom: 8px;
+}
+
+.required {
+  color: #e74c3c;
+}
+
+.form-input,
+.form-select,
+.form-textarea {
+  width: 100%;
+  padding: 14px 18px;
+  border: 1px solid rgba(13, 13, 15, 0.12);
+  border-radius: 8px;
+  font-size: 16px; /* Prevents iOS zoom */
+  color: #0d0d0f;
+  transition: all 0.2s ease;
+  font-family: inherit;
+  background: white;
+  min-height: 48px;
+}
+
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+  outline: none;
+  border-color: rgba(13, 13, 15, 0.25);
+  box-shadow: 0 0 0 3px rgba(13, 13, 15, 0.05);
+}
+
+.form-select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%230d0d0f' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 18px center;
+  padding-right: 48px;
+  cursor: pointer;
+}
+
+.form-textarea {
+  resize: vertical;
+  min-height: 150px;
+}
+
+.form-submit-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 16px 32px;
+  background: #0d0d0f;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(13, 13, 15, 0.15);
+  margin-top: 8px;
+  min-height: 52px;
+}
+
+.form-submit-btn:hover {
+  background: #1a1a1d;
+  box-shadow: 0 4px 12px rgba(13, 13, 15, 0.25);
+  transform: translateY(-1px);
+}
+
+/* Contact Information */
+.contact-info-section {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.info-cards {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+}
+
+.info-card {
+  background: white;
+  border-radius: 12px;
+  padding: 28px;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  transition: all 0.2s ease;
+}
+
+.info-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+.info-icon {
+  width: 48px;
+  height: 48px;
+  background: rgba(13, 13, 15, 0.04);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(13, 13, 15, 0.6);
+  margin-bottom: 16px;
+  padding: 10px;
+  flex-shrink: 0;
+}
+
+.info-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #0d0d0f;
+  margin-bottom: 8px;
+}
+
+.info-text {
+  font-size: 15px;
+  line-height: 1.7;
+  color: rgba(13, 13, 15, 0.7);
+}
+
+.social-links-contact {
+  display: flex;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.social-link-contact {
+  width: 40px;
+  height: 40px;
+  background: rgba(13, 13, 15, 0.04);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(13, 13, 15, 0.6);
+  text-decoration: none;
+  transition: all 0.2s ease;
+  border: 1px solid rgba(13, 13, 15, 0.08);
+}
+
+.social-link-contact:hover {
+  background: rgba(13, 13, 15, 0.08);
+  border-color: rgba(13, 13, 15, 0.15);
+  color: #0d0d0f;
+  transform: translateY(-1px);
+}
+
+.social-link-contact svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* Quick Links */
+.quick-links-card {
+  background: white;
+  border-radius: 12px;
+  padding: 28px;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.quick-links-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #0d0d0f;
+  margin-bottom: 16px;
+}
+
+.quick-links-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.quick-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  color: rgba(13, 13, 15, 0.7);
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.quick-link::before {
+  content: '→';
+  color: rgba(13, 13, 15, 0.4);
+}
+
+.quick-link:hover {
+  color: #0d0d0f;
+  padding-left: 8px;
+}
+
+/* Hours */
+.hours-card {
+  background: rgba(13, 13, 15, 0.02);
+  border-radius: 12px;
+  padding: 28px;
+  border: 1px solid rgba(13, 13, 15, 0.08);
+}
+
+.hours-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #0d0d0f;
+  margin-bottom: 16px;
+}
+
+.hours-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.hours-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  background: white;
+  border-radius: 8px;
+}
+
+.hours-item.closed {
+  opacity: 0.6;
+}
+
+.hours-day {
+  font-size: 14px;
+  font-weight: 600;
+  color: #0d0d0f;
+}
+
+.hours-time {
+  font-size: 14px;
+  color: rgba(13, 13, 15, 0.7);
+}
+
+/* FAQ Section */
+.faq-section {
+  background: white;
+  border-radius: 12px;
+  padding: 64px 48px;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.faq-section-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 40px;
+  font-weight: 700;
+  color: #0d0d0f;
+  text-align: center;
+  margin-bottom: 48px;
+}
+
+.faq-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 32px;
+  margin-bottom: 48px;
+}
+
+@media (min-width: 768px) {
+  .faq-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.faq-item {
+  padding: 28px;
+  background: rgba(13, 13, 15, 0.02);
+  border: 1px solid rgba(13, 13, 15, 0.08);
+  border-radius: 12px;
+  transition: all 0.2s ease;
+}
+
+.faq-item:hover {
+  background: white;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
+  border-color: rgba(13, 13, 15, 0.12);
+}
+
+.faq-question {
+  font-size: 18px;
+  font-weight: 700;
+  color: #0d0d0f;
+  margin-bottom: 12px;
+}
+
+.faq-answer {
+  font-size: 15px;
+  line-height: 1.7;
+  color: rgba(13, 13, 15, 0.7);
+}
+
+.faq-cta {
+  text-align: center;
+  padding: 32px;
+  background: rgba(13, 13, 15, 0.02);
+  border: 1px solid rgba(13, 13, 15, 0.08);
+  border-radius: 12px;
+}
+
+.faq-cta p {
+  font-size: 16px;
+  color: rgba(13, 13, 15, 0.7);
+  margin-bottom: 12px;
+}
+
+.faq-cta-link {
+  font-size: 16px;
+  font-weight: 600;
+  color: #0d0d0f;
+  text-decoration: none;
+}
+
+.faq-cta-link:hover {
+  text-decoration: underline;
+}
+
+/* Mobile Responsive */
+@media (max-width: 767px) {
+  .contact-hero {
+    padding: 80px 0 60px;
+  }
+
+  .contact-hero-title {
+    font-size: 40px;
+  }
+
+  .contact-content-wrapper {
+    padding: 48px 24px;
+  }
+
+  .form-card {
+    padding: 32px 24px;
+  }
+
+  .form-title {
+    font-size: 28px;
+  }
+
+  .faq-section {
+    padding: 48px 24px;
+  }
+
+  .faq-section-title {
+    font-size: 32px;
+  }
+}
+</style>
+
+<script>
+document.getElementById('contactForm')?.addEventListener('submit', function(e) {
+  e.preventDefault();
+  
+  const formData = new FormData(this);
+  const data = Object.fromEntries(formData);
+  
+  // Send to server
+  fetch('/contact/submit', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
+  })
+  .then(r => r.json())
+  .then(response => {
+    if (response.success) {
+      alert('Message sent successfully! We\'ll get back to you soon.');
+      this.reset();
+    } else {
+      alert('Failed to send message. Please try again.');
+    }
+  })
+  .catch(() => {
+    alert('An error occurred. Please try again later.');
+  });
+});
+</script>

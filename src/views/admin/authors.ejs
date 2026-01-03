@@ -1,0 +1,25 @@
+<h1 class="font-display text-2xl mb-4">Authors</h1>
+<form method="post" class="mb-6 grid md:grid-cols-[1fr,8rem] gap-2">
+  <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+  <input name="name" placeholder="Name" class="rounded bg-white/10 border-white/20" required>
+  <button class="rounded bg-gold text-charcoal">Add</button>
+  <textarea name="bio" placeholder="Bio" class="rounded bg-white/10 border-white/20 md:col-span-2"></textarea>
+</form>
+<div class="overflow-auto">
+  <table class="min-w-full text-sm">
+    <thead class="text-white/70"><tr><th class="text-left p-2">Name</th><th class="p-2"></th></tr></thead>
+    <tbody>
+    <% authors.forEach(function(a){ %>
+      <tr class="border-t border-white/10">
+        <td class="p-2"><%= a.name %></td>
+        <td class="p-2">
+          <form method="post" action="/admin/authors/<%= a._id %>/delete" onsubmit="return confirm('Delete?')">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+            <button class="text-red-300">Delete</button>
+          </form>
+        </td>
+      </tr>
+    <% }) %>
+    </tbody>
+  </table>
+</div>

@@ -1,0 +1,191 @@
+<div class="admin-card-header" style="margin-top: 0;">
+  <h1 class="admin-card-title" style="font-size: 1.75rem; margin: 0;">Order <%= order.number %></h1>
+  <div class="admin-card-actions">
+    <a href="/admin/orders" class="admin-btn admin-btn-sm admin-btn-secondary">Back to Orders</a>
+  </div>
+</div>
+
+<!-- Order Status Banner -->
+<div class="admin-card">
+  <% 
+    let statusClass = 'admin-badge-primary';
+    let statusIcon = 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2';
+    
+    if (order.status === 'Delivered') {
+      statusClass = 'admin-badge-success';
+      statusIcon = 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z';
+    } else if (order.status === 'Cancelled' || order.status === 'Returned') {
+      statusClass = 'admin-badge-danger';
+      statusIcon = 'M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z';
+    } else if (order.status === 'Shipped') {
+      statusClass = 'admin-badge-info';
+      statusIcon = 'M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0';
+    }
+  %>
+  <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
+    <div style="display: flex; align-items: center; gap: 1rem;">
+      <svg width="48" height="48" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="opacity: 0.5;">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="<%= statusIcon %>" />
+      </svg>
+      <div>
+        <div style="font-size: 0.875rem; color: var(--admin-text-muted);">Current Status</div>
+        <div style="font-size: 1.5rem; font-weight: 700; margin-top: 0.25rem;"><span class="<%= statusClass %>" style="font-size: 1.25rem; padding: 0.5rem 1rem;"><%= order.status %></span></div>
+      </div>
+    </div>
+    <div style="text-align: right;">
+      <div style="font-size: 0.875rem; color: var(--admin-text-muted);">Order Date</div>
+      <div style="font-weight: 600; margin-top: 0.25rem;"><%= new Date(order.createdAt).toLocaleDateString() %> at <%= new Date(order.createdAt).toLocaleTimeString() %></div>
+    </div>
+  </div>
+</div>
+
+<div style="display: grid; grid-template-columns: 1fr; gap: 1.5rem;">
+  <div style="display: grid; grid-template-columns: 1fr; gap: 1.5rem;">
+    <!-- Order Items -->
+    <div class="admin-card">
+      <div class="admin-card-header">
+        <div class="admin-card-title">Order Items</div>
+        <div class="admin-badge admin-badge-info"><%= order.items.length %> items</div>
+      </div>
+      
+      <div class="admin-table-container">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Product</th>
+              <th>Price</th>
+              <th>Quantity</th>
+              <th>Subtotal</th>
+            </tr>
+          </thead>
+          <tbody>
+          <% order.items.forEach(function(it) { %>
+            <tr>
+              <td>
+                <div style="font-weight: 600;"><%= it.titleSnapshot %></div>
+                <% if (it.subtitleSnapshot) { %>
+                  <div style="font-size: 0.75rem; color: var(--admin-text-muted); margin-top: 0.25rem;"><%= it.subtitleSnapshot %></div>
+                <% } %>
+              </td>
+              <td><%= store.currency %> <%= it.priceAtPurchase.toFixed(2) %></td>
+              <td><span class="admin-badge admin-badge-info">× <%= it.qty %></span></td>
+              <td><strong><%= store.currency %> <%= (it.qty * it.priceAtPurchase).toFixed(2) %></strong></td>
+            </tr>
+          <% }) %>
+          </tbody>
+        </table>
+      </div>
+
+      <div style="border-top: 1px solid var(--admin-border); margin-top: 1rem; padding-top: 1rem;">
+        <div style="max-width: 400px; margin-left: auto; display: flex; flex-direction: column; gap: 0.75rem;">
+          <div style="display: flex; justify-content: space-between;">
+            <span>Subtotal:</span>
+            <span><%= store.currency %> <%= order.totals.grandTotal.toFixed(2) %></span>
+          </div>
+          <div style="display: flex; justify-content: space-between; font-size: 1.25rem; font-weight: 700; padding-top: 0.75rem; border-top: 2px solid var(--admin-border);">
+            <span>Total:</span>
+            <span><%= store.currency %> <%= order.totals.grandTotal.toFixed(2) %></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Customer Information -->
+    <div class="admin-card">
+      <div class="admin-card-header">
+        <div class="admin-card-title">Customer Information</div>
+      </div>
+      
+      <div class="admin-form-grid">
+        <div>
+          <div style="font-size: 0.875rem; font-weight: 600; color: var(--admin-text-muted); margin-bottom: 0.5rem;">Full Name</div>
+          <div style="font-weight: 600;"><%= order.customer.name || 'N/A' %></div>
+        </div>
+        
+        <div>
+          <div style="font-size: 0.875rem; font-weight: 600; color: var(--admin-text-muted); margin-bottom: 0.5rem;">Phone Number</div>
+          <div style="font-weight: 600;">
+            <a href="tel:<%= order.customer.phone %>" style="color: var(--admin-primary);"><%= order.customer.phone || 'N/A' %></a>
+          </div>
+        </div>
+        
+        <div style="grid-column: 1 / -1;">
+          <div style="font-size: 0.875rem; font-weight: 600; color: var(--admin-text-muted); margin-bottom: 0.5rem;">Email Address</div>
+          <div style="font-weight: 600;">
+            <% if (order.customer.email) { %>
+              <a href="mailto:<%= order.customer.email %>" style="color: var(--admin-primary);"><%= order.customer.email %></a>
+            <% } else { %>
+              N/A
+            <% } %>
+          </div>
+        </div>
+        
+        <div style="grid-column: 1 / -1;">
+          <div style="font-size: 0.875rem; font-weight: 600; color: var(--admin-text-muted); margin-bottom: 0.5rem;">Shipping Address</div>
+          <div style="line-height: 1.6;">
+            <%= order.customer.address1 %><br>
+            <% if (order.customer.address2) { %><%= order.customer.address2 %><br><% } %>
+            <%= order.customer.city %>, <%= order.customer.state %> <%= order.customer.postalCode %><br>
+            <%= order.customer.country %>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Update Status -->
+    <div class="admin-card">
+      <div class="admin-card-header">
+        <div class="admin-card-title">Update Order Status</div>
+      </div>
+      
+      <form method="post" action="/admin/orders/<%= order._id %>/status" class="admin-form">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        
+        <div class="admin-form-group">
+          <label class="admin-form-label">Change Status</label>
+          <select name="status" class="admin-form-select">
+            <option value="New" <%= order.status === 'New' ? 'selected' : '' %>>New</option>
+            <option value="Confirmed" <%= order.status === 'Confirmed' ? 'selected' : '' %>>Confirmed</option>
+            <option value="Packed" <%= order.status === 'Packed' ? 'selected' : '' %>>Packed</option>
+            <option value="Shipped" <%= order.status === 'Shipped' ? 'selected' : '' %>>Shipped</option>
+            <option value="Delivered" <%= order.status === 'Delivered' ? 'selected' : '' %>>Delivered</option>
+            <option value="Cancelled" <%= order.status === 'Cancelled' ? 'selected' : '' %>>Cancelled</option>
+            <option value="Returned" <%= order.status === 'Returned' ? 'selected' : '' %>>Returned</option>
+          </select>
+          <span class="admin-form-hint">Select the new status for this order</span>
+        </div>
+
+        <button type="submit" class="admin-btn admin-btn-primary">
+          <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+          </svg>
+          Update Status
+        </button>
+      </form>
+    </div>
+
+    <!-- Order Timeline -->
+    <% if (order.timeline && order.timeline.length > 0) { %>
+      <div class="admin-card">
+        <div class="admin-card-header">
+          <div class="admin-card-title">Order Timeline</div>
+        </div>
+        
+        <div style="position: relative; padding-left: 2rem;">
+          <div style="position: absolute; left: 0.5rem; top: 0.5rem; bottom: 0.5rem; width: 2px; background: var(--admin-border);"></div>
+          
+          <% order.timeline.forEach(function(event, index) { %>
+            <div style="position: relative; padding-bottom: 1.5rem;">
+              <div style="position: absolute; left: -1.5rem; top: 0; width: 12px; height: 12px; border-radius: 50%; background: var(--admin-primary); border: 2px solid var(--admin-bg);"></div>
+              
+              <div style="font-weight: 600; margin-bottom: 0.25rem;"><%= event.label %></div>
+              <div style="font-size: 0.75rem; color: var(--admin-text-muted);">
+                <%= event.createdAt ? new Date(event.createdAt).toLocaleString() : 'Unknown time' %>
+              </div>
+            </div>
+          <% }) %>
+        </div>
+      </div>
+    <% } %>
+  </div>
+</div>

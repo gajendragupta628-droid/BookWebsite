@@ -1,0 +1,468 @@
+<!-- Auth Modal -->
+<div id="authModal" class="auth-modal" style="display: none;">
+  <div class="auth-modal-overlay" onclick="closeAuthModal()"></div>
+  <div class="auth-modal-content">
+    <button class="auth-modal-close" onclick="closeAuthModal()" aria-label="Close">×</button>
+    
+    <!-- Login Tab -->
+    <div id="loginTab" class="auth-tab">
+      <div class="auth-header">
+        <h2 class="auth-title">Welcome Back!</h2>
+        <p class="auth-subtitle">Sign in to continue your journey</p>
+      </div>
+
+      <!-- Social Login -->
+      <div class="auth-social">
+        <a href="/auth/google" class="auth-google-btn">
+          <svg width="20" height="20" viewBox="0 0 20 20">
+            <path fill="#4285F4" d="M19.6 10.23c0-.82-.1-1.42-.25-2.05H10v3.72h5.5c-.15.96-.74 2.31-2.04 3.22v2.45h3.16c1.89-1.73 2.98-4.3 2.98-7.34z"/>
+            <path fill="#34A853" d="M13.46 15.13c-.83.59-1.96 1-3.46 1-2.64 0-4.88-1.74-5.68-4.15H1.07v2.52C2.72 17.75 6.09 20 10 20c2.7 0 4.96-.89 6.62-2.42l-3.16-2.45z"/>
+            <path fill="#FBBC05" d="M3.99 10c0-.69.12-1.35.32-1.97V5.51H1.07A9.973 9.973 0 0 0 0 10c0 1.61.39 3.14 1.07 4.49l3.24-2.52c-.2-.62-.32-1.28-.32-1.97z"/>
+            <path fill="#EA4335" d="M10 3.88c1.88 0 3.13.81 3.85 1.48l2.84-2.76C14.96.99 12.7 0 10 0 6.09 0 2.72 2.25 1.07 5.51l3.24 2.52C5.12 5.62 7.36 3.88 10 3.88z"/>
+          </svg>
+          <span>Continue with Google</span>
+        </a>
+      </div>
+
+      <div class="auth-divider">
+        <span>or</span>
+      </div>
+
+      <!-- Email Login Form -->
+      <form action="/auth/login" method="POST" class="auth-form" id="loginForm">
+        <input type="hidden" name="redirectTo" id="loginRedirectTo" value="">
+        
+        <div class="auth-form-group">
+          <label class="auth-label">Email</label>
+          <input type="email" name="email" required class="auth-input" placeholder="your@email.com" autocomplete="email">
+        </div>
+
+        <div class="auth-form-group">
+          <label class="auth-label">Password</label>
+          <input type="password" name="password" required class="auth-input" placeholder="••••••••" autocomplete="current-password">
+        </div>
+
+        <div class="auth-form-footer">
+          <label class="auth-checkbox">
+            <input type="checkbox" name="remember">
+            <span>Remember me</span>
+          </label>
+          <a href="/auth/forgot-password" class="auth-link">Forgot password?</a>
+        </div>
+
+        <button type="submit" class="auth-submit">Sign In</button>
+      </form>
+
+      <div class="auth-switch">
+        Don't have an account? <button onclick="switchToSignup()" class="auth-switch-btn">Create account</button>
+      </div>
+    </div>
+
+    <!-- Signup Tab -->
+    <div id="signupTab" class="auth-tab" style="display: none;">
+      <div class="auth-header">
+        <h2 class="auth-title">Create Account</h2>
+        <p class="auth-subtitle">Join us and start your reading journey</p>
+      </div>
+
+      <!-- Social Signup -->
+      <div class="auth-social">
+        <a href="/auth/google" class="auth-google-btn">
+          <svg width="20" height="20" viewBox="0 0 20 20">
+            <path fill="#4285F4" d="M19.6 10.23c0-.82-.1-1.42-.25-2.05H10v3.72h5.5c-.15.96-.74 2.31-2.04 3.22v2.45h3.16c1.89-1.73 2.98-4.3 2.98-7.34z"/>
+            <path fill="#34A853" d="M13.46 15.13c-.83.59-1.96 1-3.46 1-2.64 0-4.88-1.74-5.68-4.15H1.07v2.52C2.72 17.75 6.09 20 10 20c2.7 0 4.96-.89 6.62-2.42l-3.16-2.45z"/>
+            <path fill="#FBBC05" d="M3.99 10c0-.69.12-1.35.32-1.97V5.51H1.07A9.973 9.973 0 0 0 0 10c0 1.61.39 3.14 1.07 4.49l3.24-2.52c-.2-.62-.32-1.28-.32-1.97z"/>
+            <path fill="#EA4335" d="M10 3.88c1.88 0 3.13.81 3.85 1.48l2.84-2.76C14.96.99 12.7 0 10 0 6.09 0 2.72 2.25 1.07 5.51l3.24 2.52C5.12 5.62 7.36 3.88 10 3.88z"/>
+          </svg>
+          <span>Sign up with Google</span>
+        </a>
+      </div>
+
+      <div class="auth-divider">
+        <span>or</span>
+      </div>
+
+      <!-- Email Signup Form -->
+      <form action="/auth/signup" method="POST" class="auth-form" id="signupForm">
+        <input type="hidden" name="redirectTo" id="signupRedirectTo" value="">
+        
+        <div class="auth-form-group">
+          <label class="auth-label">Full Name</label>
+          <input type="text" name="name" required class="auth-input" placeholder="John Doe" autocomplete="name">
+        </div>
+
+        <div class="auth-form-group">
+          <label class="auth-label">Email</label>
+          <input type="email" name="email" required class="auth-input" placeholder="your@email.com" autocomplete="email">
+        </div>
+
+        <div class="auth-form-group">
+          <label class="auth-label">Password</label>
+          <input type="password" name="password" required minlength="6" class="auth-input" placeholder="••••••••" autocomplete="new-password">
+          <span class="auth-hint">At least 6 characters</span>
+        </div>
+
+        <label class="auth-checkbox" style="margin-bottom: 1rem;">
+          <input type="checkbox" name="agreeToTerms" required>
+          <span>I agree to the <a href="/policies" class="auth-link">Terms & Conditions</a></span>
+        </label>
+
+        <button type="submit" class="auth-submit">Create Account</button>
+      </form>
+
+      <div class="auth-switch">
+        Already have an account? <button onclick="switchToLogin()" class="auth-switch-btn">Sign in</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+/* Auth Modal Styles */
+.auth-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.auth-modal-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(13, 13, 15, 0.7);
+  backdrop-filter: blur(4px);
+  animation: fadeIn 0.2s ease-out;
+}
+
+.auth-modal-content {
+  position: relative;
+  width: 100%;
+  max-width: 460px;
+  max-height: 90vh;
+  overflow-y: auto;
+  background: white;
+  border-radius: 24px;
+  padding: 40px;
+  box-shadow: 0 20px 60px rgba(13, 13, 15, 0.3);
+  animation: slideUp 0.3s ease-out;
+}
+
+.auth-modal-close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 40px;
+  height: 40px;
+  border: none;
+  background: rgba(13, 13, 15, 0.05);
+  border-radius: 50%;
+  font-size: 28px;
+  line-height: 1;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: rgba(13, 13, 15, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.auth-modal-close:hover {
+  background: rgba(13, 13, 15, 0.1);
+  color: #0d0d0f;
+  transform: rotate(90deg);
+}
+
+.auth-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.auth-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 32px;
+  font-weight: 700;
+  color: #0d0d0f;
+  margin-bottom: 8px;
+}
+
+.auth-subtitle {
+  font-size: 16px;
+  color: rgba(13, 13, 15, 0.6);
+}
+
+.auth-social {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.auth-google-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 14px 24px;
+  background: white;
+  border: 2px solid rgba(13, 13, 15, 0.15);
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 15px;
+  color: #0d0d0f;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.auth-google-btn:hover {
+  border-color: #4285F4;
+  background: rgba(66, 133, 244, 0.05);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 15px rgba(66, 133, 244, 0.2);
+}
+
+.auth-divider {
+  position: relative;
+  text-align: center;
+  margin: 24px 0;
+}
+
+.auth-divider::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: rgba(13, 13, 15, 0.1);
+}
+
+.auth-divider span {
+  position: relative;
+  display: inline-block;
+  padding: 0 16px;
+  background: white;
+  font-size: 14px;
+  color: rgba(13, 13, 15, 0.5);
+  font-weight: 500;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.auth-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.auth-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #0d0d0f;
+}
+
+.auth-input {
+  padding: 14px 16px;
+  border: 2px solid rgba(13, 13, 15, 0.15);
+  border-radius: 12px;
+  font-size: 15px;
+  transition: all 0.2s ease;
+  outline: none;
+}
+
+.auth-input:focus {
+  border-color: #caa660;
+  box-shadow: 0 0 0 4px rgba(202, 166, 96, 0.1);
+}
+
+.auth-hint {
+  font-size: 12px;
+  color: rgba(13, 13, 15, 0.5);
+}
+
+.auth-form-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+}
+
+.auth-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.auth-checkbox input {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+
+.auth-link {
+  color: #caa660;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.2s ease;
+}
+
+.auth-link:hover {
+  color: #b8954d;
+  text-decoration: underline;
+}
+
+.auth-submit {
+  padding: 16px 24px;
+  background: #caa660;
+  color: #0d0d0f;
+  border: none;
+  border-radius: 50px;
+  font-weight: 700;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 15px rgba(202, 166, 96, 0.3);
+}
+
+.auth-submit:hover {
+  background: #d4b76f;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 25px rgba(202, 166, 96, 0.4);
+}
+
+.auth-switch {
+  text-align: center;
+  margin-top: 24px;
+  font-size: 14px;
+  color: rgba(13, 13, 15, 0.7);
+}
+
+.auth-switch-btn {
+  background: none;
+  border: none;
+  color: #caa660;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  text-decoration: underline;
+  transition: color 0.2s ease;
+}
+
+.auth-switch-btn:hover {
+  color: #b8954d;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Mobile Responsive */
+@media (max-width: 640px) {
+  .auth-modal-content {
+    padding: 32px 24px;
+  }
+
+  .auth-title {
+    font-size: 28px;
+  }
+
+  .auth-form-footer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+}
+</style>
+
+<script>
+// Auth Modal Functions
+function openAuthModal(mode = 'login', redirectTo = '') {
+  const modal = document.getElementById('authModal');
+  const loginTab = document.getElementById('loginTab');
+  const signupTab = document.getElementById('signupTab');
+  
+  // Set redirect URL
+  if (redirectTo) {
+    document.getElementById('loginRedirectTo').value = redirectTo;
+    document.getElementById('signupRedirectTo').value = redirectTo;
+  } else {
+    const currentPath = window.location.pathname + window.location.search;
+    document.getElementById('loginRedirectTo').value = currentPath;
+    document.getElementById('signupRedirectTo').value = currentPath;
+  }
+  
+  // Show correct tab
+  if (mode === 'signup') {
+    loginTab.style.display = 'none';
+    signupTab.style.display = 'block';
+  } else {
+    loginTab.style.display = 'block';
+    signupTab.style.display = 'none';
+  }
+  
+  // Show modal
+  modal.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+}
+
+function closeAuthModal() {
+  const modal = document.getElementById('authModal');
+  modal.style.display = 'none';
+  document.body.style.overflow = '';
+}
+
+function switchToLogin() {
+  document.getElementById('loginTab').style.display = 'block';
+  document.getElementById('signupTab').style.display = 'none';
+}
+
+function switchToSignup() {
+  document.getElementById('loginTab').style.display = 'none';
+  document.getElementById('signupTab').style.display = 'block';
+}
+
+// Close modal on Escape key
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    closeAuthModal();
+  }
+});
+
+// Prevent closing when clicking inside modal content
+document.addEventListener('DOMContentLoaded', function() {
+  const modalContent = document.querySelector('.auth-modal-content');
+  if (modalContent) {
+    modalContent.addEventListener('click', function(e) {
+      e.stopPropagation();
+    });
+  }
+});
+</script>

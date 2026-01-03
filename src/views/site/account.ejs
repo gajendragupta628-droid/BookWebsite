@@ -1,0 +1,1903 @@
+<div class="account-page">
+  <div class="container-custom account-wrapper">
+    <!-- Account Header -->
+    <div class="account-header">
+      <div class="user-info-header">
+        <div class="user-avatar-large">
+          <% if (currentUser.avatar) { %>
+            <img src="<%= currentUser.avatar %>" alt="<%= currentUser.name %>" class="avatar-img" />
+          <% } else { %>
+            <span class="avatar-initial"><%= currentUser.name.charAt(0).toUpperCase() %></span>
+          <% } %>
+        </div>
+        <div class="user-details">
+          <h1 class="user-name"><%= currentUser.name %></h1>
+          <p class="user-email"><%= currentUser.email %></p>
+          <div class="user-badges">
+            <% if (currentUser.isVerified) { %>
+              <span class="badge-verified">✓ Verified</span>
+            <% } %>
+            <% if (currentUser.provider === 'google') { %>
+              <span class="badge-google">Google Account</span>
+            <% } %>
+          </div>
+        </div>
+      </div>
+      <div class="header-actions">
+        <a href="/auth/logout" class="btn-logout">
+          <span>Logout</span>
+          <svg class="logout-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+
+    <!-- Account Navigation Tabs -->
+    <div class="account-nav" role="tablist">
+      <button class="nav-tab <%= activeTab === 'orders' ? 'active' : '' %>" data-tab="orders" type="button" role="tab">
+        <svg class="tab-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+        </svg>
+        <span class="tab-text">Orders</span>
+      </button>
+      <button class="nav-tab <%= activeTab === 'wishlist' ? 'active' : '' %>" data-tab="wishlist" type="button" role="tab">
+        <svg class="tab-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+        </svg>
+        <span class="tab-text">Wishlist</span>
+      </button>
+      <button class="nav-tab <%= activeTab === 'addresses' ? 'active' : '' %>" data-tab="addresses" type="button" role="tab">
+        <svg class="tab-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+        </svg>
+        <span class="tab-text">Addresses</span>
+      </button>
+      <button class="nav-tab <%= activeTab === 'settings' ? 'active' : '' %>" data-tab="settings" type="button" role="tab">
+        <svg class="tab-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+        </svg>
+        <span class="tab-text">Settings</span>
+      </button>
+    </div>
+
+    <!-- Tab Content -->
+    <div class="tab-content-wrapper">
+      <!-- Orders Tab -->
+      <div class="tab-panel <%= activeTab === 'orders' ? 'active' : '' %>" id="tab-orders" role="tabpanel">
+        <div class="panel-header">
+          <h2 class="panel-title">My Orders</h2>
+          <div class="order-filters">
+            <select class="filter-select" id="orderFilterSelect">
+              <option value="all">All Orders</option>
+              <option value="pending">Pending</option>
+              <option value="processing">Processing</option>
+              <option value="shipped">Shipped</option>
+              <option value="delivered">Delivered</option>
+              <option value="cancelled">Cancelled</option>
+            </select>
+          </div>
+        </div>
+
+        <% if (orders && orders.length > 0) { %>
+          <div class="orders-list">
+            <% orders.forEach(order => { %>
+              <div class="order-card" data-order-status="<%= order.status %>">
+                <div class="order-header-card">
+                  <div class="order-info">
+                    <div class="order-number">Order #<%= order.orderNumber || order._id.toString().slice(-8).toUpperCase() %></div>
+                    <div class="order-date">Placed on <%= new Date(order.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) %></div>
+                  </div>
+                  <span class="order-status <%= order.status %>"><%= order.status.charAt(0).toUpperCase() + order.status.slice(1) %></span>
+                </div>
+
+                <div class="order-items">
+                  <% (order.items || []).slice(0, 3).forEach(item => { %>
+                    <div class="order-item-preview">
+                      <div class="item-image-small">
+                        <% if (item.image) { %>
+                          <img src="<%= item.image %>" alt="<%= item.title %>" />
+                        <% } else { %>
+                          <div class="placeholder-img">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                            </svg>
+                          </div>
+                        <% } %>
+                      </div>
+                      <div class="item-details-small">
+                        <div class="item-title-small"><%= item.title %></div>
+                        <div class="item-qty-small">Qty: <%= item.qty %></div>
+                      </div>
+                    </div>
+                  <% }); %>
+                  <% if (order.items && order.items.length > 3) { %>
+                    <div class="more-items">+<%= order.items.length - 3 %> more items</div>
+                  <% } %>
+                </div>
+
+                <div class="order-footer">
+                  <div class="order-total">
+                    <span class="total-label">Total:</span>
+                    <span class="total-amount"><%= store.currency %> <%= (order.totals && order.totals.grandTotal) ? order.totals.grandTotal.toFixed(2) : '0.00' %></span>
+                  </div>
+                  <a href="/orders/<%= order._id %>" class="btn-view-order">View Details</a>
+                </div>
+              </div>
+            <% }); %>
+          </div>
+        <% } else { %>
+          <div class="empty-state">
+            <div class="empty-icon">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+              </svg>
+            </div>
+            <h3 class="empty-title">No Orders Yet</h3>
+            <p class="empty-description">Start shopping and your orders will appear here.</p>
+            <a href="/search" class="btn-primary">Browse Books</a>
+          </div>
+        <% } %>
+      </div>
+
+      <!-- Wishlist Tab -->
+      <div class="tab-panel <%= activeTab === 'wishlist' ? 'active' : '' %>" id="tab-wishlist" role="tabpanel">
+        <div class="panel-header">
+          <h2 class="panel-title">My Wishlist</h2>
+          <a href="/wishlist" class="btn-secondary-sm">View Full Wishlist</a>
+        </div>
+
+        <% if (wishlistItems && wishlistItems.length > 0) { %>
+          <div class="wishlist-grid-account">
+            <% wishlistItems.slice(0, 6).forEach(book => { %>
+              <div class="wishlist-item-card">
+                <a href="/book/<%= book.slug %>" class="wishlist-item-image">
+                  <% const imgSrc = (book.images && book.images[0] && book.images[0].src) ? book.images[0].src : (book.isbn ? `https://covers.openlibrary.org/b/isbn/${book.isbn}-M.jpg` : 'https://images.pexels.com/photos/768125/pexels-photo-768125.jpeg?auto=compress&cs=tinysrgb&w=300'); %>
+                  <img src="<%= imgSrc %>" alt="<%= book.title %>" />
+                </a>
+                <div class="wishlist-item-info">
+                  <a href="/book/<%= book.slug %>" class="wishlist-item-title"><%= book.title %></a>
+                  <div class="wishlist-item-price"><%= store.currency %> <%= book.priceSale ? book.priceSale.toFixed(2) : '0.00' %></div>
+                  <button class="btn-add-to-cart-small" data-add-to-cart data-id="<%= book._id %>">Add to Cart</button>
+                </div>
+              </div>
+            <% }); %>
+          </div>
+        <% } else { %>
+          <div class="empty-state">
+            <div class="empty-icon">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+              </svg>
+            </div>
+            <h3 class="empty-title">Your Wishlist is Empty</h3>
+            <p class="empty-description">Save books you love to your wishlist.</p>
+            <a href="/search" class="btn-primary">Discover Books</a>
+          </div>
+        <% } %>
+      </div>
+
+      <!-- Addresses Tab -->
+      <div class="tab-panel <%= activeTab === 'addresses' ? 'active' : '' %>" id="tab-addresses" role="tabpanel">
+        <div class="panel-header">
+          <h2 class="panel-title">Saved Addresses</h2>
+          <button class="btn-primary" id="showAddressModalBtn" type="button">
+            <span>+</span>
+            <span>Add New Address</span>
+          </button>
+        </div>
+
+        <% if (currentUser.addresses && currentUser.addresses.length > 0) { %>
+          <div class="addresses-grid" data-addresses='<%- JSON.stringify(currentUser.addresses || []) %>'>
+            <% currentUser.addresses.forEach((addr, index) => { %>
+              <div class="address-card <%= addr.isDefault ? 'default' : '' %>" data-address-index="<%= index %>">
+                <div class="address-header">
+                  <span class="address-label"><%= addr.label || 'Address' %></span>
+                  <% if (addr.isDefault) { %>
+                    <span class="default-badge">Default</span>
+                  <% } %>
+                </div>
+                <div class="address-content">
+                  <div class="address-name"><%= addr.fullName %></div>
+                  <div class="address-text">
+                    <%= addr.addressLine1 %><br />
+                    <% if (addr.addressLine2) { %><%= addr.addressLine2 %><br /><% } %>
+                    <%= addr.city %>, <%= addr.state || '' %> <%= addr.postalCode %><br />
+                    <%= addr.country %>
+                  </div>
+                  <div class="address-phone">Phone: <%= addr.phone %></div>
+                </div>
+                <div class="address-actions">
+                  <button class="btn-edit" data-edit-address="<%= index %>" type="button">Edit</button>
+                  <button class="btn-delete" data-delete-address="<%= index %>" type="button">Delete</button>
+                  <% if (!addr.isDefault) { %>
+                    <button class="btn-set-default" data-set-default="<%= index %>" type="button">Set as Default</button>
+                  <% } %>
+                </div>
+              </div>
+            <% }); %>
+          </div>
+        <% } else { %>
+          <div class="empty-state">
+            <div class="empty-icon">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+              </svg>
+            </div>
+            <h3 class="empty-title">No Saved Addresses</h3>
+            <p class="empty-description">Add an address for faster checkout.</p>
+            <button class="btn-primary" id="showAddressModalBtnEmpty" type="button">Add Address</button>
+          </div>
+        <% } %>
+      </div>
+
+      <!-- Settings Tab -->
+      <div class="tab-panel <%= activeTab === 'settings' ? 'active' : '' %>" id="tab-settings" role="tabpanel">
+        <div class="panel-header">
+          <h2 class="panel-title">Account Settings</h2>
+        </div>
+
+        <div class="settings-sections">
+          <!-- Personal Information -->
+          <div class="settings-section">
+            <h3 class="settings-section-title">Personal Information</h3>
+            <form action="/account/update-profile" method="POST" class="settings-form">
+              <div class="form-row">
+                <div class="form-group-settings">
+                  <label class="label-settings">Full Name</label>
+                  <input type="text" name="name" value="<%= currentUser.name %>" class="input-settings" required />
+                </div>
+                <div class="form-group-settings">
+                  <label class="label-settings">Email Address</label>
+                  <input type="email" name="email" value="<%= currentUser.email %>" class="input-settings" required />
+                </div>
+              </div>
+              <div class="form-group-settings">
+                <label class="label-settings">Phone Number</label>
+                <input type="tel" name="phone" value="<%= currentUser.phone || '' %>" class="input-settings" />
+              </div>
+              <button type="submit" class="btn-save">Save Changes</button>
+            </form>
+          </div>
+
+          <!-- Change Password (Local accounts only) -->
+          <% if (currentUser.provider === 'local') { %>
+            <div class="settings-section">
+              <h3 class="settings-section-title">Change Password</h3>
+              <form action="/account/change-password" method="POST" class="settings-form">
+                <div class="form-group-settings">
+                  <label class="label-settings">Current Password</label>
+                  <input type="password" name="currentPassword" class="input-settings" required />
+                </div>
+                <div class="form-row">
+                  <div class="form-group-settings">
+                    <label class="label-settings">New Password</label>
+                    <input type="password" name="newPassword" class="input-settings" required minlength="8" />
+                  </div>
+                  <div class="form-group-settings">
+                    <label class="label-settings">Confirm New Password</label>
+                    <input type="password" name="confirmPassword" class="input-settings" required />
+                  </div>
+                </div>
+                <button type="submit" class="btn-save">Update Password</button>
+              </form>
+            </div>
+          <% } %>
+
+          <!-- Preferences -->
+          <div class="settings-section">
+            <h3 class="settings-section-title">Preferences</h3>
+            <form action="/account/update-preferences" method="POST" class="settings-form">
+              <div class="preferences-list">
+                <label class="preference-item">
+                  <input type="checkbox" name="newsletter" <%= currentUser.preferences?.newsletter ? 'checked' : '' %> class="preference-checkbox" />
+                  <span class="preference-label">
+                    <span class="preference-title">Newsletter</span>
+                    <span class="preference-desc">Receive our newsletter with book recommendations and offers</span>
+                  </span>
+                </label>
+                <label class="preference-item">
+                  <input type="checkbox" name="orderUpdates" <%= currentUser.preferences?.orderUpdates ? 'checked' : '' %> class="preference-checkbox" />
+                  <span class="preference-label">
+                    <span class="preference-title">Order Updates</span>
+                    <span class="preference-desc">Get notified about your order status</span>
+                  </span>
+                </label>
+                <label class="preference-item">
+                  <input type="checkbox" name="recommendations" <%= currentUser.preferences?.recommendations ? 'checked' : '' %> class="preference-checkbox" />
+                  <span class="preference-label">
+                    <span class="preference-title">Personalized Recommendations</span>
+                    <span class="preference-desc">Receive book suggestions based on your interests</span>
+                  </span>
+                </label>
+              </div>
+              <button type="submit" class="btn-save">Save Preferences</button>
+            </form>
+          </div>
+
+          <!-- Danger Zone -->
+          <div class="settings-section danger-zone">
+            <h3 class="settings-section-title">Danger Zone</h3>
+            <div class="danger-content">
+              <div class="danger-info">
+                <h4 class="danger-title">Delete Account</h4>
+                <p class="danger-desc">Permanently delete your account and all associated data. This action cannot be undone.</p>
+              </div>
+              <button class="btn-danger" id="deleteAccountBtn" type="button">Delete Account</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Address Modal -->
+<div id="addressModal" class="address-modal" style="display: none;">
+  <div class="modal-overlay" id="modalOverlay"></div>
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3 id="addressModalTitle" class="modal-title">Add New Address</h3>
+      <button class="modal-close" id="modalCloseBtn" type="button" aria-label="Close">×</button>
+    </div>
+    
+    <form id="addressForm" method="POST" action="/account/addresses/add" class="address-form">
+      <div class="form-grid">
+        <div class="form-group-full">
+          <label>Label (e.g., Home, Office)</label>
+          <input type="text" id="addressLabel" name="label" placeholder="Home" class="form-input">
+        </div>
+        
+        <div class="form-group">
+          <label>Full Name *</label>
+          <input type="text" id="addressFullName" name="fullName" required class="form-input">
+        </div>
+        
+        <div class="form-group">
+          <label>Phone Number *</label>
+          <input type="tel" id="addressPhone" name="phone" required class="form-input">
+        </div>
+        
+        <div class="form-group-full">
+          <label>Address Line 1 *</label>
+          <input type="text" id="addressLine1" name="addressLine1" required placeholder="Street address" class="form-input">
+        </div>
+        
+        <div class="form-group-full">
+          <label>Address Line 2</label>
+          <input type="text" id="addressLine2" name="addressLine2" placeholder="Apartment, suite, etc. (optional)" class="form-input">
+        </div>
+        
+        <div class="form-group">
+          <label>City *</label>
+          <input type="text" id="addressCity" name="city" required class="form-input">
+        </div>
+        
+        <div class="form-group">
+          <label>State/Province</label>
+          <input type="text" id="addressState" name="state" class="form-input">
+        </div>
+        
+        <div class="form-group">
+          <label>Postal Code *</label>
+          <input type="text" id="addressPostalCode" name="postalCode" required class="form-input">
+        </div>
+        
+        <div class="form-group">
+          <label>Country *</label>
+          <input type="text" id="addressCountry" name="country" value="Nepal" required class="form-input">
+        </div>
+        
+        <div class="form-group-full">
+          <label class="checkbox-label">
+            <input type="checkbox" id="addressIsDefault" name="isDefault">
+            <span>Set as default address</span>
+          </label>
+        </div>
+      </div>
+      
+      <div class="modal-actions">
+        <button type="button" class="btn-cancel" id="cancelAddressBtn">Cancel</button>
+        <button type="submit" class="btn-save">Save Address</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<style>
+/* Account Page Styles - Mobile First */
+.account-page {
+  background: #f8f6f2;
+  padding: 16px 0 100px;
+  min-height: calc(100vh - 200px);
+}
+
+.account-wrapper {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+/* Account Header - Mobile First */
+.account-header {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 24px 20px;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(13, 13, 15, 0.08);
+  border: 1px solid rgba(13, 13, 15, 0.08);
+  margin-bottom: 24px;
+}
+
+.user-info-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 16px;
+}
+
+.user-avatar-large {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #020617 0%, #1e293b 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(13, 13, 15, 0.2);
+}
+
+.avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.avatar-initial {
+  font-size: 32px;
+  font-weight: 700;
+  color: white;
+  font-family: 'Playfair Display', serif;
+}
+
+.user-details {
+  width: 100%;
+}
+
+.user-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 24px;
+  font-weight: 700;
+  color: #0d0d0f;
+  margin-bottom: 6px;
+  line-height: 1.2;
+}
+
+.user-email {
+  font-size: 14px;
+  color: rgba(13, 13, 15, 0.6);
+  margin-bottom: 12px;
+}
+
+.user-badges {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.badge-verified,
+.badge-google {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.badge-verified {
+  background: rgba(46, 204, 113, 0.1);
+  color: #27ae60;
+}
+
+.badge-google {
+  background: rgba(66, 133, 244, 0.1);
+  color: #4285F4;
+}
+
+.header-actions {
+  width: 100%;
+}
+
+.btn-logout {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background: rgba(13, 13, 15, 0.05);
+  color: #0d0d0f;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 14px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  width: 100%;
+  border: 1px solid rgba(13, 13, 15, 0.1);
+}
+
+.btn-logout:hover {
+  background: rgba(231, 76, 60, 0.1);
+  color: #e74c3c;
+  border-color: rgba(231, 76, 60, 0.2);
+}
+
+.logout-icon {
+  width: 16px;
+  height: 16px;
+}
+
+/* Account Navigation - Mobile First */
+.account-nav {
+  display: flex;
+  gap: 8px;
+  background: white;
+  padding: 8px;
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(13, 13, 15, 0.08);
+  border: 1px solid rgba(13, 13, 15, 0.08);
+  margin-bottom: 24px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.account-nav::-webkit-scrollbar {
+  display: none;
+}
+
+.nav-tab {
+  flex: 1;
+  min-width: 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 12px 16px;
+  background: transparent;
+  border: none;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(13, 13, 15, 0.6);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  touch-action: manipulation;
+  min-height: 72px;
+}
+
+.nav-tab:hover {
+  background: rgba(13, 13, 15, 0.04);
+  color: #0d0d0f;
+}
+
+.nav-tab.active {
+  background: #0d0d0f;
+  color: white;
+  box-shadow: 0 2px 8px rgba(13, 13, 15, 0.15);
+}
+
+.tab-icon {
+  width: 20px;
+  height: 20px;
+  stroke-width: 2;
+  flex-shrink: 0;
+}
+
+.tab-text {
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+/* Tab Content - Mobile First */
+.tab-panel {
+  display: none;
+  background: white;
+  border-radius: 16px;
+  padding: 24px 20px;
+  box-shadow: 0 2px 12px rgba(13, 13, 15, 0.08);
+  border: 1px solid rgba(13, 13, 15, 0.08);
+}
+
+.tab-panel.active {
+  display: block;
+}
+
+.panel-header {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.panel-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 24px;
+  font-weight: 700;
+  color: #0d0d0f;
+  line-height: 1.3;
+}
+
+.order-filters {
+  width: 100%;
+}
+
+.filter-select {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid rgba(13, 13, 15, 0.1);
+  border-radius: 12px;
+  font-size: 14px;
+  background: white;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.filter-select:focus {
+  outline: none;
+  border-color: #0d0d0f;
+  box-shadow: 0 0 0 3px rgba(13, 13, 15, 0.1);
+}
+
+/* Orders List - Mobile First */
+.orders-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.order-card {
+  padding: 20px;
+  border: 1px solid rgba(13, 13, 15, 0.1);
+  border-radius: 12px;
+  background: white;
+  transition: all 0.2s ease;
+}
+
+.order-card:hover {
+  box-shadow: 0 4px 16px rgba(13, 13, 15, 0.1);
+}
+
+.order-header-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgba(13, 13, 15, 0.08);
+  margin-bottom: 16px;
+}
+
+.order-info {
+  flex: 1;
+}
+
+.order-number {
+  font-weight: 700;
+  font-size: 16px;
+  color: #0d0d0f;
+  margin-bottom: 4px;
+}
+
+.order-date {
+  font-size: 13px;
+  color: rgba(13, 13, 15, 0.6);
+}
+
+.order-status {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: capitalize;
+  align-self: flex-start;
+}
+
+.order-status.pending { background: rgba(241, 196, 15, 0.1); color: #f39c12; }
+.order-status.processing { background: rgba(52, 152, 219, 0.1); color: #3498db; }
+.order-status.shipped { background: rgba(155, 89, 182, 0.1); color: #9b59b6; }
+.order-status.delivered { background: rgba(46, 204, 113, 0.1); color: #27ae60; }
+.order-status.cancelled { background: rgba(231, 76, 60, 0.1); color: #e74c3c; }
+
+.order-items {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.order-item-preview {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.item-image-small {
+  width: 50px;
+  height: 70px;
+  flex-shrink: 0;
+  border-radius: 8px;
+  overflow: hidden;
+  background: rgba(13, 13, 15, 0.05);
+}
+
+.item-image-small img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.placeholder-img {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(13, 13, 15, 0.3);
+}
+
+.item-details-small {
+  flex: 1;
+  min-width: 0;
+}
+
+.item-title-small {
+  font-weight: 600;
+  font-size: 14px;
+  color: #0d0d0f;
+  margin-bottom: 4px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.item-qty-small {
+  font-size: 12px;
+  color: rgba(13, 13, 15, 0.6);
+}
+
+.more-items {
+  padding: 8px 12px;
+  background: rgba(13, 13, 15, 0.05);
+  border-radius: 8px;
+  font-size: 13px;
+  color: rgba(13, 13, 15, 0.7);
+  text-align: center;
+  font-weight: 500;
+}
+
+.order-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(13, 13, 15, 0.08);
+}
+
+.order-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.total-label {
+  font-size: 14px;
+  color: rgba(13, 13, 15, 0.6);
+  font-weight: 500;
+}
+
+.total-amount {
+  font-size: 18px;
+  font-weight: 700;
+  color: #0d0d0f;
+  font-family: 'Playfair Display', serif;
+}
+
+.btn-view-order {
+  padding: 12px 24px;
+  background: #0d0d0f;
+  color: white;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 14px;
+  text-decoration: none;
+  text-align: center;
+  transition: all 0.2s ease;
+  display: block;
+  width: 100%;
+}
+
+.btn-view-order:hover {
+  background: #1a1a1d;
+  box-shadow: 0 4px 12px rgba(13, 13, 15, 0.2);
+  transform: translateY(-1px);
+}
+
+/* Wishlist Grid - Mobile First */
+.wishlist-grid-account {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.wishlist-item-card {
+  display: flex;
+  flex-direction: column;
+  background: white;
+  border: 1px solid rgba(13, 13, 15, 0.08);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.2s ease;
+}
+
+.wishlist-item-card:hover {
+  box-shadow: 0 4px 16px rgba(13, 13, 15, 0.1);
+}
+
+.wishlist-item-image {
+  aspect-ratio: 2/3;
+  overflow: hidden;
+  background: rgba(13, 13, 15, 0.05);
+}
+
+.wishlist-item-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.wishlist-item-info {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.wishlist-item-title {
+  font-weight: 600;
+  font-size: 13px;
+  color: #0d0d0f;
+  text-decoration: none;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.wishlist-item-title:hover {
+  color: #0d9488;
+}
+
+.wishlist-item-price {
+  font-weight: 700;
+  font-size: 14px;
+  color: #0d0d0f;
+  font-family: 'Playfair Display', serif;
+}
+
+.btn-add-to-cart-small {
+  padding: 8px 16px;
+  background: #0d0d0f;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: 100%;
+}
+
+.btn-add-to-cart-small:hover {
+  background: #1a1a1d;
+}
+
+/* Addresses Grid - Mobile First */
+.addresses-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+.address-card {
+  padding: 20px;
+  border: 2px solid rgba(13, 13, 15, 0.1);
+  border-radius: 12px;
+  background: white;
+  transition: all 0.2s ease;
+}
+
+.address-card:hover {
+  box-shadow: 0 4px 16px rgba(13, 13, 15, 0.1);
+}
+
+.address-card.default {
+  border-color: #0d0d0f;
+  background: rgba(13, 13, 15, 0.02);
+}
+
+.address-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.address-label {
+  font-weight: 700;
+  font-size: 16px;
+  color: #0d0d0f;
+}
+
+.default-badge {
+  padding: 4px 10px;
+  background: #0d0d0f;
+  color: white;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.address-content {
+  margin-bottom: 16px;
+}
+
+.address-name {
+  font-weight: 600;
+  font-size: 15px;
+  color: #0d0d0f;
+  margin-bottom: 8px;
+}
+
+.address-text {
+  font-size: 14px;
+  color: rgba(13, 13, 15, 0.7);
+  line-height: 1.6;
+  margin-bottom: 8px;
+}
+
+.address-phone {
+  font-size: 13px;
+  color: rgba(13, 13, 15, 0.6);
+}
+
+.address-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(13, 13, 15, 0.08);
+}
+
+.btn-edit,
+.btn-delete,
+.btn-set-default {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-edit {
+  background: rgba(13, 13, 15, 0.05);
+  color: #0d0d0f;
+}
+
+.btn-edit:hover {
+  background: rgba(13, 13, 15, 0.1);
+}
+
+.btn-delete {
+  background: rgba(231, 76, 60, 0.1);
+  color: #e74c3c;
+}
+
+.btn-delete:hover {
+  background: rgba(231, 76, 60, 0.2);
+}
+
+.btn-set-default {
+  background: #0d0d0f;
+  color: white;
+}
+
+.btn-set-default:hover {
+  background: #1a1a1d;
+}
+
+/* Settings Sections - Mobile First */
+.settings-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.settings-section {
+  padding-bottom: 24px;
+  border-bottom: 1px solid rgba(13, 13, 15, 0.08);
+}
+
+.settings-section:last-child {
+  border-bottom: none;
+}
+
+.settings-section-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: #0d0d0f;
+  margin-bottom: 20px;
+}
+
+.settings-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-row {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-group-settings {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.label-settings {
+  font-weight: 600;
+  font-size: 14px;
+  color: #0d0d0f;
+}
+
+.input-settings {
+  padding: 12px 16px;
+  border: 2px solid rgba(13, 13, 15, 0.1);
+  border-radius: 12px;
+  font-size: 16px;
+  transition: all 0.2s ease;
+  background: white;
+}
+
+.input-settings:focus {
+  outline: none;
+  border-color: #0d0d0f;
+  box-shadow: 0 0 0 3px rgba(13, 13, 15, 0.1);
+}
+
+.btn-save {
+  padding: 12px 24px;
+  background: #0d0d0f;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  align-self: flex-start;
+}
+
+.btn-save:hover {
+  background: #1a1a1d;
+  box-shadow: 0 4px 12px rgba(13, 13, 15, 0.2);
+  transform: translateY(-1px);
+}
+
+.preferences-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.preference-item {
+  display: flex;
+  gap: 12px;
+  padding: 16px;
+  border: 1px solid rgba(13, 13, 15, 0.1);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.preference-item:hover {
+  border-color: rgba(13, 13, 15, 0.2);
+  background: rgba(13, 13, 15, 0.02);
+}
+
+.preference-checkbox {
+  width: 20px;
+  height: 20px;
+  margin-top: 2px;
+  cursor: pointer;
+  accent-color: #0d0d0f;
+  flex-shrink: 0;
+}
+
+.preference-label {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.preference-title {
+  font-weight: 600;
+  font-size: 14px;
+  color: #0d0d0f;
+}
+
+.preference-desc {
+  font-size: 13px;
+  color: rgba(13, 13, 15, 0.6);
+}
+
+.danger-zone {
+  background: rgba(231, 76, 60, 0.05);
+  padding: 20px;
+  border-radius: 12px;
+  border: 1px solid rgba(231, 76, 60, 0.2);
+}
+
+.danger-content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.danger-info {
+  flex: 1;
+}
+
+.danger-title {
+  font-weight: 700;
+  font-size: 16px;
+  color: #e74c3c;
+  margin-bottom: 8px;
+}
+
+.danger-desc {
+  font-size: 14px;
+  color: rgba(13, 13, 15, 0.7);
+  line-height: 1.6;
+}
+
+.btn-danger {
+  padding: 12px 24px;
+  background: #e74c3c;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  align-self: flex-start;
+}
+
+.btn-danger:hover {
+  background: #c0392b;
+  box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);
+  transform: translateY(-1px);
+}
+
+/* Empty State - Mobile First */
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+}
+
+.empty-icon {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 20px;
+  opacity: 0.4;
+  color: rgba(13, 13, 15, 0.4);
+}
+
+.empty-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 24px;
+  font-weight: 700;
+  color: #0d0d0f;
+  margin-bottom: 12px;
+}
+
+.empty-description {
+  font-size: 14px;
+  color: rgba(13, 13, 15, 0.6);
+  margin-bottom: 24px;
+  line-height: 1.6;
+}
+
+.btn-primary {
+  display: inline-block;
+  padding: 12px 24px;
+  background: #0d0d0f;
+  color: white;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 14px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.btn-primary:hover {
+  background: #1a1a1d;
+  box-shadow: 0 4px 12px rgba(13, 13, 15, 0.2);
+  transform: translateY(-1px);
+}
+
+.btn-secondary-sm {
+  display: inline-flex;
+  align-items: center;
+  padding: 10px 20px;
+  background: white;
+  color: #0d0d0f;
+  border: 1px solid rgba(13, 13, 15, 0.2);
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 13px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.btn-secondary-sm:hover {
+  border-color: rgba(13, 13, 15, 0.3);
+  background: rgba(13, 13, 15, 0.02);
+}
+
+/* Address Modal - Mobile First */
+.address-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 0;
+}
+
+.modal-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(13, 13, 15, 0.7);
+  backdrop-filter: blur(4px);
+}
+
+.modal-content {
+  position: relative;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  background: white;
+  border-radius: 20px 20px 0 0;
+  box-shadow: 0 -4px 24px rgba(13, 13, 15, 0.2);
+  animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  border-bottom: 1px solid rgba(13, 13, 15, 0.1);
+  position: sticky;
+  top: 0;
+  background: white;
+  z-index: 1;
+}
+
+.modal-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: #0d0d0f;
+}
+
+.modal-close {
+  width: 36px;
+  height: 36px;
+  border: none;
+  background: rgba(13, 13, 15, 0.05);
+  border-radius: 50%;
+  font-size: 24px;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: rgba(13, 13, 15, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  touch-action: manipulation;
+}
+
+.modal-close:hover {
+  background: rgba(13, 13, 15, 0.1);
+  transform: rotate(90deg);
+}
+
+.address-form {
+  padding: 20px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.form-group,
+.form-group-full {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-group-full {
+  grid-column: 1 / -1;
+}
+
+.form-input {
+  padding: 12px 16px;
+  border: 2px solid rgba(13, 13, 15, 0.1);
+  border-radius: 12px;
+  font-size: 16px;
+  transition: all 0.2s;
+  background: white;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: #0d0d0f;
+  box-shadow: 0 0 0 3px rgba(13, 13, 15, 0.1);
+}
+
+.form-group label {
+  font-weight: 600;
+  font-size: 14px;
+  color: #0d0d0f;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  padding: 12px 0;
+}
+
+.checkbox-label input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  accent-color: #0d0d0f;
+}
+
+.modal-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(13, 13, 15, 0.1);
+}
+
+.btn-cancel,
+.btn-save {
+  padding: 14px 24px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 15px;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+  width: 100%;
+  touch-action: manipulation;
+}
+
+.btn-cancel {
+  background: rgba(13, 13, 15, 0.05);
+  color: #0d0d0f;
+}
+
+.btn-cancel:hover {
+  background: rgba(13, 13, 15, 0.1);
+}
+
+.btn-save {
+  background: #0d0d0f;
+  color: white;
+  box-shadow: 0 2px 8px rgba(13, 13, 15, 0.15);
+}
+
+.btn-save:hover {
+  background: #1a1a1d;
+  box-shadow: 0 4px 12px rgba(13, 13, 15, 0.25);
+  transform: translateY(-1px);
+}
+
+/* Responsive - Tablet and Desktop */
+@media (min-width: 640px) {
+  .account-page {
+    padding: 32px 0 100px;
+  }
+
+  .account-wrapper {
+    padding: 0 24px;
+  }
+
+  .account-header {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 32px 40px;
+  }
+
+  .user-info-header {
+    flex-direction: row;
+    align-items: center;
+    text-align: left;
+    flex: 1;
+  }
+
+  .user-avatar-large {
+    width: 100px;
+    height: 100px;
+  }
+
+  .avatar-initial {
+    font-size: 40px;
+  }
+
+  .user-name {
+    font-size: 32px;
+  }
+
+  .user-email {
+    font-size: 16px;
+  }
+
+  .user-badges {
+    justify-content: flex-start;
+  }
+
+  .header-actions {
+    width: auto;
+  }
+
+  .btn-logout {
+    width: auto;
+  }
+
+  .account-nav {
+    gap: 8px;
+    padding: 8px;
+  }
+
+  .nav-tab {
+    flex-direction: row;
+    min-width: 120px;
+    padding: 14px 20px;
+    min-height: auto;
+  }
+
+  .tab-text {
+    font-size: 15px;
+  }
+
+  .tab-panel {
+    padding: 40px;
+  }
+
+  .panel-header {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .panel-title {
+    font-size: 28px;
+  }
+
+  .order-filters {
+    width: auto;
+  }
+
+  .filter-select {
+    width: 200px;
+  }
+
+  .order-header-card {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .order-footer {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .btn-view-order {
+    width: auto;
+  }
+
+  .wishlist-grid-account {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+
+  .wishlist-item-info {
+    padding: 16px;
+  }
+
+  .wishlist-item-title {
+    font-size: 14px;
+  }
+
+  .wishlist-item-price {
+    font-size: 16px;
+  }
+
+  .addresses-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .address-actions {
+    justify-content: flex-start;
+  }
+
+  .form-row {
+    flex-direction: row;
+    gap: 20px;
+  }
+
+  .form-group-settings {
+    flex: 1;
+  }
+
+  .danger-content {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .btn-danger {
+    align-self: center;
+  }
+
+  .empty-state {
+    padding: 80px 40px;
+  }
+
+  .empty-icon {
+    width: 80px;
+    height: 80px;
+  }
+
+  .empty-title {
+    font-size: 28px;
+  }
+
+  .empty-description {
+    font-size: 16px;
+  }
+
+  .address-modal {
+    align-items: center;
+    padding: 20px;
+  }
+
+  .modal-content {
+    max-width: 600px;
+    border-radius: 20px;
+    animation: slideDown 0.3s ease-out;
+  }
+
+  @keyframes slideDown {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .modal-header {
+    padding: 24px 32px;
+  }
+
+  .modal-title {
+    font-size: 24px;
+  }
+
+  .address-form {
+    padding: 32px;
+  }
+
+  .form-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+
+  .modal-actions {
+    flex-direction: row;
+    justify-content: flex-end;
+  }
+
+  .btn-cancel,
+  .btn-save {
+    width: auto;
+  }
+}
+
+@media (min-width: 1024px) {
+  .wishlist-grid-account {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .addresses-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+</style>
+
+<script>
+(function() {
+  'use strict';
+
+  // Tab Switching Functionality
+  function initTabs() {
+    const navTabs = document.querySelectorAll('.nav-tab');
+    const tabPanels = document.querySelectorAll('.tab-panel');
+
+    navTabs.forEach(tab => {
+      tab.addEventListener('click', function() {
+        const targetTab = this.getAttribute('data-tab');
+
+        // Remove active class from all tabs and panels
+        navTabs.forEach(t => t.classList.remove('active'));
+        tabPanels.forEach(p => p.classList.remove('active'));
+
+        // Add active class to clicked tab and corresponding panel
+        this.classList.add('active');
+        const targetPanel = document.getElementById('tab-' + targetTab);
+        if (targetPanel) {
+          targetPanel.classList.add('active');
+        }
+      });
+    });
+  }
+
+  // Order Filter Functionality
+  function initOrderFilter() {
+    const filterSelect = document.getElementById('orderFilterSelect');
+    if (!filterSelect) return;
+
+    filterSelect.addEventListener('change', function() {
+      const selectedStatus = this.value;
+      const orderCards = document.querySelectorAll('.order-card');
+
+      orderCards.forEach(card => {
+        const orderStatus = card.getAttribute('data-order-status');
+        if (selectedStatus === 'all' || orderStatus === selectedStatus) {
+          card.style.display = 'block';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    });
+  }
+
+  // Address Modal Functionality
+  function initAddressModal() {
+    const modal = document.getElementById('addressModal');
+    const form = document.getElementById('addressForm');
+    const title = document.getElementById('addressModalTitle');
+    const showBtn = document.getElementById('showAddressModalBtn');
+    const showBtnEmpty = document.getElementById('showAddressModalBtnEmpty');
+    const closeBtn = document.getElementById('modalCloseBtn');
+    const cancelBtn = document.getElementById('cancelAddressBtn');
+    const overlay = document.getElementById('modalOverlay');
+    const addressesGrid = document.querySelector('.addresses-grid');
+
+    function openModal(editIndex = null) {
+      if (!modal) return;
+      
+      form.reset();
+
+      if (editIndex !== null && addressesGrid) {
+        const addressesData = addressesGrid.getAttribute('data-addresses');
+        if (addressesData) {
+          try {
+            const addresses = JSON.parse(addressesData);
+            const addr = addresses[editIndex];
+
+            if (addr) {
+              title.textContent = 'Edit Address';
+              form.action = `/account/addresses/${editIndex}/edit`;
+
+              document.getElementById('addressLabel').value = addr.label || '';
+              document.getElementById('addressFullName').value = addr.fullName || '';
+              document.getElementById('addressPhone').value = addr.phone || '';
+              document.getElementById('addressLine1').value = addr.addressLine1 || '';
+              document.getElementById('addressLine2').value = addr.addressLine2 || '';
+              document.getElementById('addressCity').value = addr.city || '';
+              document.getElementById('addressState').value = addr.state || '';
+              document.getElementById('addressPostalCode').value = addr.postalCode || '';
+              document.getElementById('addressCountry').value = addr.country || 'Nepal';
+              document.getElementById('addressIsDefault').checked = addr.isDefault || false;
+            }
+          } catch (e) {
+            console.error('Error parsing addresses:', e);
+          }
+        }
+      } else {
+        title.textContent = 'Add New Address';
+        form.action = '/account/addresses/add';
+      }
+
+      modal.style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+      if (!modal) return;
+      modal.style.display = 'none';
+      document.body.style.overflow = '';
+    }
+
+    if (showBtn) {
+      showBtn.addEventListener('click', () => openModal(null));
+    }
+
+    if (showBtnEmpty) {
+      showBtnEmpty.addEventListener('click', () => openModal(null));
+    }
+
+    if (closeBtn) {
+      closeBtn.addEventListener('click', closeModal);
+    }
+
+    if (cancelBtn) {
+      cancelBtn.addEventListener('click', closeModal);
+    }
+
+    if (overlay) {
+      overlay.addEventListener('click', closeModal);
+    }
+
+    // Close on ESC key
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' && modal && modal.style.display === 'flex') {
+        closeModal();
+      }
+    });
+
+    // Address action handlers
+    document.addEventListener('click', function(e) {
+      if (e.target.hasAttribute('data-edit-address')) {
+        const index = parseInt(e.target.getAttribute('data-edit-address'));
+        openModal(index);
+      }
+
+      if (e.target.hasAttribute('data-delete-address')) {
+        const index = parseInt(e.target.getAttribute('data-delete-address'));
+        if (confirm('Are you sure you want to delete this address?')) {
+          fetch(`/account/addresses/${index}/delete`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          })
+          .then(r => r.json())
+          .then(data => {
+            if (data.ok) {
+              location.reload();
+            } else {
+              alert(data.message || 'Failed to delete address');
+            }
+          })
+          .catch(err => {
+            console.error('Delete address error:', err);
+            alert('Failed to delete address');
+          });
+        }
+      }
+
+      if (e.target.hasAttribute('data-set-default')) {
+        const index = parseInt(e.target.getAttribute('data-set-default'));
+        fetch(`/account/addresses/${index}/set-default`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        })
+        .then(r => r.json())
+        .then(data => {
+          if (data.ok) {
+            location.reload();
+          } else {
+            alert(data.message || 'Failed to set default address');
+          }
+        })
+        .catch(err => {
+          console.error('Set default error:', err);
+          alert('Failed to set default address');
+        });
+      }
+    });
+  }
+
+  // Delete Account Functionality
+  function initDeleteAccount() {
+    const deleteBtn = document.getElementById('deleteAccountBtn');
+    if (!deleteBtn) return;
+
+    deleteBtn.addEventListener('click', function() {
+      if (confirm('Are you ABSOLUTELY sure you want to delete your account? This action cannot be undone!')) {
+        if (confirm('This will permanently delete all your data. Continue?')) {
+          window.location.href = '/account/delete';
+        }
+      }
+    });
+  }
+
+  // Initialize all functionality when DOM is ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function() {
+      initTabs();
+      initOrderFilter();
+      initAddressModal();
+      initDeleteAccount();
+    });
+  } else {
+    initTabs();
+    initOrderFilter();
+    initAddressModal();
+    initDeleteAccount();
+  }
+})();
+</script>

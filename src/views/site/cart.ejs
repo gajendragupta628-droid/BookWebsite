@@ -1,0 +1,1195 @@
+<div class="cart-page">
+  <div class="container-custom cart-wrapper">
+    <!-- Page Header -->
+    <div class="cart-header">
+      <h1 class="cart-title">Shopping Cart</h1>
+      <div class="cart-breadcrumb">
+        <a href="/">Home</a>
+        <span>/</span>
+        <span>Cart</span>
+      </div>
+    </div>
+
+    <% if (!(cart.items||[]).length) { %>
+      <!-- Empty Cart State -->
+      <div class="cart-empty">
+        <div class="empty-cart-icon">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
+          </svg>
+        </div>
+        <h2 class="empty-cart-title">Your cart is empty</h2>
+        <p class="empty-cart-description">
+          Looks like you haven't added any books to your cart yet. Start exploring our collection!
+        </p>
+        <div class="empty-cart-actions">
+          <a href="/search" class="btn-primary-large">Browse Books</a>
+          <a href="/wishlist" class="btn-secondary-outline">View Wishlist</a>
+        </div>
+
+        <!-- Recommended Books -->
+        <div class="empty-recommendations">
+          <h3 class="recommendations-title">You might like these</h3>
+          <div class="recommendations-grid">
+            <!-- Placeholder for recommended books -->
+            <div class="placeholder-cards">
+              <div class="placeholder-text">Check out our featured books</div>
+              <a href="/search?sort=popular" class="placeholder-link">View All →</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% } else { %>
+      <!-- Cart with Items -->
+      <div class="cart-content">
+        <!-- Cart Items -->
+        <div class="cart-items-section">
+          <div class="cart-items-header">
+            <h2 class="items-count"><%= cart.items.length %> <%= cart.items.length === 1 ? 'Item' : 'Items' %> in Cart</h2>
+            <button class="clear-cart-btn" onclick="if(confirm('Clear entire cart?')) clearCart()">
+              Clear Cart
+            </button>
+          </div>
+
+          <form id="cart-form" class="cart-items-list">
+            <% cart.items.forEach(function(it, index){ %>
+              <div class="cart-item" data-item-id="<%= it.bookId %>">
+                <!-- Item Image -->
+                <div class="item-image">
+                  <% const img = it.image || (it.isbn ? `https://covers.openlibrary.org/b/isbn/${it.isbn}-M.jpg` : 'https://images.pexels.com/photos/768125/pexels-photo-768125.jpeg?auto=compress&cs=tinysrgb&w=200'); %>
+                  <img src="<%= img %>" alt="<%= it.title %>" />
+                  <% if (it.discountPercent) { %>
+                    <span class="item-badge">-<%= it.discountPercent %>%</span>
+                  <% } %>
+                </div>
+
+                <!-- Item Details -->
+                <div class="item-details">
+                  <div class="item-info">
+                    <% if (it.slug) { %>
+                      <a href="/book/<%= it.slug %>" class="item-title"><%= it.title %></a>
+                    <% } else { %>
+                      <h3 class="item-title"><%= it.title %></h3>
+                    <% } %>
+                    
+                    <% if (it.authors) { %>
+                      <p class="item-author">by <%= it.authors %></p>
+                    <% } %>
+                    
+                    <% if (it.sku) { %>
+                      <p class="item-sku">SKU: <%= it.sku %></p>
+                    <% } %>
+
+                    <!-- Stock Status -->
+                    <div class="item-stock">
+                      <% if (it.stock === undefined || it.stock > 10) { %>
+                        <span class="stock-badge in-stock">✓ In Stock</span>
+                      <% } else if (it.stock > 0) { %>
+                        <span class="stock-badge low-stock">Only <%= it.stock %> left</span>
+                      <% } else { %>
+                        <span class="stock-badge out-stock">Out of Stock</span>
+                      <% } %>
+                    </div>
+                  </div>
+
+                  <!-- Quantity & Price -->
+                  <div class="item-actions">
+                    <div class="quantity-controls-cart">
+                      <button 
+                        type="button" 
+                        class="qty-btn-cart" 
+                        onclick="updateQuantity('<%= it.bookId %>', <%= it.qty - 1 %>, <%= it.stock || 0 %>)"
+                        <%= it.qty <= 1 ? 'disabled' : '' %>
+                        data-qty-minus
+                        data-id="<%= it.bookId %>"
+                      >−</button>
+                      <input 
+                        type="number" 
+                        min="1" 
+                        max="<%= it.stock || 999 %>"
+                        value="<%= it.qty %>" 
+                        data-cart-qty 
+                        data-id="<%= it.bookId %>" 
+                        data-stock="<%= it.stock || 0 %>"
+                        class="qty-input-cart"
+                        onchange="updateQuantity('<%= it.bookId %>', this.value, <%= it.stock || 0 %>)"
+                      />
+                      <button 
+                        type="button" 
+                        class="qty-btn-cart" 
+                        onclick="updateQuantity('<%= it.bookId %>', <%= it.qty + 1 %>, <%= it.stock || 0 %>)"
+                        <%= (it.stock && it.qty >= it.stock) ? 'disabled' : '' %>
+                        data-qty-plus
+                        data-id="<%= it.bookId %>"
+                      >+</button>
+                    </div>
+
+                    <div class="item-price-section">
+                      <div class="item-price"><%= store.currency %>&nbsp;<%= (it.price * it.qty).toFixed(2) %></div>
+                      <% if (it.originalPrice && it.originalPrice > it.price) { %>
+                        <div class="item-original-price"><%= store.currency %>&nbsp;<%= (it.originalPrice * it.qty).toFixed(2) %></div>
+                      <% } %>
+                    </div>
+
+                    <!-- Remove Button -->
+                    <button 
+                      type="button" 
+                      class="remove-item-btn" 
+                      data-cart-remove 
+                      data-id="<%= it.bookId %>"
+                      aria-label="Remove item"
+                      title="Remove from cart"
+                    >
+                      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M15 5L5 15M5 5L15 15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            <% }) %>
+          </form>
+
+          <!-- Continue Shopping -->
+          <div class="continue-shopping">
+            <a href="/search" class="continue-shopping-link">
+              <span>←</span>
+              <span>Continue Shopping</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Order Summary Sidebar -->
+        <div class="order-summary-section">
+          <div class="order-summary-sticky">
+            <div class="summary-card">
+              <h3 class="summary-title">Order Summary</h3>
+
+              <!-- Promo Code -->
+              <div class="promo-code-section">
+                <div class="promo-input-wrapper">
+                  <input 
+                    type="text" 
+                    placeholder="Enter promo code" 
+                    class="promo-input"
+                    id="promoCode"
+                  />
+                  <button type="button" class="promo-apply-btn" onclick="applyPromo()">
+                    Apply
+                  </button>
+                </div>
+              </div>
+
+              <!-- Price Breakdown -->
+              <div class="price-breakdown">
+                <div class="price-row">
+                  <span class="price-label">Subtotal (<%= cart.items.length %> items)</span>
+                  <span class="price-value">
+                    <%= store.currency %> 
+                    <% 
+                      const subtotal = cart.items.reduce((sum, it) => sum + (it.price * it.qty), 0);
+                    %>
+                    <%= subtotal.toFixed(2) %>
+                  </span>
+                </div>
+
+                <div class="price-row">
+                  <span class="price-label">Shipping</span>
+                  <span class="price-value shipping-free">FREE</span>
+                </div>
+
+                <% 
+                  const discount = 0; // Calculate from promo code
+                %>
+                <% if (discount > 0) { %>
+                  <div class="price-row discount">
+                    <span class="price-label">Discount</span>
+                    <span class="price-value">-<%= store.currency %> <%= discount.toFixed(2) %></span>
+                  </div>
+                <% } %>
+
+                <div class="price-divider"></div>
+
+                <div class="price-row total">
+                  <span class="price-label">Total</span>
+                  <span class="price-value"><%= store.currency %> <%= (subtotal - discount).toFixed(2) %></span>
+                </div>
+              </div>
+
+              <!-- Checkout Button -->
+              <% if (currentUser) { %>
+                <a href="/checkout" class="checkout-btn">
+                  <span>Proceed to Checkout</span>
+                  <span>→</span>
+                </a>
+              <% } else { %>
+                <button onclick="openAuthModal('login', '/checkout')" class="checkout-btn" style="border: none; width: 100%; cursor: pointer;">
+                  <span>Proceed to Checkout</span>
+                  <span>→</span>
+                </button>
+              <% } %>
+
+              <!-- Payment Methods -->
+              <div class="payment-methods">
+                <div class="payment-label">We Accept:</div>
+                <div class="payment-icons">
+                  <div class="payment-icon">VISA</div>
+                  <div class="payment-icon">MC</div>
+                  <div class="payment-icon">eSewa</div>
+                  <div class="payment-icon">COD</div>
+                </div>
+              </div>
+
+              <!-- Trust Signals -->
+              <div class="trust-signals-cart">
+                <div class="trust-item-cart">
+                  <svg class="trust-icon-small" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                  </svg>
+                  <span class="trust-text-small">Secure Checkout</span>
+                </div>
+                <div class="trust-item-cart">
+                  <svg class="trust-icon-small" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                  </svg>
+                  <span class="trust-text-small">Fast Delivery</span>
+                </div>
+                <div class="trust-item-cart">
+                  <svg class="trust-icon-small" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+                  </svg>
+                  <span class="trust-text-small">Easy Returns</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% } %>
+
+    <!-- Upsell Section -->
+    <% if ((cart.items||[]).length > 0) { %>
+      <section class="upsell-section">
+        <h2 class="upsell-title">Frequently Bought Together</h2>
+        <div class="upsell-grid">
+          <div class="upsell-placeholder">
+            <p>Recommended books based on your cart will appear here</p>
+            <a href="/search?sort=popular" class="upsell-browse">Browse Bestsellers</a>
+          </div>
+        </div>
+      </section>
+    <% } %>
+  </div>
+</div>
+
+<style>
+/* Cart Page Styles - Mobile First */
+.cart-page {
+  background: #fafafa;
+  padding: 16px 0 100px; /* Extra bottom padding for mobile nav */
+  min-height: 100vh;
+}
+
+@media (min-width: 640px) {
+  .cart-page {
+    padding: 24px 0 80px;
+  }
+}
+
+@media (min-width: 768px) {
+  .cart-page {
+    padding: 40px 0 80px;
+  }
+}
+
+.cart-wrapper {
+  padding: 16px;
+}
+
+@media (min-width: 640px) {
+  .cart-wrapper {
+    padding: 20px 24px;
+  }
+}
+
+/* Cart Header */
+.cart-header {
+  margin-bottom: 40px;
+}
+
+.cart-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(28px, 8vw, 40px);
+  font-weight: 700;
+  color: #0d0d0f;
+  margin-bottom: 8px;
+  line-height: 1.2;
+}
+
+@media (min-width: 768px) {
+  .cart-title {
+    font-size: 40px;
+  }
+}
+
+.cart-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: rgba(13, 13, 15, 0.6);
+}
+
+.cart-breadcrumb a {
+  color: rgba(13, 13, 15, 0.6);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.cart-breadcrumb a:hover {
+  color: #0d0d0f;
+}
+
+/* Empty Cart */
+.cart-empty {
+  background: white;
+  border-radius: 12px;
+  padding: 80px 40px;
+  text-align: center;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.empty-cart-icon {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 24px;
+  opacity: 0.3;
+  color: rgba(13, 13, 15, 0.3);
+}
+
+.empty-cart-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(28px, 7vw, 36px);
+  font-weight: 600;
+  color: #0d0d0f;
+  margin-bottom: 16px;
+  letter-spacing: -0.01em;
+}
+
+.empty-cart-description {
+  font-size: 17px;
+  line-height: 1.6;
+  color: rgba(13, 13, 15, 0.6);
+  max-width: 500px;
+  margin: 0 auto 32px;
+}
+
+.empty-cart-actions {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 64px;
+}
+
+.btn-primary-large {
+  padding: 14px 32px;
+  background: #0d0d0f;
+  color: #f8f6f2;
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 16px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(13, 13, 15, 0.15);
+  min-height: 48px;
+}
+
+.btn-primary-large:hover {
+  background: #1a1a1d;
+  box-shadow: 0 4px 12px rgba(13, 13, 15, 0.25);
+  transform: translateY(-1px);
+}
+
+.btn-secondary-outline {
+  padding: 14px 28px;
+  background: white;
+  color: #0d0d0f;
+  border: 1px solid rgba(13, 13, 15, 0.12);
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 15px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  display: inline-block;
+  min-height: 48px;
+}
+
+.btn-secondary-outline:hover {
+  border-color: rgba(13, 13, 15, 0.25);
+  background: rgba(13, 13, 15, 0.02);
+}
+
+.empty-recommendations {
+  padding-top: 48px;
+  border-top: 1px solid rgba(13, 13, 15, 0.1);
+}
+
+.recommendations-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(24px, 6vw, 28px);
+  font-weight: 600;
+  color: #0d0d0f;
+  margin-bottom: 24px;
+  letter-spacing: -0.01em;
+}
+
+.placeholder-cards {
+  padding: 48px;
+  background: #f8f6f2;
+  border-radius: 16px;
+  text-align: center;
+}
+
+.placeholder-text {
+  font-size: 16px;
+  color: rgba(13, 13, 15, 0.6);
+  margin-bottom: 16px;
+}
+
+.placeholder-link {
+  color: #0d0d0f;
+  font-weight: 500;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(13, 13, 15, 0.2);
+  transition: border-color 0.2s ease;
+}
+
+.placeholder-link:hover {
+  border-bottom-color: #0d0d0f;
+}
+
+.placeholder-link:hover {
+  text-decoration: underline;
+}
+
+/* Cart Content */
+.cart-content {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 32px;
+  align-items: start;
+}
+
+@media (min-width: 1024px) {
+  .cart-content {
+    grid-template-columns: 1fr 400px;
+  }
+}
+
+/* Cart Items Section */
+.cart-items-section {
+  background: white;
+  border-radius: 12px;
+  padding: 32px;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.cart-items-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  padding-bottom: 24px;
+  border-bottom: 2px solid rgba(13, 13, 15, 0.1);
+}
+
+.items-count {
+  font-family: 'Playfair Display', serif;
+  font-size: 24px;
+  font-weight: 700;
+  color: #0d0d0f;
+}
+
+.clear-cart-btn {
+  background: none;
+  border: none;
+  color: rgba(13, 13, 15, 0.6);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: underline;
+  transition: color 0.3s ease;
+}
+
+.clear-cart-btn:hover {
+  color: #e74c3c;
+}
+
+/* Cart Items List */
+.cart-items-list {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.cart-item {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 24px;
+  padding: 24px;
+  background: rgba(13, 13, 15, 0.02);
+  border: 1px solid rgba(13, 13, 15, 0.08);
+  border-radius: 12px;
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+.cart-item:hover {
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  border-color: rgba(13, 13, 15, 0.12);
+}
+
+/* Item Image */
+.item-image {
+  position: relative;
+  aspect-ratio: 3/4;
+  border-radius: 12px;
+  overflow: hidden;
+  background: white;
+  box-shadow: 0 4px 15px rgba(13, 13, 15, 0.1);
+}
+
+.item-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.item-badge {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  padding: 4px 8px;
+  background: #0d0d0f;
+  color: #f8f6f2;
+  border-radius: 6px;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Item Details */
+.item-details {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.item-info {}
+
+.item-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #0d0d0f;
+  margin-bottom: 6px;
+  text-decoration: none;
+  display: block;
+  transition: color 0.3s ease;
+}
+
+.item-title:hover {
+  color: rgba(13, 13, 15, 0.8);
+}
+
+.item-author {
+  font-size: 14px;
+  color: rgba(13, 13, 15, 0.7);
+  margin-bottom: 4px;
+}
+
+.item-sku {
+  font-size: 13px;
+  color: rgba(13, 13, 15, 0.5);
+  margin-bottom: 12px;
+}
+
+.item-stock {
+  margin-top: 8px;
+}
+
+.stock-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.stock-badge.in-stock {
+  background: #d1fae5;
+  color: #059669;
+}
+
+.stock-badge.low-stock {
+  background: #fef3c7;
+  color: #d97706;
+}
+
+.stock-badge.out-stock {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+/* Item Actions */
+.item-actions {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.quantity-controls-cart {
+  display: flex;
+  align-items: center;
+  border: 1px solid rgba(13, 13, 15, 0.12);
+  border-radius: 8px;
+  overflow: hidden;
+  background: white;
+}
+
+.qty-btn-cart {
+  width: 36px;
+  height: 36px;
+  background: white;
+  border: none;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: #0d0d0f;
+}
+
+.qty-btn-cart:hover:not(:disabled) {
+  background: rgba(13, 13, 15, 0.04);
+}
+
+.qty-btn-cart:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  color: rgba(13, 13, 15, 0.3);
+}
+
+.qty-input-cart {
+  width: 65px;
+  height: 36px;
+  border: none;
+  border-left: 1px solid rgba(13, 13, 15, 0.1);
+  border-right: 1px solid rgba(13, 13, 15, 0.1);
+  text-align: center;
+  font-weight: 600;
+  font-size: 15px;
+  background: white;
+  padding: 0 8px;
+}
+
+.qty-input-cart:focus {
+  outline: none;
+}
+
+.item-price-section {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.item-price {
+  font-size: 20px;
+  font-weight: 700;
+  color: #0d0d0f;
+  font-family: 'Playfair Display', serif;
+  white-space: nowrap;
+}
+
+.item-original-price {
+  font-size: 14px;
+  color: rgba(13, 13, 15, 0.5);
+  text-decoration: line-through;
+  white-space: nowrap;
+}
+
+.remove-item-btn {
+  width: 36px;
+  height: 36px;
+  background: white;
+  border: 1px solid rgba(13, 13, 15, 0.12);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: rgba(13, 13, 15, 0.5);
+}
+
+.remove-item-btn:hover {
+  border-color: rgba(231, 76, 60, 0.3);
+  background: rgba(231, 76, 60, 0.08);
+  color: #e74c3c;
+}
+
+/* Continue Shopping */
+.continue-shopping {
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(13, 13, 15, 0.1);
+}
+
+.continue-shopping-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #caa660;
+  font-weight: 600;
+  font-size: 15px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.continue-shopping-link:hover {
+  gap: 12px;
+  color: #b8954d;
+}
+
+/* Order Summary */
+.order-summary-section {}
+
+.order-summary-sticky {
+  position: sticky;
+  top: 100px;
+}
+
+.summary-card {
+  background: white;
+  border-radius: 12px;
+  padding: 32px;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.summary-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 24px;
+  font-weight: 700;
+  color: #0d0d0f;
+  margin-bottom: 24px;
+}
+
+/* Promo Code */
+.promo-code-section {
+  margin-bottom: 24px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid rgba(13, 13, 15, 0.1);
+}
+
+.promo-input-wrapper {
+  display: flex;
+  gap: 8px;
+}
+
+.promo-input {
+  flex: 1;
+  padding: 12px 16px;
+  border: 1px solid rgba(13, 13, 15, 0.12);
+  border-radius: 8px;
+  font-size: 16px; /* Prevents iOS zoom */
+  transition: all 0.2s ease;
+  min-height: 44px;
+}
+
+.promo-input:focus {
+  outline: none;
+  border-color: rgba(13, 13, 15, 0.25);
+  box-shadow: 0 0 0 3px rgba(13, 13, 15, 0.05);
+}
+
+.promo-apply-btn {
+  padding: 12px 24px;
+  background: #0d0d0f;
+  color: #f8f6f2;
+  border: none;
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-height: 44px;
+  white-space: nowrap;
+}
+
+.promo-apply-btn:hover {
+  background: #caa660;
+  border-color: #caa660;
+  color: white;
+}
+
+/* Price Breakdown */
+.price-breakdown {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.price-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.price-label {
+  font-size: 15px;
+  color: rgba(13, 13, 15, 0.7);
+}
+
+.price-value {
+  font-size: 16px;
+  font-weight: 600;
+  color: #0d0d0f;
+}
+
+.shipping-free {
+  color: #27ae60;
+  font-weight: 700;
+}
+
+.price-row.discount .price-value {
+  color: #e74c3c;
+}
+
+.price-divider {
+  height: 1px;
+  background: rgba(13, 13, 15, 0.1);
+  margin: 8px 0;
+}
+
+.price-row.total {
+  padding-top: 8px;
+}
+
+.price-row.total .price-label {
+  font-size: 18px;
+  font-weight: 700;
+  color: #0d0d0f;
+}
+
+.price-row.total .price-value {
+  font-size: 28px;
+  font-weight: 700;
+  color: #caa660;
+  font-family: 'Playfair Display', serif;
+}
+
+/* Checkout Button */
+.checkout-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 16px 32px;
+  background: #0d0d0f;
+  color: #f8f6f2;
+  border: none;
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(13, 13, 15, 0.15);
+  text-decoration: none;
+  margin-bottom: 24px;
+  min-height: 52px;
+}
+
+.checkout-btn:hover {
+  background: #1a1a1d;
+  box-shadow: 0 4px 12px rgba(13, 13, 15, 0.25);
+  transform: translateY(-1px);
+}
+
+/* Payment Methods */
+.payment-methods {
+  margin-bottom: 20px;
+}
+
+.payment-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(13, 13, 15, 0.6);
+  margin-bottom: 12px;
+}
+
+.payment-icons {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.payment-icon {
+  padding: 6px 12px;
+  background: #f8f6f2;
+  border: 1px solid rgba(13, 13, 15, 0.1);
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  color: rgba(13, 13, 15, 0.6);
+}
+
+/* Trust Signals */
+.trust-signals-cart {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 20px;
+  background: rgba(13, 13, 15, 0.02);
+  border-radius: 12px;
+  border: 1px solid rgba(13, 13, 15, 0.08);
+}
+
+.trust-item-cart {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.trust-icon-small {
+  width: 18px;
+  height: 18px;
+  color: rgba(13, 13, 15, 0.6);
+  flex-shrink: 0;
+}
+
+.trust-text-small {
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(13, 13, 15, 0.7);
+}
+
+/* Upsell Section */
+.upsell-section {
+  margin-top: 48px;
+  padding: 48px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.upsell-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 28px;
+  font-weight: 700;
+  color: #0d0d0f;
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.upsell-placeholder {
+  padding: 48px;
+  background: #f8f6f2;
+  border-radius: 16px;
+  text-align: center;
+}
+
+.upsell-browse {
+  display: inline-block;
+  margin-top: 16px;
+  color: #caa660;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.upsell-browse:hover {
+  text-decoration: underline;
+}
+
+/* Mobile Responsive */
+@media (max-width: 1023px) {
+  .cart-title {
+    font-size: 32px;
+  }
+
+  .cart-items-section,
+  .summary-card {
+    padding: 24px;
+  }
+
+  .order-summary-sticky {
+    position: static;
+  }
+}
+
+@media (max-width: 767px) {
+  .cart-item {
+    grid-template-columns: 80px 1fr;
+    gap: 16px;
+    padding: 16px;
+  }
+
+  .item-image {
+    width: 80px;
+  }
+
+  .item-title {
+    font-size: 16px;
+  }
+
+  .item-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .item-price-section {
+    align-items: flex-start;
+  }
+
+  .empty-cart-icon {
+    width: 80px;
+    height: 80px;
+  }
+
+  .empty-cart-title {
+    font-size: 28px;
+  }
+
+  .upsell-section {
+    padding: 24px;
+  }
+}
+</style>
+
+<script>
+function updateQuantity(bookId, newQty, maxStock) {
+  // Validate quantity
+  const qty = parseInt(newQty, 10);
+  
+  // Handle invalid input (NaN, null, undefined)
+  if (isNaN(qty) || qty === null || qty === undefined) {
+    console.error('Invalid quantity:', newQty);
+    location.reload(); // Reload to reset to valid state
+    return;
+  }
+  
+  // Don't allow less than 1
+  if (qty < 1) {
+    console.log('Quantity cannot be less than 1');
+    const input = document.querySelector(`input[data-id="${bookId}"]`);
+    if (input) input.value = 1;
+    return;
+  }
+  
+  // Don't allow more than stock
+  if (maxStock && maxStock > 0 && qty > maxStock) {
+    alert(`Only ${maxStock} item${maxStock > 1 ? 's' : ''} available in stock`);
+    const input = document.querySelector(`input[data-id="${bookId}"]`);
+    if (input) input.value = maxStock;
+    return;
+  }
+  
+  // Handle zero stock case
+  if (maxStock === 0) {
+    alert('This item is currently out of stock');
+    return;
+  }
+  
+  // Update buttons state before AJAX call
+  updateButtonStates(bookId, qty, maxStock);
+  
+  // Update via AJAX
+  fetch('/cart/update', {
+    method: 'POST',
+    headers: { 
+      'Content-Type': 'application/json',
+      'X-Requested-With': 'XMLHttpRequest'
+    },
+    body: JSON.stringify({ 
+      lines: [{ bookId, qty }] 
+    })
+  })
+  .then(r => r.json())
+  .then(data => {
+    if (data.ok) {
+      // Reload page to show updated cart
+      location.reload();
+    } else {
+      alert('Failed to update cart');
+      location.reload(); // Reload to reset state
+    }
+  })
+  .catch(err => {
+    console.error('Cart update error:', err);
+    alert('Failed to update cart. Please try again.');
+    location.reload(); // Reload to reset state
+  });
+}
+
+function updateButtonStates(bookId, qty, maxStock) {
+  // Update minus button
+  const minusBtn = document.querySelector(`button[data-qty-minus][data-id="${bookId}"]`);
+  if (minusBtn) {
+    if (qty <= 1) {
+      minusBtn.disabled = true;
+    } else {
+      minusBtn.disabled = false;
+    }
+  }
+  
+  // Update plus button
+  const plusBtn = document.querySelector(`button[data-qty-plus][data-id="${bookId}"]`);
+  if (plusBtn) {
+    if (maxStock && qty >= maxStock) {
+      plusBtn.disabled = true;
+    } else {
+      plusBtn.disabled = false;
+    }
+  }
+}
+
+function clearCart() {
+  // Implementation for clearing entire cart
+  window.location.href = '/cart/clear';
+}
+
+function applyPromo() {
+  const code = document.getElementById('promoCode').value;
+  if (!code) {
+    alert('Please enter a promo code');
+    return;
+  }
+  
+  // Send to server
+  fetch('/cart/apply-promo', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ code })
+  })
+  .then(r => r.json())
+  .then(data => {
+    if (data.success) {
+      location.reload();
+    } else {
+      alert(data.message || 'Invalid promo code');
+    }
+  });
+}
+</script>

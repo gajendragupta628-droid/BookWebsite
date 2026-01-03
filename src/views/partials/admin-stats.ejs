@@ -1,0 +1,15 @@
+<div class="grid md:grid-cols-3 gap-4">
+  <div class="p-4 rounded bg-white/5 border border-white/10">
+    <div class="text-sm text-white/70">Orders today</div>
+    <div class="mt-1 text-2xl font-semibold"><%= stats.ordersToday %></div>
+  </div>
+  <div class="p-4 rounded bg-white/5 border border-white/10">
+    <div class="text-sm text-white/70">Revenue today</div>
+    <div class="mt-1 text-2xl font-semibold"><%= stats.revenueToday.toFixed(2) %> <%= store.currency %></div>
+  </div>
+  <div class="p-4 rounded bg-white/5 border border-white/10">
+    <div class="text-sm text-white/70">Low stock</div>
+    <div class="mt-1 text-2xl font-semibold"><%= stats.lowStock %></div>
+  </div>
+</div>
+
