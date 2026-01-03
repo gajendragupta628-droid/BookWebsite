@@ -13,6 +13,14 @@
     featured: 'Featured Collection',
     recommendations: 'Recommendations'
   }; %>
+  <% const sectionMaxLimits = {
+    bestSellers: 8,
+    newArrivals: 12,
+    bookshelf: 12,
+    promo: 6,
+    featured: 6,
+    recommendations: 12
+  }; %>
   <% sections.forEach((section, idx) => { %>
     <button 
       class="home-settings-tab <%= idx === 0 ? 'active' : '' %>" 
@@ -68,10 +76,10 @@
             class="admin-form-input" 
             value="<%= section.displayLimit || 8 %>"
             min="1"
-            max="50"
+            max="<%= sectionMaxLimits[section.sectionId] || 50 %>"
             onchange="updateSectionField('<%= section.sectionId %>', 'displayLimit', parseInt(this.value))"
           >
-          <span class="admin-form-hint">Number of books to display</span>
+          <span class="admin-form-hint">Number of books to display (max <%= sectionMaxLimits[section.sectionId] || 50 %>)</span>
         </div>
       </div>
 
@@ -577,4 +585,3 @@
   }
 }
 </style>
-

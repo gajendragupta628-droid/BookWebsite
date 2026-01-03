@@ -1,5 +1,9 @@
 const dotenv = require('dotenv');
-dotenv.config();
+const path = require('path');
+
+// Load `.env` from the project root regardless of the current working directory.
+// This avoids accidentally falling back to defaults when the app is started from `src/` (or elsewhere).
+dotenv.config({ path: process.env.DOTENV_CONFIG_PATH || path.resolve(__dirname, '../../.env') });
 
 const DEFAULT_ADMIN_EMAIL = 'admin@bookstore.com';
 const DEFAULT_ADMIN_PASSWORD = 'SecurePass123!';

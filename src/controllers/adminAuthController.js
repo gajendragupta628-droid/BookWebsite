@@ -1,5 +1,6 @@
 const { login } = require('../services/adminService');
 const logger = require('../utils/logger');
+const { env } = require('../config/env');
 
 exports.getLogin = (req, res) => {
   logger.info({ 
@@ -16,7 +17,7 @@ exports.getLogin = (req, res) => {
   }
   
   logger.info('Rendering admin login page from controller');
-  res.render('admin/login', { error: null, layout: false });
+  res.render('admin/login', { error: null, layout: false, prefillEmail: env.ADMIN_EMAIL });
 };
 
 exports.postLogin = async (req, res) => {
@@ -32,7 +33,7 @@ exports.postLogin = async (req, res) => {
   
   if (!user) {
     console.log('Invalid credentials - rendering error page');
-    return res.status(401).render('admin/login', { error: 'Invalid credentials', layout: false });
+    return res.status(401).render('admin/login', { error: 'Invalid credentials', layout: false, prefillEmail: env.ADMIN_EMAIL });
   }
   
   console.log('Login successful - setting session and redirecting to /admin');

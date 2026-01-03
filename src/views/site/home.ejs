@@ -129,6 +129,12 @@
 </section>
 
 <!-- Premium 3D Book Showcase Section -->
+<%
+  const bookshelfEnabled = (typeof bookshelfSection === 'undefined') ? true : (bookshelfSection && bookshelfSection.enabled !== false);
+  const bookshelfLimit = Math.min((bookshelfSection && bookshelfSection.displayLimit) ? bookshelfSection.displayLimit : 12, 12);
+  const bookshelfBooksToShow = (bookshelfBooks && bookshelfBooks.length > 0) ? bookshelfBooks.slice(0, bookshelfLimit) : [];
+%>
+<% if (bookshelfEnabled && bookshelfBooksToShow.length > 0) { %>
 <section class="premium-bookshelf-section">
   <div class="container-custom">
     <div class="bookshelf-header">
@@ -146,7 +152,6 @@
       <div class="bookshelf-stage">
         <div class="bookshelf-track">
           <% 
-            const bookshelfBooksToShow = bookshelfBooks && bookshelfBooks.length > 0 ? bookshelfBooks : [];
             // Duplicate for seamless carousel
             const bookshelfCovers = [...bookshelfBooksToShow, ...bookshelfBooksToShow];
             
@@ -186,8 +191,14 @@
     </div>
   </div>
 </section>
+<% } %>
 
 <!-- Best Sellers Section -->
+<%
+  const bestSellersEnabled = (typeof bestSellersSection === 'undefined') ? true : (bestSellersSection && bestSellersSection.enabled !== false);
+  const bestSellersLimit = Math.min((bestSellersSection && bestSellersSection.displayLimit) ? bestSellersSection.displayLimit : 8, 8);
+%>
+<% if (bestSellersEnabled) { %>
 <section class="section-padding" id="best-sellers">
   <div class="container-custom">
     <div class="section-header">
@@ -201,7 +212,7 @@
       </a>
     </div>
     <div class="books-grid">
-      <% (bestSellers && bestSellers.length > 0 ? bestSellers : featured || []).slice(0, 8).forEach(book => { %>
+      <% (bestSellers && bestSellers.length > 0 ? bestSellers : featured || []).slice(0, bestSellersLimit).forEach(book => { %>
         <%- include('../partials/product-card', { book, session, store }) %>
       <% }); %>
     </div>
@@ -212,8 +223,14 @@
     </div>
   </div>
 </section>
+<% } %>
 
 <!-- Promotional Banner - Special Offer -->
+<%
+  const promoEnabled = (typeof promoSection === 'undefined') ? true : (promoSection && promoSection.enabled !== false);
+  const promoLimit = Math.min((promoSection && promoSection.displayLimit) ? promoSection.displayLimit : 6, 6);
+%>
+<% if (promoEnabled) { %>
 <section class="promo-section">
   <div class="container-custom">
     <div class="promo-grid">
@@ -231,7 +248,7 @@
       </div>
       <div class="promo-images">
         <% 
-          const promoBooksToShow = promoBooks && promoBooks.length > 0 ? promoBooks.slice(0, 6) : [];
+          const promoBooksToShow = promoBooks && promoBooks.length > 0 ? promoBooks.slice(0, promoLimit) : [];
         %>
         <% promoBooksToShow.forEach((book, i) => { %>
           <div class="promo-image-item promo-image-<%= i + 1 %>">
@@ -253,8 +270,14 @@
     </div>
   </div>
 </section>
+<% } %>
 
 <!-- New Arrivals Section -->
+<%
+  const newArrivalsEnabled = (typeof newArrivalsSection === 'undefined') ? true : (newArrivalsSection && newArrivalsSection.enabled !== false);
+  const newArrivalsLimit = Math.min((newArrivalsSection && newArrivalsSection.displayLimit) ? newArrivalsSection.displayLimit : 12, 12);
+%>
+<% if (newArrivalsEnabled) { %>
 <section class="section-padding" id="new-arrivals">
   <div class="container-custom">
     <div class="section-header">
@@ -268,7 +291,7 @@
       </a>
     </div>
     <div class="books-grid">
-      <% (newArrivals || []).slice(0, 12).forEach(book => { %>
+      <% (newArrivals || []).slice(0, newArrivalsLimit).forEach(book => { %>
         <%- include('../partials/product-card', { book, session, store }) %>
       <% }); %>
     </div>
@@ -279,8 +302,14 @@
     </div>
   </div>
 </section>
+<% } %>
 
 <!-- Featured Collection - Personal Growth -->
+<%
+  const featuredEnabled = (typeof featuredSection === 'undefined') ? true : (featuredSection && featuredSection.enabled !== false);
+  const featuredLimit = Math.min((featuredSection && featuredSection.displayLimit) ? featuredSection.displayLimit : 6, 6);
+%>
+<% if (featuredEnabled) { %>
 <section class="nepali-section">
   <div class="container-custom">
     <div class="nepali-header">
@@ -296,7 +325,7 @@
 
     <div class="nepali-books-grid">
       <% 
-        const featuredBooksToShow = featured && featured.length > 0 ? featured.slice(0, 6) : [];
+        const featuredBooksToShow = featured && featured.length > 0 ? featured.slice(0, featuredLimit) : [];
       %>
       <% featuredBooksToShow.forEach((book, idx) => { %>
         <a href="/book/<%= book.slug || book._id %>" class="nepali-book-card">
@@ -324,8 +353,14 @@
     </div>
   </div>
 </section>
+<% } %>
 
 <!-- Personalized Recommendations Section -->
+<%
+  const recommendationsEnabled = (typeof recommendationsSection === 'undefined') ? true : (recommendationsSection && recommendationsSection.enabled !== false);
+  const recommendationsLimit = Math.min((recommendationsSection && recommendationsSection.displayLimit) ? recommendationsSection.displayLimit : 12, 12);
+%>
+<% if (recommendationsEnabled) { %>
 <section class="recommendations-section">
   <div class="geometric-background"></div>
   <div class="container-custom">
@@ -339,16 +374,16 @@
           <a href="/account" class="btn-recommendations">VIEW YOUR RECOMMENDATIONS</a>
         <% } else { %>
           <p class="recommendations-prompt">Login or create account to get started.</p>
-          <a href="/login" class="btn-recommendations">LOGIN | REGISTER</a>
+          <a href="/auth/login" class="btn-recommendations">LOGIN | REGISTER</a>
         <% } %>
       </div>
       
       <div class="recommendations-books-3d">
         <div class="books-grid-3d">
           <% 
-            const recommendationsBooksToShow = recommendationsBooks && recommendationsBooks.length > 0 ? recommendationsBooks.slice(0, 12) : [];
+            const recommendationsBooksToShow = recommendationsBooks && recommendationsBooks.length > 0 ? recommendationsBooks.slice(0, recommendationsLimit) : [];
             // Duplicate to fill grid if needed
-            const recommendationCovers = [...recommendationsBooksToShow, ...recommendationsBooksToShow].slice(0, 12);
+            const recommendationCovers = [...recommendationsBooksToShow, ...recommendationsBooksToShow].slice(0, recommendationsLimit);
             
             recommendationCovers.forEach((book, idx) => { 
               const imageUrl = book.images && book.images.length > 0 ? book.images[0].src : '';
@@ -371,6 +406,7 @@
     </div>
   </div>
 </section>
+<% } %>
 
 <!-- Bestselling Authors -->
 <section class="section-padding authors-section">

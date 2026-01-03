@@ -5,6 +5,17 @@ let allBooks = [];
 let currentPage = 1;
 let totalPages = 1;
 
+function getCsrfToken() {
+  const meta = document.querySelector('meta[name="csrf-token"]');
+  return meta ? meta.getAttribute('content') : null;
+}
+
+function withCsrfHeaders(headers = {}) {
+  const csrfToken = getCsrfToken();
+  if (!csrfToken) return headers;
+  return { ...headers, 'X-CSRF-Token': csrfToken };
+}
+
 // Tab switching
 function switchTab(sectionId) {
   // Update tabs
@@ -23,9 +34,9 @@ async function toggleSection(sectionId, enabled) {
   try {
     const response = await fetch(`/admin/home/sections/${sectionId}`, {
       method: 'POST',
-      headers: {
+      headers: withCsrfHeaders({
         'Content-Type': 'application/json',
-      },
+      }),
       body: JSON.stringify({ enabled })
     });
     
@@ -46,9 +57,9 @@ async function updateSectionField(sectionId, field, value) {
   try {
     const response = await fetch(`/admin/home/sections/${sectionId}`, {
       method: 'POST',
-      headers: {
+      headers: withCsrfHeaders({
         'Content-Type': 'application/json',
-      },
+      }),
       body: JSON.stringify({ [field]: value })
     });
     
@@ -179,9 +190,9 @@ async function addSelectedBooks() {
     
     const response = await fetch(`/admin/home/sections/${currentSection}`, {
       method: 'POST',
-      headers: {
+      headers: withCsrfHeaders({
         'Content-Type': 'application/json',
-      },
+      }),
       body: JSON.stringify({ bookIds: allBookIds })
     });
     
@@ -209,9 +220,9 @@ async function removeBook(sectionId, bookId) {
     
     const response = await fetch(`/admin/home/sections/${sectionId}`, {
       method: 'POST',
-      headers: {
+      headers: withCsrfHeaders({
         'Content-Type': 'application/json',
-      },
+      }),
       body: JSON.stringify({ bookIds: currentBookIds })
     });
     
@@ -316,9 +327,9 @@ async function saveBookOrder(sectionId, bookIds) {
   try {
     const response = await fetch(`/admin/home/sections/${sectionId}/reorder`, {
       method: 'POST',
-      headers: {
+      headers: withCsrfHeaders({
         'Content-Type': 'application/json',
-      },
+      }),
       body: JSON.stringify({ bookIds })
     });
     
@@ -371,4 +382,3 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 });
-

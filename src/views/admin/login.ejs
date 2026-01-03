@@ -87,10 +87,14 @@
             type="email" 
             name="email" 
             class="admin-form-input" 
-            placeholder="admin@example.com" 
+            value="<%= (typeof prefillEmail === 'string') ? prefillEmail : '' %>"
+            placeholder="<%= (typeof prefillEmail === 'string' && prefillEmail) ? prefillEmail : 'admin@example.com' %>" 
             required 
             autofocus
           />
+          <% if (typeof prefillEmail === 'string' && prefillEmail) { %>
+            <div class="admin-form-hint">Configured admin email: <%= prefillEmail %></div>
+          <% } %>
         </div>
         
         <div class="admin-form-group">

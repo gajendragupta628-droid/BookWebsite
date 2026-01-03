@@ -10,11 +10,19 @@ exports.getSettings = async (req, res) => {
       sectionIds.map(async (sectionId) => {
         let section = await HomePageSection.findOne({ sectionId });
         if (!section) {
+          const defaultDisplayLimits = {
+            bestSellers: 8,
+            newArrivals: 12,
+            bookshelf: 12,
+            promo: 6,
+            featured: 6,
+            recommendations: 12
+          };
           section = await HomePageSection.create({
             sectionId,
             enabled: true,
             bookIds: [],
-            displayLimit: sectionId === 'newArrivals' ? 12 : sectionId === 'bookshelf' ? 12 : 8,
+            displayLimit: defaultDisplayLimits[sectionId] || 8,
             title: getDefaultTitle(sectionId),
             subtitle: getDefaultSubtitle(sectionId)
           });
@@ -64,9 +72,14 @@ exports.updateSection = async (req, res) => {
     if (subtitle !== undefined) section.subtitle = subtitle;
     if (displayLimit !== undefined) section.displayLimit = parseInt(displayLimit) || 8;
     if (bookIds !== undefined) {
-      // Convert string array to ObjectIds
-      section.bookIds = Array.isArray(bookIds) 
-        ? bookIds.map(id => mongoose.Types.ObjectId(id)).filter(Boolean)
+      section.bookIds = Array.isArray(bookIds)
+        ? bookIds.map((id) => {
+          try {
+            return mongoose.Types.ObjectId.isValid(id) ? new mongoose.Types.ObjectId(id) : null;
+          } catch (_) {
+            return null;
+          }
+        }).filter(Boolean)
         : [];
     }
 
@@ -176,4 +189,3 @@ function getDefaultSubtitle(sectionId) {
   };
   return subtitles[sectionId] || '';
 }
-
