@@ -1,10 +1,13 @@
 const dotenv = require('dotenv');
 dotenv.config();
 
+const DEFAULT_ADMIN_EMAIL = 'admin@bookstore.com';
+const DEFAULT_ADMIN_PASSWORD = 'SecurePass123!';
+
 const env = {
   NODE_ENV: process.env.NODE_ENV || 'development',
   PORT: parseInt(process.env.PORT || '3000', 10),
-  MONGODB_URI: process.env.MONGODB_URI || 'mongodb://localhost:27017/premium_books',
+  MONGODB_URI: process.env.MONGODB_URI,
   SESSION_SECRET: process.env.SESSION_SECRET || 'change_me',
   STORE_NAME: process.env.STORE_NAME || 'Motivational Books',
   STORE_CURRENCY: process.env.STORE_CURRENCY || process.env.CURRENCY || 'USD',
@@ -12,8 +15,9 @@ const env = {
   SMTP_PORT: parseInt(process.env.SMTP_PORT || '0', 10) || 587,
   SMTP_USER: process.env.SMTP_USER || '',
   SMTP_PASS: process.env.SMTP_PASS || '',
-  ADMIN_EMAIL: process.env.ADMIN_EMAIL || 'owner@store.com',
-  ADMIN_PASSWORD: process.env.ADMIN_PASSWORD || 'ChangeMe!42',
+  // Used to bootstrap a default admin user in development, and optionally in production if explicitly set.
+  ADMIN_EMAIL: process.env.ADMIN_EMAIL || DEFAULT_ADMIN_EMAIL,
+  ADMIN_PASSWORD: process.env.ADMIN_PASSWORD || DEFAULT_ADMIN_PASSWORD,
   BASE_URL: process.env.BASE_URL || process.env.SITE_URL || 'http://localhost:3000',
   TRUST_PROXY: (process.env.TRUST_PROXY || '').toLowerCase() === 'true',
   ENABLE_COD: (process.env.ENABLE_COD || 'true') === 'true',
@@ -45,6 +49,16 @@ function validateEnv() {
     }
     if (env.SESSION_SECRET.length < 32) {
       errors.push('SESSION_SECRET must be at least 32 characters long in production');
+    }
+
+    // If admin bootstrap variables are used in production, enforce they are explicitly set and not defaults.
+    const adminEmailExplicit = typeof process.env.ADMIN_EMAIL === 'string' && process.env.ADMIN_EMAIL.trim() !== '';
+    const adminPasswordExplicit = typeof process.env.ADMIN_PASSWORD === 'string' && process.env.ADMIN_PASSWORD.trim() !== '';
+    if (adminEmailExplicit !== adminPasswordExplicit) {
+      errors.push('ADMIN_EMAIL and ADMIN_PASSWORD must be set together (or both omitted)');
+    }
+    if (adminEmailExplicit && env.ADMIN_PASSWORD === DEFAULT_ADMIN_PASSWORD) {
+      errors.push('ADMIN_PASSWORD must be changed from the default in production');
     }
   }
 

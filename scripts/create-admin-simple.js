@@ -30,7 +30,11 @@ async function createAdmin() {
     console.log('\n📚 Creating admin user...\n');
 
     // Connect to MongoDB
-    const mongoUri = process.env.MONGODB_URI || 'mongodb://localhost:27017/bookstore';
+    const mongoUri = process.env.MONGODB_URI;
+    if (!mongoUri) {
+      console.error('❌ MONGODB_URI is required (set it in your .env or environment).');
+      process.exit(1);
+    }
     await mongoose.connect(mongoUri);
     console.log('✅ Connected to MongoDB\n');
 
@@ -79,4 +83,3 @@ async function createAdmin() {
 }
 
 createAdmin();
-

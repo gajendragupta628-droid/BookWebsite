@@ -15,6 +15,7 @@ const { sessionConfig } = require('./config/session');
 const { securityConfig } = require('./config/security');
 const passport = require('./config/passport');
 const authController = require('./controllers/authController');
+const { ensureAdmin } = require('./services/adminService');
 
 // Routes
 const siteRoutes = require('./routes/site.routes');
@@ -53,8 +54,24 @@ validateEnv();
 
 // DB
 connectDB()
-  .then(() => {
+  .then(async () => {
     logger.info('MongoDB connected successfully');
+
+    const adminEmailExplicit = typeof process.env.ADMIN_EMAIL === 'string' && process.env.ADMIN_EMAIL.trim() !== '';
+    const adminPasswordExplicit = typeof process.env.ADMIN_PASSWORD === 'string' && process.env.ADMIN_PASSWORD.trim() !== '';
+    const shouldBootstrapAdmin = env.NODE_ENV !== 'production' || (adminEmailExplicit && adminPasswordExplicit);
+
+    if (shouldBootstrapAdmin) {
+      await ensureAdmin({
+        email: env.ADMIN_EMAIL,
+        password: env.ADMIN_PASSWORD,
+        // In dev, keep the DB admin in sync with .env to avoid "can't login" confusion.
+        forcePassword: env.NODE_ENV !== 'production'
+      });
+      logger.info({ email: env.ADMIN_EMAIL }, 'Ensured admin user exists');
+    } else {
+      logger.info('Skipping admin bootstrap (set ADMIN_EMAIL and ADMIN_PASSWORD to enable)');
+    }
   })
   .catch((e) => {
     logger.fatal(e, 'Failed to connect to MongoDB');

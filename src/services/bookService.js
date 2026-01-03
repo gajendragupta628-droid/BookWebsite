@@ -43,7 +43,7 @@ const list = async ({ q, filters, sort, page, perPage }) => {
   
   // Language filter
   if (filters?.language) {
-    query.language = filters.language;
+    query.language = { $regex: `^${escapeRegex(filters.language)}$`, $options: 'i' };
   }
   
   // Condition filter (assuming you have a condition field)

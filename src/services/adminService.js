@@ -1,9 +1,18 @@
 const bcrypt = require('bcryptjs');
 const AdminUser = require('../models/AdminUser');
 
-const ensureAdmin = async ({ email, password }) => {
+const ensureAdmin = async ({ email, password, forcePassword = false }) => {
   const existing = await AdminUser.findOne({ email });
-  if (existing) return existing;
+  if (existing) {
+    if (forcePassword && typeof password === 'string' && password.length > 0) {
+      const ok = await existing.verifyPassword(password);
+      if (!ok) {
+        existing.passwordHash = await bcrypt.hash(password, 10);
+        await existing.save();
+      }
+    }
+    return existing;
+  }
   const passwordHash = await bcrypt.hash(password, 10);
   return AdminUser.create({ email, passwordHash });
 };
@@ -16,4 +25,3 @@ const login = async ({ email, password }) => {
 };
 
 module.exports = { ensureAdmin, login };
-

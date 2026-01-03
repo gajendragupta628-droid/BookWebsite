@@ -60,7 +60,10 @@ BookSchema.index({
   isbn10: 'text',
   isbn13: 'text',
   tags: 'text'
+}, {
+  name: 'book_text_search',
+  default_language: 'none',
+  language_override: 'textSearchLanguage'
 });
 
 module.exports = mongoose.model('Book', BookSchema);
-

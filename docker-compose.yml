@@ -10,14 +10,14 @@ services:
   app:
     build: .
     environment:
-      - NODE_ENV=development
-      - PORT=3000
-      - MONGODB_URI=mongodb://mongo:27017/premium_books
-      - SESSION_SECRET=change_me
-      - STORE_NAME=Motivational Books
-      - STORE_CURRENCY=USD
-      - ENABLE_COD=true
-      - BASE_URL=http://localhost:3000
+      - NODE_ENV=${NODE_ENV:-development}
+      - PORT=${PORT:-3000}
+      - MONGODB_URI=${MONGODB_URI}
+      - SESSION_SECRET=${SESSION_SECRET}
+      - STORE_NAME=${STORE_NAME:-Motivational Books}
+      - STORE_CURRENCY=${STORE_CURRENCY:-USD}
+      - ENABLE_COD=${ENABLE_COD:-true}
+      - BASE_URL=${BASE_URL:-http://localhost:3000}
     ports:
       - "3000:3000"
     depends_on:
